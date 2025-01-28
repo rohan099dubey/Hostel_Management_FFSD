@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card{
+    @apply border border-black rounded-xl overflow-hidden shadow-md transform hover:scale-105 hover:shadow-lg transition ease-out
+}
+
+.username{  
+    @apply bg-fuchsia-100 border p-3 font-semibold flex justify-between
+}

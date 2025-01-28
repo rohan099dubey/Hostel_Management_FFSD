@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostelia</title>
+  <link rel="stylesheet" href="/css/output.css">
+  <style>
+    /* The Modal (background) */
+    .modal {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      /* Stay in place */
+      z-index: 1;
+      /* Sit on top */
+      padding-top: 50px;
+      /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%;
+      /* Full width */
+      height: 100%;
+      /* Full height */
+      overflow: auto;
+      /* Enable scroll if needed */
+      background-color: rgb(0, 0, 0);
+      /* Fallback color */
+      background-color: rgba(0, 0, 0, 0.4);
+      /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body class="w-screen overflow-x-hidden">
+  <%- include('partials/navbar.ejs') %>
+    <div class="h-40" style="background: linear-gradient(90deg, #1B8AF1, #873eed);">
+      <h1 class="block text-4xl pt-9 text-center text-white font-bold">IIIT SRI CITY</h1>
+    </div>
+    <main class="bg-white flex">
+      <div class="py-40 mx-44">
+        <h1 class="font-mono font-extrabold text-4xl  ">Hostel problem registry</h1>
+
+        <p class="w-96 py-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor debitis, dolores deserunt,
+          exercitationem dicta ad corporis maxime quia consequatur molestias officiis provident quibusdam? Excepturi
+          voluptatem, voluptas maiores voluptatibus consequatur id.</p>
+
+
+        <a href="/problems"><button
+            class="bg-purple-700 text-white mr-3 my-2 text-xl p-2 border rounded-3xl hover:bg-purple-800 hover:text-white font-bold hover:border-purple-700">Problems</button></a>
+
+        <button
+          class="bg-purple-700 text-white mr-3 my-2 text-xl p-2 border rounded-3xl hover:bg-purple-800 hover:text-white font-bold hover:border-purple-700">
+          <a href="/contact">Contact</a></button>
+      </div>
+      <img src="/images/Building safety-bro.svg" alt="couldnt load" class="w-96 ml-11  ">
+    </main>
+    <hr class="border border-black">
+    <main class="bg-white flex">
+      <div class="py-40 mx-44">
+        <h1 class="font-mono font-extrabold text-4xl  ">Mess Statistics</h1>
+
+        <p class="w-96 py-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor debitis, dolores deserunt,
+          exercitationem dicta ad corporis maxime quia consequatur molestias officiis provident quibusdam? Excepturi
+          voluptatem, voluptas maiores voluptatibus consequatur id.</p>
+        <button
+          class="bg-purple-700 text-white mr-3 my-2 text-xl p-2 border rounded-3xl hover:bg-purple-800 hover:text-white font-bold hover:border-purple-700"
+          id="myBtn">Menu</button>
+
+        <div id="myModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <center>
+              <h1 style="color: green">Mess Menu</h1>
+              <object data="/images/flight.pdf" width="80%" height="500">
+              </object>
+            </center>
+          </div>
+        </div>
+
+        <button
+          class="bg-purple-700 text-white mr-3 my-2 text-xl p-2 border rounded-3xl hover:bg-purple-800 hover:text-white font-bold hover:border-purple-700"><a
+            href="/contact">Contact</a>
+        </button>
+      </div>
+      <img src="/images/Cooking-bro.svg" alt="couldnt load" class="w-96 ml-28">
+    </main>
+    <%- include('partials/footer.ejs') %>
+      <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[ 0 ];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function () {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+      </script>
+</body>
+
+
+</html>
