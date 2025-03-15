@@ -1,199 +1,721 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Home Page</title>
-    <meta name="description" content="Home Page of Hostelia" />
-    <meta name="keywords" content="Home Page of Hostelia" />
-    <meta name="author" content="Home Page of Hostelia" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Hostelia</title>
+    <!-- Add AOS library for scroll animations -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link
-      rel="stylesheet"
-      href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-    />
-    <!--Replace with your tailwind.css once created-->
-    <link
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
-      rel="stylesheet"
-    />
-    <!-- Define your gradient here - use online tools to find a gradient matching your branding-->
+    rel="stylesheet"
+    href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
+  />
+  <!--Replace with your tailwind.css once created-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+    rel="stylesheet"
+  />
     <style>
-      .gradient {
-        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
-        /* background-image: linear-gradient(135deg, #fab2ff 0%, #1904e5 100%); */
-      }
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #32D74B;
+            --dark: #121212;
+            --light: #F5F5F7;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .narrow-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+            z-index: -1;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%);
+    animation: waveAnimation 8s ease-in-out infinite alternate;
+        }
+        /* Smooth wave animation */
+@keyframes waveAnimation {
+  0% {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%);
+  }
+  50% {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 0% 95%);
+  }
+  100% {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%);
+  }
+}
+
+        
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: whitesmoke;
+            transform: perspective(500px) rotateX(15deg);
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        /* Section Styles */
+        section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Mission Section */
+        .mission {
+            background-color: whitesmoke;
+            border-radius: 20px;
+            padding: 4rem;
+            margin: 2rem auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--primary);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            max-width: 900px;
+        }
+
+        .mission:hover {
+            transform: perspective(1000px) rotateY(5deg);
+        }
+
+        .mission-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #121212;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card { 
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 101, 132, 0.1));
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .feature-card:hover {
+            transform: perspective(1000px) translateZ(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transform: translateZ(20px);
+        }
+
+        .feature-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: black;
+        }
+
+        .feature-description {
+            color: rgba(23, 22, 22, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Tech Stack Section */
+        .tech-stack {
+            background: linear-gradient(135deg, rgba(108, 99, 245, 0.15), rgba(255, 101, 132, 0.15));
+            border-radius: 20px;
+            padding: 4rem;
+            margin: 2rem auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .tech-badge {
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(255, 120, 150, 0.2));
+            border: 1px solid var(--card-border);
+            color: black;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Users and Roles Section */
+        .roles-section {
+            margin-top: 4rem;
+        }
+
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .role-card {
+            background: linear-gradient(135deg, rgba(98, 88, 255, 0.15), rgba(255, 105, 160, 0.15));
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: black;
+            display: flex;
+            align-items: center;
+        }
+
+        .role-title i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+
+        .role-list {
+            list-style-position: inside;
+            color: rgba(39, 37, 37, 0.7);
+        }
+
+        .role-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .role-list li::before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Revenue Model Section */
+        .revenue-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .revenue-card {
+            background: linear-gradient(135deg, rgba(115, 104, 255, 0.12), rgba(255, 125, 140, 0.12));
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .revenue-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .revenue-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: black;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .revenue-description {
+            color: rgba(37, 36, 36, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .pricing-model {
+            background: rgba(108, 99, 255, 0.1);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 500;
+            color: black;
+        }
+
+        /* Features List Section */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-item {
+          background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 101, 132, 0.1));
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: 1rem;
+        }
+
+        /* Skeleton Loading Animation */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .mission, .tech-stack {
+                padding: 2rem;
+            }
+
+            .container, .narrow-container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator i {
+            font-size: 2rem;
+            color: black;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
     </style>
-  </head>
-  <body
-    class="leading-normal tracking-normal text-white gradient"
-    style="font-family: 'Source Sans Pro', sans-serif"
-  >
-    <!--Nav-->
+</head>
+
+<body>
+    <!-- Navbar Section -->
     <%- include('partials/navbar.ejs') %>
 
-    <div class="pt-24">
-      <div
-        class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
-      >
-        <div
-          class="flex flex-col w-full justify-center items-start md:text-left"
-        >
-          <h1 class="my-4 text-5xl font-bold leading-tight text-center w-full">
-            About Us
-          </h1>
-          <p class="leading-normal text-2xl mb-8 text-center w-full">
-            We are dedicated to providing comfortable and secure accommodation
-            for students. Our mission is to create a welcoming environment where
-            students can thrive academically and socially.
-          </p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <h1 class="hero-title" data-aos="zoom-in">HOSTELIA</h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">Revolutionizing Hostel Management with Innovation</p>
         </div>
-      </div>
-    </div>
-
-    <div class="relative -mt-12 lg:-mt-24">
-      <svg
-        viewBox="0 0 1428 174"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-          <g
-            transform="translate(-2.000000, 44.000000)"
-            fill="#FFFFFF"
-            fill-rule="nonzero"
-          >
-            <path
-              d="M0,0 C90.7283404,0.927527913 147.912752,27.187927 291.910178,59.9119003 C387.908462,81.7278826 543.605069,89.334785 759,82.7326078 C469.336065,156.254352 216.336065,153.6679 0,74.9732496"
-              opacity="0.100000001"
-            ></path>
-            <path
-              d="M100,104.708498 C277.413333,72.2345949 426.147877,52.5246657 546.203633,45.5787101 C666.259389,38.6327546 810.524845,41.7979068 979,55.0741668 C931.069965,56.122511 810.303266,74.8455141 616.699903,111.243176 C423.096539,147.640838 250.863238,145.462612 100,104.708498 Z"
-              opacity="0.100000001"
-            ></path>
-            <path
-              d="M1046,51.6521276 C1130.83045,29.328812 1279.08318,17.607883 1439,40.1656806 L1439,120 C1271.17211,77.9435312 1140.17211,55.1609071 1046,51.6521276 Z"
-              opacity="0.200000003"
-            ></path>
-          </g>
-          <g
-            transform="translate(-4.000000, 76.000000)"
-            fill="#FFFFFF"
-            fill-rule="nonzero"
-          >
-            <path
-              d="M0.457,34.035 C57.086,53.198 98.208,65.809 123.822,71.865 C181.454,85.495 234.295,90.29 272.033,93.459 C311.355,96.759 396.635,95.801 461.025,91.663 C486.76,90.01 518.727,86.372 556.926,80.752 C595.747,74.596 622.372,70.008 636.799,66.991 C663.913,61.324 712.501,49.503 727.605,46.128 C780.47,34.317 818.839,22.532 856.324,15.904 C922.689,4.169 955.676,2.522 1011.185,0.432 C1060.705,1.477 1097.39,3.129 1121.236,5.387 C1161.703,9.219 1208.621,17.821 1235.4,22.304 C1285.855,30.748 1354.351,47.432 1440.886,72.354 L1441.191,104.352 L1.121,104.031 L0.457,34.035 Z"
-            ></path>
-          </g>
-        </g>
-      </svg>
-    </div>
-
-    <section class="bg-white py-8">
-      <div class="container max-w-5xl mx-auto m-8">
-        <div class="w-full mb-4">
-          <div
-            class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"
-          ></div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
         </div>
-        <div class="flex flex-wrap">
-          <div class="w-full sm:w-1/2 p-6">
-            <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
-              Our Vision
-            </h3>
-            <p class="text-gray-600 mb-8">
-              To be the leading provider of student accommodation, known for
-              excellence in service, comfort and community building. We strive
-              to create an environment that supports academic success and
-              personal growth. Our goal is to set new standards in student
-              housing by combining modern amenities with a supportive community
-              atmosphere.
-            </p>
-          </div>
-          <div class="w-full sm:w-1/2 p-6">
-            <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
-              Our Values
-            </h3>
-            <ul class="list-disc text-gray-600 mb-8 ml-5">
-              <li>
-                Safety and Security - 24/7 security personnel and modern access
-                control systems
-              </li>
-              <li>
-                Community Spirit - Regular events and activities to foster
-                friendships
-              </li>
-              <li>
-                Academic Excellence - Dedicated study spaces and high-speed
-                internet
-              </li>
-              <li>
-                Inclusivity - Welcoming environment for students from all
-                backgrounds
-              </li>
-              <li>
-                Sustainability - Eco-friendly practices and energy-efficient
-                facilities
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- New Sections -->
-        <div class="flex flex-wrap mt-8">
-          <div class="w-full sm:w-1/2 p-6">
-            <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
-              Our Facilities
-            </h3>
-            <ul class="list-disc text-gray-600 mb-8 ml-5">
-              <li>Modern, fully furnished rooms</li>
-              <li>High-speed WiFi throughout the building</li>
-              <li>24/7 security and CCTV surveillance</li>
-              <li>Fully equipped communal kitchen</li>
-              <li>Comfortable study areas and meeting rooms</li>
-              <li>Recreation room with gaming facilities</li>
-              <li>On-site laundry facilities</li>
-              <li>Bicycle storage</li>
-            </ul>
-          </div>
-          <div class="w-full sm:w-1/2 p-6">
-            <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
-              Why Choose Us?
-            </h3>
-            <p class="text-gray-600 mb-8">
-              With over a decade of experience in student accommodation, we
-              understand what students need to thrive. Our hostels are
-              strategically located near major educational institutions,
-              offering:
-            </p>
-            <ul class="list-disc text-gray-600 mb-8 ml-5">
-              <li>Competitive and transparent pricing</li>
-              <li>Flexible booking options</li>
-              <li>Professional maintenance team</li>
-              <li>Regular community events</li>
-              <li>Dedicated student support staff</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="w-full p-6">
-          <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
-            Our Community
-          </h3>
-          <p class="text-gray-600 mb-8">
-            At Hostelia, we believe that student accommodation is more than just
-            a place to stay – it's a home away from home. Our diverse community
-            of students from various backgrounds creates a rich, multicultural
-            environment where lifelong friendships are formed. We regularly
-            organize social events, cultural celebrations, and academic support
-            programs to enhance your university experience.
-          </p>
-        </div>
-      </div>
+        
     </section>
+    
 
-    <!--Footer-->
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Mission Section -->
+        <section>
+            <h2 class="section-title" data-aos="fade-up">Our Mission</h2>
+            <div class="narrow-container">
+                <div class="mission skeleton" data-aos="fade-up">
+                    <p class="mission-text">
+                        At <strong style="color: var(--primary);">Hostelia</strong>, we are revolutionizing hostel management by providing a comprehensive platform that simplifies communication, enhances security, and automates administrative tasks. Our mission is to empower students, wardens, and admins with the tools they need for a seamless and efficient hostel experience.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+
+        <!-- Abstract Section -->
+        <section>
+            <h2 class="section-title" data-aos="fade-up">About The Project</h2>
+            <div class="narrow-container">
+                <div class="mission skeleton" data-aos="fade-up">
+                    <p class="mission-text">
+                        The Hostel Management Application is a comprehensive solution designed to simplify hostel administration for students, wardens, and admins. It enables students to lodge complaints, pay fees, and access policies, while wardens manage attendance, complaints, and communication. Admins oversee hostel operations, including room allocation and fee tracking. The system addresses challenges such as inefficient communication, manual processes, and issue resolution delays.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section>
+            <h2 class="section-title" data-aos="fade-up">Core Features</h2>
+            <div class="features-grid">
+                <div class="feature-card skeleton" data-aos="flip-left" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Secure Authentication</h3>
+                    <p class="feature-description">
+                        Login/Signup via OTP and college email ensures secure and verified access for all users.
+                    </p>
+                </div>
+
+                <div class="feature-card skeleton" data-aos="flip-left" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h3 class="feature-title">Role-Based Dashboards</h3>
+                    <p class="feature-description">
+                        Personalized dashboards for Admins, Wardens, and Students with role-specific functionalities.
+                    </p>
+                </div>
+
+                <div class="feature-card skeleton" data-aos="flip-left" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="feature-title">Problem Tracking</h3>
+                    <p class="feature-description">
+                        Students can report, upvote, and track issues, while admins and wardens can resolve them efficiently.
+                    </p>
+                </div>
+
+                <div class="feature-card skeleton" data-aos="flip-left" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="feature-title">Direct Email System</h3>
+                    <p class="feature-description">
+                        Integrated Gmail API for seamless communication between students, wardens, and admins.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Stack -->
+        <section>
+            <h2 class="section-title" data-aos="fade-up">Technology Stack</h2>
+            <div class="narrow-container">
+                <div class="tech-stack skeleton" data-aos="fade-up">
+                    <p class="mission-text" style="text-align: center;">
+                        Hostelia is powered by cutting-edge technologies ensuring a robust, scalable, and secure platform for all your hostel management needs.
+                    </p>
+                    <div class="tech-badges">
+                        <span class="tech-badge" data-aos="zoom-in" data-aos-delay="100">Node.js</span>
+                        <span class="tech-badge" data-aos="zoom-in" data-aos-delay="200">Express</span>
+                        <span class="tech-badge" data-aos="zoom-in" data-aos-delay="300">MongoDB</span>
+                        <span class="tech-badge" data-aos="zoom-in" data-aos-delay="400">Socket.io</span>
+                        <span class="tech-badge" data-aos="zoom-in" data-aos-delay="500">EJS</span>
+                        <span class="tech-badge" data-aos="zoom-in" data-aos-delay="600">Tailwind CSS</span>
+                        <span class="tech-badge" data-aos="zoom-in" data-aos-delay="700">Gmail API</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Users and Roles -->
+        <section class="roles-section">
+            <h2 class="section-title" data-aos="fade-up">Users & Roles</h2>
+            <div class="role-cards">
+                <div class="role-card skeleton" data-aos="fade-right" data-aos-delay="100">
+                    <h3 class="role-title"><i class="fas fa-user-tie"></i> Hostel Office (Admin)</h3>
+                    <ul class="role-list">
+                        <li>Oversee all hostel operations</li>
+                        <li>Block users for misconduct</li>
+                        <li>Notify students and wardens in case of severe issues</li>
+                        <li>Manage room allocation</li>
+                        <li>Track fee payments</li>
+                    </ul>
+                </div>
+
+                <div class="role-card skeleton" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="role-title"><i class="fas fa-user-shield"></i> Hostel Wardens</h3>
+                    <ul class="role-list">
+                        <li>Provide updates on problem resolution status</li>
+                        <li>Make announcements / Provide event updates</li>
+                        <li>Create chatroom to communicate with students</li>
+                        <li>Oversee menu updates and resolve mess complaints</li>
+                        <li>Notify Students for fee dues</li>
+                    </ul>
+                </div>
+
+                <div class="role-card skeleton" data-aos="fade-left" data-aos-delay="300">
+                    <h3 class="role-title"><i class="fas fa-user-graduate"></i> Students</h3>
+                    <ul class="role-list">
+                        <li>Report issues and track their progress</li>
+                        <li>Provide feedback on mess menu</li>
+                        <li>Make entries in entry/exit register</li>
+                        <li>Upvote/downvote problems to raise concerns</li>
+                        <li>Pay fees and access policies</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Revenue Model -->
+        <section>
+            <h2 class="section-title" data-aos="fade-up">Revenue Model</h2>
+            <div class="revenue-cards">
+                <div class="revenue-card skeleton" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="revenue-title">Customization Fee</h3>
+                    <p class="revenue-description">
+                        Tailor the application to meet the specific needs of individual hostels or institutions by adding institution-specific branding (logo, theme colors), custom module development, configuring workflows based on unique administrative requirements.
+                    </p>
+                    <div class="pricing-model">
+                        <strong>Pricing:</strong> One-time fee, based on the scope and complexity of customization.
+                    </div>
+                </div>
+
+                <div class="revenue-card skeleton" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="revenue-title">Management Fee</h3>
+                    <p class="revenue-description">
+                        Provide ongoing technical support and manage the application's performance like, database backups, server maintenance, and system optimization, monitoring uptime and resolving downtime issues.
+                    </p>
+                    <div class="pricing-model">
+                        <strong>Pricing:</strong> Monthly recurring fee tiered based on the size of the hostel and number of users.
+                    </div>
+                </div>
+
+                <div class="revenue-card skeleton" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="revenue-title">Regular Updates Fee</h3>
+                    <p class="revenue-description">
+                        Ensure the platform remains up to date with new features, improved security measures, and compatibility with evolving technologies.
+                    </p>
+                    <div class="pricing-model">
+                        <strong>Pricing:</strong> Annual or semi-annual subscription fee.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features List -->
+        <section>
+            <h2 class="section-title" data-aos="fade-up">Key Features</h2>
+            <div class="narrow-container">
+                <div class="features-list">
+                    <div class="feature-item skeleton" data-aos="zoom-in" data-aos-delay="100">
+                        <i class="fas fa-lock"></i>
+                        <span>Login/Signup through OTP and College Email</span>
+                    </div>
+                    <div class="feature-item skeleton" data-aos="zoom-in" data-aos-delay="150">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>Upvote/Downvote on Problems</span>
+                    </div>
+                    <div class="feature-item skeleton" data-aos="zoom-in" data-aos-delay="200">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Entry/Exit Register on Noticeboard Page</span>
+                    </div>
+                    <div class="feature-item skeleton" data-aos="zoom-in" data-aos-delay="250">
+                        <i class="fas fa-bell"></i>
+                        <span>Real-time Notifications</span>
+                    </div>
+                    <div class="feature-item skeleton" data-aos="zoom-in" data-aos-delay="300">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Completion Statistics on Dashboard</span>
+                    </div>
+                    <div class="feature-item skeleton" data-aos="zoom-in" data-aos-delay="350">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Important Dates/Circulars Board</span>
+                    </div>
+                    <div class="feature-item skeleton" data-aos="zoom-in" data-aos-delay="400">
+                        <i class="fas fa-comments"></i>
+                        <span>Admins Can Create New Chatrooms</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer Section -->
     <%- include('partials/footer.ejs') %>
-    <script src="/js/navbar.js"></script>
-  </body>
+
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            easing: 'ease',
+            once: true
+        });
+
+        
+
+        // Remove skeleton loading animation after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const skeletons = document.querySelectorAll('.skeleton');
+            skeletons.forEach((skeleton, index) => {
+                setTimeout(() => {
+                    skeleton.classList.remove('skeleton');
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+
 </html>
