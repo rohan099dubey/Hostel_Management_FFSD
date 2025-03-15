@@ -1,525 +1,811 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Home Page</title>
+    <meta name="description" content="Home Page of Hostelia" />
+    <meta name="keywords" content="Home Page of Hostelia" />
+    <meta name="author" content="Home Page of Hostelia" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <!--Replace with your tailwind.css once created-->
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+      rel="stylesheet"
+    />
+    <!-- Define your gradient here - use online tools to find a gradient matching your branding-->
+    <style>
+      .gradient {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+        /* background-image: linear-gradient(135deg, #fab2ff 0%, #1904e5 100%); */
+      }
+    </style>
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/output.css">
-</head>
-
-<body class="bg-[#E8E9ED] w-screen overflow-x-hidden">
+  <body
+    class="bg-[#E8E9ED] w-screen overflow-x-hidden leading-normal tracking-normal text-white gradient"
+  >
     <%- include('partials/navbar.ejs') %>
-        <div class="h-[200px] absolute w-screen top-[56px] z-[-1]"
-            style="background: linear-gradient(90deg, #1b8af1, #873eed)">
-            <h1 class="block text-4xl pt-9 text-center text-white font-bold">
-                SERVICES
-            </h1>
+    <div class="pt-24">
+      <div
+        class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
+      >
+        <h1 class="block text-4xl pt-9 text-center text-white font-bold w-full">
+          SERVICES
+        </h1>
+      </div>
+    </div>
+
+    <div class="relative -mt-12 lg:-mt-24">
+      <svg
+        viewBox="0 0 1428 174"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
+        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <g
+            transform="translate(-2.000000, 44.000000)"
+            fill="#FFFFFF"
+            fill-rule="nonzero"
+          >
+            <path
+              d="M0,0 C90.7283404,0.927527913 147.912752,27.187927 291.910178,59.9119003 C387.908462,81.7278826 543.605069,89.334785 759,82.7326078 C469.336065,156.254352 216.336065,153.6679 0,74.9732496"
+              opacity="0.100000001"
+            ></path>
+            <path
+              d="M100,104.708498 C277.413333,72.2345949 426.147877,52.5246657 546.203633,45.5787101 C666.259389,38.6327546 810.524845,41.7979068 979,55.0741668 C931.069965,56.122511 810.303266,74.8455141 616.699903,111.243176 C423.096539,147.640838 250.863238,145.462612 100,104.708498 Z"
+              opacity="0.100000001"
+            ></path>
+            <path
+              d="M1046,51.6521276 C1130.83045,29.328812 1279.08318,17.607883 1439,40.1656806 L1439,120 C1271.17211,77.9435312 1140.17211,55.1609071 1046,51.6521276 Z"
+              opacity="0.200000003"
+            ></path>
+          </g>
+          <g
+            transform="translate(-4.000000, 76.000000)"
+            fill="#FFFFFF"
+            fill-rule="nonzero"
+          >
+            <path
+              d="M0.457,34.035 C57.086,53.198 98.208,65.809 123.822,71.865 C181.454,85.495 234.295,90.29 272.033,93.459 C311.355,96.759 396.635,95.801 461.025,91.663 C486.76,90.01 518.727,86.372 556.926,80.752 C595.747,74.596 622.372,70.008 636.799,66.991 C663.913,61.324 712.501,49.503 727.605,46.128 C780.47,34.317 818.839,22.532 856.324,15.904 C922.689,4.169 955.676,2.522 1011.185,0.432 C1060.705,1.477 1097.39,3.129 1121.236,5.387 C1161.703,9.219 1208.621,17.821 1235.4,22.304 C1285.855,30.748 1354.351,47.432 1440.886,72.354 L1441.191,104.352 L1.121,104.031 L0.457,34.035 Z"
+            ></path>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <section class="bg-white border-b py-12">
+      <!-- tab contents  -->
+      <div
+        role="tablist"
+        class="tabs w-screen grid-cols-3 mt-40 text-white font-bold transition-all duration-500"
+      >
+        <input
+          type="radio"
+          name="my_tabs_1"
+          role="tab"
+          class="tab text-xl checked:border-b-4 checked:border-white transition-all duration-200 ease-linear"
+          aria-label="Notice Board"
+        />
+
+        <!-- Notice board tab content  -->
+        <div role="tabpanel" class="tab-content text-black p-10 text-center">
+          <div class="grid grid-cols-5 mx-24 my-12 gap-10">
+            <div class="col-span-3 bg-white flex flex-col items-center">
+              <h1
+                class="text-xl font-bold text-white px-4 py-2 w-full"
+                style="background: linear-gradient(90deg, #1b8af1, #873eed)"
+              >
+                Circulars/Announcements
+              </h1>
+              <div
+                class="grid auto-rows-min w-full mx-8 px-8 my-5 h-[30rem] overflow-y-scroll gap-y-6"
+              >
+                <% for( let index=0; index < 5; index++ ) { %>
+                <div class="flex items-start gap-2.5">
+                  <div id="profile_pic" class="avatar">
+                    <div class="w-12 h-auto rounded-full">
+                      <img
+                        src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex flex-col w-full leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl"
+                  >
+                    <div
+                      class="flex items-center rtl:space-x-reverse justify-between"
+                    >
+                      <span class="text-sm font-semibold text-gray-900"
+                        >IIITS Academic Office<span
+                          class="text-sm font-normal text-gray-500 ml-2"
+                          >11:56</span
+                        ></span
+                      >
+                      <span class="text-sm font-normal text-gray-500"
+                        >24/03/24</span
+                      >
+                    </div>
+                    <p
+                      class="text-sm font-normal py-2.5 text-gray-900 text-left"
+                    >
+                      Dear students,<br />
+
+                      Wi-Fi Internet bandwidth speed increased. Check and if any
+                      issues mail to hosteloffice@iiits.in and it support.
+                    </p>
+                  </div>
+                </div>
+                <% } %>
+              </div>
+            </div>
+            <div class="col-span-2 bg-white flex flex-col items-center">
+              <h1
+                class="text-xl font-bold text-white px-4 py-2 w-full"
+                style="background: linear-gradient(90deg, #1b8af1, #873eed)"
+              >
+                Important Events/Dates
+              </h1>
+            </div>
+          </div>
+          <div class="my-12 mx-40">
+            <div class="bg-white flex flex-col items-center">
+              <h1
+                class="text-xl font-bold text-white px-4 py-2 w-full"
+                style="background: linear-gradient(90deg, #1b8af1, #873eed)"
+              >
+                Entry/Exit Register
+              </h1>
+              <div class="overflow-x-auto h-[30rem] w-full px-20">
+                <table class="table table-xs table-pin-rows font-medium my-5">
+                  <thead class="text-base bg-white">
+                    <tr class="bg-white">
+                      <th></th>
+                      <th>Name</th>
+                      <th>Roll number</th>
+                      <th>Purpose</th>
+                      <th>Room number</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>1</th>
+                      <td>Shankar Vijay</td>
+                      <td>S20230010232</td>
+                      <td>Home</td>
+                      <td>523</td>
+                      <td>12/04/2024</td>
+                      <td>10:17</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>Hart Hagerty</td>
+                      <td>Desktop Support Technician</td>
+                      <td>Zemlak, Daniel and Leannon</td>
+                      <td>United States</td>
+                      <td>12/5/2020</td>
+                      <td>Purple</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>Brice Swyre</td>
+                      <td>Tax Accountant</td>
+                      <td>Carroll Group</td>
+                      <td>China</td>
+                      <td>8/15/2020</td>
+                      <td>Red</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>Marjy Ferencz</td>
+                      <td>Office Assistant I</td>
+                      <td>Rowe-Schoen</td>
+                      <td>Russia</td>
+                      <td>3/25/2021</td>
+                      <td>Crimson</td>
+                    </tr>
+                    <tr>
+                      <th>5</th>
+                      <td>Yancy Tear</td>
+                      <td>Community Outreach Specialist</td>
+                      <td>Wyman-Ledner</td>
+                      <td>Brazil</td>
+                      <td>5/22/2020</td>
+                      <td>Indigo</td>
+                    </tr>
+                    <tr>
+                      <th>6</th>
+                      <td>Irma Vasilik</td>
+                      <td>Editor</td>
+                      <td>Wiza, Bins and Emard</td>
+                      <td>Venezuela</td>
+                      <td>12/8/2020</td>
+                      <td>Purple</td>
+                    </tr>
+                    <tr>
+                      <th>7</th>
+                      <td>Meghann Durtnal</td>
+                      <td>Staff Accountant IV</td>
+                      <td>Schuster-Schimmel</td>
+                      <td>Philippines</td>
+                      <td>2/17/2021</td>
+                      <td>Yellow</td>
+                    </tr>
+                    <tr>
+                      <th>8</th>
+                      <td>Sammy Seston</td>
+                      <td>Accountant I</td>
+                      <td>O'Hara, Welch and Keebler</td>
+                      <td>Indonesia</td>
+                      <td>5/23/2020</td>
+                      <td>Crimson</td>
+                    </tr>
+                    <tr>
+                      <th>9</th>
+                      <td>Lesya Tinham</td>
+                      <td>Safety Technician IV</td>
+                      <td>Turner-Kuhlman</td>
+                      <td>Philippines</td>
+                      <td>2/21/2021</td>
+                      <td>Maroon</td>
+                    </tr>
+                    <tr>
+                      <th>10</th>
+                      <td>Zaneta Tewkesbury</td>
+                      <td>VP Marketing</td>
+                      <td>Sauer LLC</td>
+                      <td>Chad</td>
+                      <td>6/23/2020</td>
+                      <td>Green</td>
+                    </tr>
+                    <tr>
+                      <th>11</th>
+                      <td>Andy Tipple</td>
+                      <td>Librarian</td>
+                      <td>Hilpert Group</td>
+                      <td>Poland</td>
+                      <td>7/9/2020</td>
+                      <td>Indigo</td>
+                    </tr>
+                    <tr>
+                      <th>12</th>
+                      <td>Sophi Biles</td>
+                      <td>Recruiting Manager</td>
+                      <td>Gutmann Inc</td>
+                      <td>Indonesia</td>
+                      <td>2/12/2021</td>
+                      <td>Maroon</td>
+                    </tr>
+                    <tr>
+                      <th>13</th>
+                      <td>Florida Garces</td>
+                      <td>Web Developer IV</td>
+                      <td>Gaylord, Pacocha and Baumbach</td>
+                      <td>Poland</td>
+                      <td>5/31/2020</td>
+                      <td>Purple</td>
+                    </tr>
+                    <tr>
+                      <th>14</th>
+                      <td>Maribeth Popping</td>
+                      <td>Analyst Programmer</td>
+                      <td>Deckow-Pouros</td>
+                      <td>Portugal</td>
+                      <td>4/27/2021</td>
+                      <td>Aquamarine</td>
+                    </tr>
+                    <tr>
+                      <th>15</th>
+                      <td>Moritz Dryburgh</td>
+                      <td>Dental Hygienist</td>
+                      <td>Schiller, Cole and Hackett</td>
+                      <td>Sri Lanka</td>
+                      <td>8/8/2020</td>
+                      <td>Crimson</td>
+                    </tr>
+                    <tr>
+                      <th>16</th>
+                      <td>Reid Semiras</td>
+                      <td>Teacher</td>
+                      <td>Sporer, Sipes and Rogahn</td>
+                      <td>Poland</td>
+                      <td>7/30/2020</td>
+                      <td>Green</td>
+                    </tr>
+                    <tr>
+                      <th>17</th>
+                      <td>Alec Lethby</td>
+                      <td>Teacher</td>
+                      <td>Reichel, Glover and Hamill</td>
+                      <td>China</td>
+                      <td>2/28/2021</td>
+                      <td>Khaki</td>
+                    </tr>
+                    <tr>
+                      <th>18</th>
+                      <td>Aland Wilber</td>
+                      <td>Quality Control Specialist</td>
+                      <td>Kshlerin, Rogahn and Swaniawski</td>
+                      <td>Czech Republic</td>
+                      <td>9/29/2020</td>
+                      <td>Purple</td>
+                    </tr>
+                    <tr>
+                      <th>19</th>
+                      <td>Teddie Duerden</td>
+                      <td>Staff Accountant III</td>
+                      <td>Pouros, Ullrich and Windler</td>
+                      <td>France</td>
+                      <td>10/27/2020</td>
+                      <td>Aquamarine</td>
+                    </tr>
+                    <tr>
+                      <th>20</th>
+                      <td>Lorelei Blackstone</td>
+                      <td>Data Coordiator</td>
+                      <td>Witting, Kutch and Greenfelder</td>
+                      <td>Kazakhstan</td>
+                      <td>6/3/2020</td>
+                      <td>Red</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- tab contents  -->
-        <div role="tablist" class="tabs w-screen grid-cols-3 mt-40 text-white font-bold transition-all duration-500">
-            <input type="radio" name="my_tabs_1" role="tab"
-                class="tab text-xl checked:border-b-4 checked:border-white  transition-all duration-200 ease-linear "
-                aria-label="Notice Board" />
-
-            <!-- Notice board tab content  -->
-            <div role="tabpanel" class="tab-content text-black p-10 text-center">
-                <div class="grid grid-cols-5 mx-24 my-12 gap-10">
-                    <div class="col-span-3 bg-white flex flex-col items-center">
-                        <h1 class=" text-xl font-bold text-white px-4 py-2 w-full"
-                            style="background: linear-gradient(90deg, #1b8af1, #873eed)">Circulars/Announcements</h1>
-                        <div class="grid auto-rows-min w-full mx-8 px-8 my-5 h-[30rem] overflow-y-scroll gap-y-6">
-                            <% for( let index=0; index < 5; index++ ) { %>
-                                <div class="flex items-start gap-2.5">
-                                    <div id="profile_pic" class="avatar">
-                                        <div class="w-12 h-auto rounded-full">
-                                            <img
-                                                src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="flex flex-col w-full leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl">
-                                        <div class="flex items-center rtl:space-x-reverse justify-between">
-                                            <span class="text-sm font-semibold text-gray-900">IIITS Academic Office<span
-                                                    class="text-sm font-normal text-gray-500 ml-2">11:56</span></span>
-                                            <span class="text-sm font-normal text-gray-500">24/03/24</span>
-                                        </div>
-                                        <p class="text-sm font-normal py-2.5 text-gray-900 text-left">Dear students,<br>
-
-                                            Wi-Fi Internet bandwidth speed increased. Check and if any issues mail to
-                                            hosteloffice@iiits.in and it support.</p>
-                                    </div>
-                                </div>
-                                <% } %>
-
-                        </div>
-                    </div>
-                    <div class="col-span-2 bg-white flex flex-col items-center">
-                        <h1 class=" text-xl font-bold text-white px-4 py-2 w-full"
-                            style="background: linear-gradient(90deg, #1b8af1, #873eed)">Important Events/Dates</h1>
-                    </div>
-                </div>
-                <div class="my-12 mx-40">
-                    <div class="bg-white flex flex-col items-center">
-                        <h1 class=" text-xl font-bold text-white px-4 py-2 w-full"
-                            style="background: linear-gradient(90deg, #1b8af1, #873eed)">Entry/Exit Register</h1>
-                        <div class="overflow-x-auto h-[30rem] w-full px-20">
-                            <table class="table table-xs table-pin-rows font-medium my-5">
-                                <thead class="text-base bg-white">
-                                    <tr class="bg-white">
-                                        <th></th>
-                                        <th>Name</th>
-                                        <th>Roll number</th>
-                                        <th>Purpose</th>
-                                        <th>Room number</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th>1</th>
-                                        <td>Shankar Vijay</td>
-                                        <td>S20230010232</td>
-                                        <td>Home</td>
-                                        <td>523</td>
-                                        <td>12/04/2024</td>
-                                        <td>10:17</td>
-                                    </tr>
-                                    <tr>
-                                        <th>2</th>
-                                        <td>Hart Hagerty</td>
-                                        <td>Desktop Support Technician</td>
-                                        <td>Zemlak, Daniel and Leannon</td>
-                                        <td>United States</td>
-                                        <td>12/5/2020</td>
-                                        <td>Purple</td>
-                                    </tr>
-                                    <tr>
-                                        <th>3</th>
-                                        <td>Brice Swyre</td>
-                                        <td>Tax Accountant</td>
-                                        <td>Carroll Group</td>
-                                        <td>China</td>
-                                        <td>8/15/2020</td>
-                                        <td>Red</td>
-                                    </tr>
-                                    <tr>
-                                        <th>4</th>
-                                        <td>Marjy Ferencz</td>
-                                        <td>Office Assistant I</td>
-                                        <td>Rowe-Schoen</td>
-                                        <td>Russia</td>
-                                        <td>3/25/2021</td>
-                                        <td>Crimson</td>
-                                    </tr>
-                                    <tr>
-                                        <th>5</th>
-                                        <td>Yancy Tear</td>
-                                        <td>Community Outreach Specialist</td>
-                                        <td>Wyman-Ledner</td>
-                                        <td>Brazil</td>
-                                        <td>5/22/2020</td>
-                                        <td>Indigo</td>
-                                    </tr>
-                                    <tr>
-                                        <th>6</th>
-                                        <td>Irma Vasilik</td>
-                                        <td>Editor</td>
-                                        <td>Wiza, Bins and Emard</td>
-                                        <td>Venezuela</td>
-                                        <td>12/8/2020</td>
-                                        <td>Purple</td>
-                                    </tr>
-                                    <tr>
-                                        <th>7</th>
-                                        <td>Meghann Durtnal</td>
-                                        <td>Staff Accountant IV</td>
-                                        <td>Schuster-Schimmel</td>
-                                        <td>Philippines</td>
-                                        <td>2/17/2021</td>
-                                        <td>Yellow</td>
-                                    </tr>
-                                    <tr>
-                                        <th>8</th>
-                                        <td>Sammy Seston</td>
-                                        <td>Accountant I</td>
-                                        <td>O'Hara, Welch and Keebler</td>
-                                        <td>Indonesia</td>
-                                        <td>5/23/2020</td>
-                                        <td>Crimson</td>
-                                    </tr>
-                                    <tr>
-                                        <th>9</th>
-                                        <td>Lesya Tinham</td>
-                                        <td>Safety Technician IV</td>
-                                        <td>Turner-Kuhlman</td>
-                                        <td>Philippines</td>
-                                        <td>2/21/2021</td>
-                                        <td>Maroon</td>
-                                    </tr>
-                                    <tr>
-                                        <th>10</th>
-                                        <td>Zaneta Tewkesbury</td>
-                                        <td>VP Marketing</td>
-                                        <td>Sauer LLC</td>
-                                        <td>Chad</td>
-                                        <td>6/23/2020</td>
-                                        <td>Green</td>
-                                    </tr>
-                                    <tr>
-                                        <th>11</th>
-                                        <td>Andy Tipple</td>
-                                        <td>Librarian</td>
-                                        <td>Hilpert Group</td>
-                                        <td>Poland</td>
-                                        <td>7/9/2020</td>
-                                        <td>Indigo</td>
-                                    </tr>
-                                    <tr>
-                                        <th>12</th>
-                                        <td>Sophi Biles</td>
-                                        <td>Recruiting Manager</td>
-                                        <td>Gutmann Inc</td>
-                                        <td>Indonesia</td>
-                                        <td>2/12/2021</td>
-                                        <td>Maroon</td>
-                                    </tr>
-                                    <tr>
-                                        <th>13</th>
-                                        <td>Florida Garces</td>
-                                        <td>Web Developer IV</td>
-                                        <td>Gaylord, Pacocha and Baumbach</td>
-                                        <td>Poland</td>
-                                        <td>5/31/2020</td>
-                                        <td>Purple</td>
-                                    </tr>
-                                    <tr>
-                                        <th>14</th>
-                                        <td>Maribeth Popping</td>
-                                        <td>Analyst Programmer</td>
-                                        <td>Deckow-Pouros</td>
-                                        <td>Portugal</td>
-                                        <td>4/27/2021</td>
-                                        <td>Aquamarine</td>
-                                    </tr>
-                                    <tr>
-                                        <th>15</th>
-                                        <td>Moritz Dryburgh</td>
-                                        <td>Dental Hygienist</td>
-                                        <td>Schiller, Cole and Hackett</td>
-                                        <td>Sri Lanka</td>
-                                        <td>8/8/2020</td>
-                                        <td>Crimson</td>
-                                    </tr>
-                                    <tr>
-                                        <th>16</th>
-                                        <td>Reid Semiras</td>
-                                        <td>Teacher</td>
-                                        <td>Sporer, Sipes and Rogahn</td>
-                                        <td>Poland</td>
-                                        <td>7/30/2020</td>
-                                        <td>Green</td>
-                                    </tr>
-                                    <tr>
-                                        <th>17</th>
-                                        <td>Alec Lethby</td>
-                                        <td>Teacher</td>
-                                        <td>Reichel, Glover and Hamill</td>
-                                        <td>China</td>
-                                        <td>2/28/2021</td>
-                                        <td>Khaki</td>
-                                    </tr>
-                                    <tr>
-                                        <th>18</th>
-                                        <td>Aland Wilber</td>
-                                        <td>Quality Control Specialist</td>
-                                        <td>Kshlerin, Rogahn and Swaniawski</td>
-                                        <td>Czech Republic</td>
-                                        <td>9/29/2020</td>
-                                        <td>Purple</td>
-                                    </tr>
-                                    <tr>
-                                        <th>19</th>
-                                        <td>Teddie Duerden</td>
-                                        <td>Staff Accountant III</td>
-                                        <td>Pouros, Ullrich and Windler</td>
-                                        <td>France</td>
-                                        <td>10/27/2020</td>
-                                        <td>Aquamarine</td>
-                                    </tr>
-                                    <tr>
-                                        <th>20</th>
-                                        <td>Lorelei Blackstone</td>
-                                        <td>Data Coordiator</td>
-                                        <td>Witting, Kutch and Greenfelder</td>
-                                        <td>Kazakhstan</td>
-                                        <td>6/3/2020</td>
-                                        <td>Red</td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-            <input type="radio" name="my_tabs_1" role="tab"
-                class="tab text-xl checked:border-b-4 checked:border-white  transition-all duration-200 ease-linear "
-                aria-label="Problems" checked />
-            <div role="tabpanel" class="tab-content text-center text-black p-10">
-
-                <!-- problems entire page content -->
-                <main id="entire_page" class="my-12 grid grid-cols-4 gap-12 mx-10">
-                    <div id="problems_column" class="col-span-3 bg-white flex flex-col items-center h-fit">
-                        <!-- <div class="bg-white flex flex-col items-center">
+        <input
+          type="radio"
+          name="my_tabs_1"
+          role="tab"
+          class="tab text-xl checked:border-b-4 checked:border-white transition-all duration-200 ease-linear"
+          aria-label="Problems"
+          checked
+        />
+        <div role="tabpanel" class="tab-content text-center text-black p-10">
+          <!-- problems entire page content -->
+          <main id="entire_page" class="my-12 grid grid-cols-4 gap-12 mx-10">
+            <div
+              id="problems_column"
+              class="col-span-3 bg-white flex flex-col items-center h-fit"
+            >
+              <!-- <div class="bg-white flex flex-col items-center">
                             <h1 class=" text-xl font-bold text-white px-4 py-2 w-full"
                                 style="background: linear-gradient(90deg, #1b8af1, #873eed)">Remarks</h1> -->
 
-                        <h1 class=" text-xl font-bold text-white px-4 py-2 w-full mb-10"
-                            style="background: linear-gradient(90deg, #1b8af1, #873eed)">CURRENT
-                            PROBLEMS</h1>
+              <h1
+                class="text-xl font-bold text-white px-4 py-2 w-full mb-10"
+                style="background: linear-gradient(90deg, #1b8af1, #873eed)"
+              >
+                CURRENT PROBLEMS
+              </h1>
 
+              <button
+                class="mt-4 text-lg w-[57rem] flex font-medium justify-center mx-20 p-1 bg-slate-200 text-gray-500 border-none rounded-sm"
+                onclick="my_modal_2.showModal()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-7 w-7 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
+                </svg>
+                Add a problem
+              </button>
+              <dialog id="my_modal_2" class="modal w-3/4 m-auto">
+                <div id="crud-modal" class="z-50 mx-24 my-auto">
+                  <div class="relative p-4 w-full">
+                    <!-- Modal content -->
+                    <div
+                      class="relative bg-white rounded-lg shadow dark:bg-gray-700"
+                    >
+                      <!-- Modal header -->
+                      <div
+                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+                      >
+                        <h3
+                          class="text-lg font-semibold text-gray-900 dark:text-white"
+                        >
+                          Create New Problem
+                        </h3>
                         <button
-                            class="mt-4 text-lg w-[57rem] flex font-medium justify-center mx-20 p-1 bg-slate-200 text-gray-500 border-none rounded-sm"
-                            onclick="my_modal_2.showModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-2" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Add a problem</button>
-                        <dialog id="my_modal_2" class="modal w-3/4 m-auto">
-                            <div id="crud-modal" class="z-50 mx-24 my-auto">
-                                <div class="relative p-4 w-full ">
-                                    <!-- Modal content -->
-                                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
-                                        <!-- Modal header -->
-                                        <div
-                                            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                                Create New Problem
-                                            </h3>
-                                            <button onclick="my_modal_2.close()" type="button"
-                                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                data-modal-toggle="crud-modal">
-                                                <svg class="w-3 h-3" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2"
-                                                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                </svg>
-                                                <span class="sr-only">Close modal</span>
-                                            </button>
+                          onclick="my_modal_2.close()"
+                          type="button"
+                          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          data-modal-toggle="crud-modal"
+                        >
+                          <svg
+                            class="w-3 h-3"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 14"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                            />
+                          </svg>
+                          <span class="sr-only">Close modal</span>
+                        </button>
+                      </div>
+                      <!-- Modal body -->
+                      <form
+                        class="p-4 md:p-5"
+                        action="/services/problems"
+                        method="post"
+                      >
+                        <div class="grid gap-4 mb-4 grid-cols-7">
+                          <div class="col-span-3">
+                            <label
+                              for="name"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Name</label
+                            >
+                            <input
+                              type="text"
+                              name="name"
+                              id="name"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Type your name"
+                              required=""
+                            />
+                          </div>
+                          <div class="col-span-2">
+                            <label
+                              for="phone"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Phone no.</label
+                            >
+                            <input
+                              type="text"
+                              name="phone"
+                              id="phone"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Phone no."
+                              required=""
+                            />
+                          </div>
 
-                                        </div>
-                                        <!-- Modal body -->
-                                        <form class="p-4 md:p-5" action="/services/problems" method="post">
-                                            <div class="grid gap-4 mb-4 grid-cols-7">
-                                                <div class="col-span-3">
-                                                    <label for="name"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                                                    <input type="text" name="name" id="name"
-                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Type your name" required="">
-                                                </div>
-                                                <div class="col-span-2">
-                                                    <label for="phone"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
-                                                        no.</label>
-                                                    <input type="text" name="phone" id="phone"
-                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Phone no." required="">
-                                                </div>
+                          <div class="col-span-2">
+                            <label
+                              for="roll_number"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Roll no.</label
+                            >
+                            <input
+                              type="text"
+                              name="roll_number"
+                              id="roll_number"
+                              class="font-medium bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Roll number"
+                              required=""
+                            />
+                          </div>
+                          <div class="col-span-2">
+                            <label
+                              for="hostel"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Hostel</label
+                            >
+                            <input
+                              type="text"
+                              name="hostel"
+                              id="hostel"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Hostel"
+                              required=""
+                            />
+                          </div>
+                          <div class="col-span-2">
+                            <label
+                              for="room"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Room No.</label
+                            >
+                            <input
+                              type="number"
+                              name="room"
+                              id="room"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="xxx"
+                              required=""
+                            />
+                          </div>
 
-                                                <div class="col-span-2">
-                                                    <label for="roll_number"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Roll
-                                                        no.</label>
-                                                    <input type="text" name="roll_number" id="roll_number"
-                                                        class="font-medium bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Roll number" required="">
-                                                </div>
-                                                <div class="col-span-2">
-                                                    <label for="hostel"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hostel</label>
-                                                    <input type="text" name="hostel" id="hostel"
-                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Hostel" required="">
-                                                </div>
-                                                <div class="col-span-2">
-                                                    <label for="room"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Room
-                                                        No.</label>
-                                                    <input type="number" name="room" id="room"
-                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="xxx" required="">
-                                                </div>
-
-                                                <div class="col-span-3">
-                                                    <label for="category"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-                                                    <select id="category"
-                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                                        <option selected="">Select category</option>
-                                                        <option value="TV">Cleaning</option>
-                                                        <option value="PC">Plumbing</option>
-                                                        <option value="GA">Electricity</option>
-                                                        <option value="PH">Repair</option>
-                                                        <option value="PH">Other</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-span-4">
-                                                    <label for="description"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Problem
-                                                        Description</label>
-                                                    <textarea id="description" rows="4"
-                                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                        placeholder="Write problem description here"></textarea>
-                                                </div>
-                                                <div class="col-span-3">
-                                                    <label for="room"
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Add
-                                                        Image</label>
-                                                    <input type="file" name="image" id="image"
-                                                        class="file-input file-input-bordered file-input-primary w-full max-w-xs text-white text-sm"
-                                                        required="">
-                                                </div>
-
-                                            </div>
-                                            <button type="submit"
-                                                class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd"
-                                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                Add new problem
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </dialog>
-
-                        <div class="my-8 grid grid-cols-3 auto-rows-min gap-y-12 gap-x-16 h-[42rem] overflow-y-scroll px-16"
-                            id="grid">
-
-                            <% for( let problem of problems) { %>
-                                <% if(problem.isCompleted===false) { %>
-                                    <% for( let index=0; index < 4; index++ ) { %>
-
-
-                                        <div class="rounded-xl border-[0.5px] border-black">
-                                            <img class="rounded-t-xl" src="images/problem.jpg" alt="no image uploaded">
-                                            <h1 class="p-2 px-3 flex justify-between"><span class="">
-                                                    <%= problem.name %>
-                                                </span><span class="">13:50</span></h1>
-                                            <p class="px-4 text-sm font-normal text-left h-16 overflow-hidden">
-                                                <%= problem.text %>
-                                            </p>
-                                            <!-- //upvote downvote arrow svg buttons counter -->
-                                            <div class="flex justify-between p-2 mx-1">
-                                                <div class="flex items-center gap-x-1">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="h-6 w-6 text-gray-500  hover:bg-slate-100 active:bg-slate-200"
-                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                                    </svg>
-                                                    <span class="text-gray-500">0</span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="h-6 w-6 text-gray-500  hover:bg-slate-100 active:bg-slate-200"
-                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                                    </svg>
-                                                </div>
-                                                <button
-                                                    class="bg-blue-500 text-sm font-medium text-white px-3 py-1 border rounded-xl hover:bg-blue-700 hover:text-white hover:border-blue-700">
-                                                    Open
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <% } %>
-                                            <% } %>
-                                                <% } %>
+                          <div class="col-span-3">
+                            <label
+                              for="category"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Category</label
+                            >
+                            <select
+                              id="category"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            >
+                              <option selected="">Select category</option>
+                              <option value="TV">Cleaning</option>
+                              <option value="PC">Plumbing</option>
+                              <option value="GA">Electricity</option>
+                              <option value="PH">Repair</option>
+                              <option value="PH">Other</option>
+                            </select>
+                          </div>
+                          <div class="col-span-4">
+                            <label
+                              for="description"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Problem Description</label
+                            >
+                            <textarea
+                              id="description"
+                              rows="4"
+                              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              placeholder="Write problem description here"
+                            ></textarea>
+                          </div>
+                          <div class="col-span-3">
+                            <label
+                              for="room"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Add Image</label
+                            >
+                            <input
+                              type="file"
+                              name="image"
+                              id="image"
+                              class="file-input file-input-bordered file-input-primary w-full max-w-xs text-white text-sm"
+                              required=""
+                            />
+                          </div>
                         </div>
+                        <button
+                          type="submit"
+                          class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        >
+                          <svg
+                            class="me-1 -ms-1 w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                          Add new problem
+                        </button>
+                      </form>
                     </div>
-
-
-                    <div class="grid grid-rows-2 gap-12">
-                        <div class="bg-white flex flex-col items-center">
-                            <h1 class=" text-xl font-bold text-white px-4 py-2 w-full"
-                                style="background: linear-gradient(90deg, #1b8af1, #873eed)">Remarks</h1>
-                            <div
-                                class="my-4 grid auto-rows-min *:font-normal *:border-b-2 *:text-sm overflow-y-scroll h-[19.625rem]">
-                                <% for( let index=0; index < 6; index++ ) { %>
-                                    <div class="text-left px-2 mx-3 pb-2">
-                                        <div><span class="font-semibold text-base w-fit h-4">admin 1 : </span>
-                                            The problem has been
-                                            taken into
-                                            consideration</div>
-                                        <div class="font-semibold text-xs text-gray-500 flex flex-row-reverse gap-4">
-                                            <span id="date">24/03/24</span><span id="time">12:55 am</span>
-                                        </div>
-                                    </div>
-                                    <% } %>
-
-                            </div>
-                        </div>
-                        <div class="bg-white flex flex-col items-center">
-                            <h1 class=" text-xl font-bold text-white px-4 py-2 w-full"
-                                style="background: linear-gradient(90deg, #1b8af1, #873eed)">Statistics</h1>
-                        </div>
-                    </div>
-                </main>
-
-
-            </div>
-
-            <!-- chat input -->
-            <input type="radio" name="my_tabs_1" role="tab"
-                class="tab text-xl checked:border-b-4 checked:border-white transition-all duration-200 ease-linear "
-                aria-label="Chat" />
-            <div role="tabpanel" class="tab-content text-black p-10 text-center">
-                <div class="my-12 bg-white mx-32 p-10 flex flex-col">
-                    <h1 class="font-semibold text-3xl text-center border-b-4 w-fit place-self-center" style="background: linear-gradient(90deg, #1b8af1, #873eed);
-                        -webkit-text-fill-color: transparent;
-                        -webkit-background-clip: text;
-                        border-image: linear-gradient(90deg, #1b8af1, #873eed) 6; ">Join a Chatroom</h1>
-
-                    <div class="my-10 grid grid-cols-4 gap-20 mx-6 *:h-30 *:bg-slate-300">
-                        <% for( let index=0; index < 5; index++ ) { %>
-                            <div class="bg-white rounded-lg shadow-md p-4">
-                                <h1 class="text-xl font-semibold">Chatroom 1</h1>
-                                <p class="text-gray-500">Description</p>
-                                <button class="bg-blue-500 text-white px-4 py-1 rounded-lg">Join</button>
-                            </div>
-                            <% } %>
-                                <!-- //create a chatroom with + sign svg -->
-                                <div
-                                    class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center justify-center cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-500" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                    <h1 class=" text-gray-500">Create a Chatroom</h1>
-                                </div>
-                    </div>
+                  </div>
                 </div>
-            </div>
-        </div>
-</body>
-<%- include('partials/footer.ejs') %>
-    <script src="/js/services.js"></script>
+              </dialog>
 
+              <div
+                class="my-8 grid grid-cols-3 auto-rows-min gap-y-12 gap-x-16 h-[42rem] overflow-y-scroll px-16"
+                id="grid"
+              >
+                <% for( let problem of problems) { %> <%
+                if(problem.isCompleted===false) { %> <% for( let index=0; index
+                < 4; index++ ) { %>
+
+                <div class="rounded-xl border-[0.5px] border-black">
+                  <img
+                    class="rounded-t-xl"
+                    src="images/problem.jpg"
+                    alt="no image uploaded"
+                  />
+                  <h1 class="p-2 px-3 flex justify-between">
+                    <span class=""> <%= problem.name %> </span
+                    ><span class="">13:50</span>
+                  </h1>
+                  <p
+                    class="px-4 text-sm font-normal text-left h-16 overflow-hidden"
+                  >
+                    <%= problem.text %>
+                  </p>
+                  <!-- //upvote downvote arrow svg buttons counter -->
+                  <div class="flex justify-between p-2 mx-1">
+                    <div class="flex items-center gap-x-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 text-gray-500 hover:bg-slate-100 active:bg-slate-200"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 15l7-7 7 7"
+                        ></path>
+                      </svg>
+                      <span class="text-gray-500">0</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 text-gray-500 hover:bg-slate-100 active:bg-slate-200"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        ></path>
+                      </svg>
+                    </div>
+                    <button
+                      class="bg-blue-500 text-sm font-medium text-white px-3 py-1 border rounded-xl hover:bg-blue-700 hover:text-white hover:border-blue-700"
+                    >
+                      Open
+                    </button>
+                  </div>
+                </div>
+                <% } %> <% } %> <% } %>
+              </div>
+            </div>
+
+            <div class="grid grid-rows-2 gap-12">
+              <div class="bg-white flex flex-col items-center">
+                <h1
+                  class="text-xl font-bold text-white px-4 py-2 w-full"
+                  style="background: linear-gradient(90deg, #1b8af1, #873eed)"
+                >
+                  Remarks
+                </h1>
+                <div
+                  class="my-4 grid auto-rows-min *:font-normal *:border-b-2 *:text-sm overflow-y-scroll h-[19.625rem]"
+                >
+                  <% for( let index=0; index < 6; index++ ) { %>
+                  <div class="text-left px-2 mx-3 pb-2">
+                    <div>
+                      <span class="font-semibold text-base w-fit h-4"
+                        >admin 1 :
+                      </span>
+                      The problem has been taken into consideration
+                    </div>
+                    <div
+                      class="font-semibold text-xs text-gray-500 flex flex-row-reverse gap-4"
+                    >
+                      <span id="date">24/03/24</span
+                      ><span id="time">12:55 am</span>
+                    </div>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+              <div class="bg-white flex flex-col items-center">
+                <h1
+                  class="text-xl font-bold text-white px-4 py-2 w-full"
+                  style="background: linear-gradient(90deg, #1b8af1, #873eed)"
+                >
+                  Statistics
+                </h1>
+              </div>
+            </div>
+          </main>
+        </div>
+
+        <!-- chat input -->
+        <input
+          type="radio"
+          name="my_tabs_1"
+          role="tab"
+          class="tab text-xl checked:border-b-4 checked:border-white transition-all duration-200 ease-linear"
+          aria-label="Chat"
+        />
+        <div role="tabpanel" class="tab-content text-black p-10 text-center">
+          <div class="my-12 bg-white mx-32 p-10 flex flex-col">
+            <h1
+              class="font-semibold text-3xl text-center border-b-4 w-fit place-self-center"
+              style="
+                background: linear-gradient(90deg, #1b8af1, #873eed);
+                -webkit-text-fill-color: transparent;
+                -webkit-background-clip: text;
+                border-image: linear-gradient(90deg, #1b8af1, #873eed) 6;
+              "
+            >
+              Join a Chatroom
+            </h1>
+
+            <div
+              class="my-10 grid grid-cols-4 gap-20 mx-6 *:h-30 *:bg-slate-300"
+            >
+              <% for( let index=0; index < 5; index++ ) { %>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h1 class="text-xl font-semibold">Chatroom 1</h1>
+                <p class="text-gray-500">Description</p>
+                <button class="bg-blue-500 text-white px-4 py-1 rounded-lg">
+                  Join
+                </button>
+              </div>
+              <% } %>
+              <!-- //create a chatroom with + sign svg -->
+              <div
+                class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center justify-center cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-10 w-10 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
+                </svg>
+                <h1 class="text-gray-500">Create a Chatroom</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <svg
+      class="wave-top"
+      viewBox="0 0 1439 147"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-1.000000, -14.000000)" fill-rule="nonzero">
+          <g class="wave" fill="#f8fafc">
+            <path
+              d="M1440,84 C1383.555,64.3 1342.555,51.3 1317,45 C1259.5,30.824 1206.707,25.526 1169,22 C1129.711,18.326 1044.426,18.475 980,22 C954.25,23.409 922.25,26.742 884,32 C845.122,37.787 818.455,42.121 804,45 C776.833,50.41 728.136,61.77 713,65 C660.023,76.309 621.544,87.729 584,94 C517.525,105.104 484.525,106.438 429,108 C379.49,106.484 342.823,104.484 319,102 C278.571,97.783 231.737,88.736 205,84 C154.629,75.076 86.296,57.743 0,32 L0,0 L1440,0 L1440,84 Z"
+            ></path>
+          </g>
+          <g transform="translate(1.000000, 15.000000)" fill="#FFFFFF">
+            <g
+              transform="translate(719.500000, 68.500000) rotate(-180.000000) translate(-719.500000, -68.500000)"
+            >
+              <path
+                d="M0,0 C90.7283404,0.927527913 147.912752,27.187927 291.910178,59.9119003 C387.908462,81.7278826 543.605069,89.334785 759,82.7326078 C469.336065,156.254352 216.336065,153.6679 0,74.9732496"
+                opacity="0.100000001"
+              ></path>
+              <path
+                d="M100,104.708498 C277.413333,72.2345949 426.147877,52.5246657 546.203633,45.5787101 C666.259389,38.6327546 810.524845,41.7979068 979,55.0741668 C931.069965,56.122511 810.303266,74.8455141 616.699903,111.243176 C423.096539,147.640838 250.863238,145.462612 100,104.708498 Z"
+                opacity="0.100000001"
+              ></path>
+              <path
+                d="M1046,51.6521276 C1130.83045,29.328812 1279.08318,17.607883 1439,40.1656806 L1439,120 C1271.17211,77.9435312 1140.17211,55.1609071 1046,51.6521276 Z"
+                opacity="0.200000003"
+              ></path>
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </body>
+  <%- include('partials/footer.ejs') %>
+  <script src="/js/services.js"></script>
 </html>
