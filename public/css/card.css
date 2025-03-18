@@ -1,0 +1,173 @@
+.card {
+  width: 240px; /* Reduced width */
+  height: 240px; /* Reduced height */
+  background: white;
+  border-radius: 24px; /* Slightly smaller border radius */
+  padding: 2px; /* Reduced padding */
+  position: relative;
+  box-shadow: #604b4a30 0px 50px 20px -30px; /* Adjusted shadow */
+  transition: all 0.5s ease-in-out;
+}
+
+.card .mail {
+  position: absolute;
+  right: 1.5rem; /* Adjusted position */
+  top: 1rem; /* Adjusted position */
+  background: transparent;
+  border: none;
+}
+
+.card .mail svg {
+  stroke: #fbb9b6;
+  stroke-width: 2.5px; /* Slightly thinner stroke */
+}
+
+.card .mail svg:hover {
+  stroke: #f55d56;
+}
+
+.card .profile-pic {
+  position: absolute;
+  width: calc(100% - 4px); /* Adjusted width */
+  height: calc(100% - 4px); /* Adjusted height */
+  top: 2px; /* Adjusted position */
+  left: 2px; /* Adjusted position */
+  border-radius: 22px; /* Slightly smaller border radius */
+  z-index: 1;
+  border: 0px solid #fbb9b6;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
+}
+
+.card .profile-pic img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-position: 0px 0px;
+  transition: all 0.5s ease-in-out 0s;
+}
+
+.card .profile-pic svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 0px 0px;
+  transform-origin: 45% 20%;
+  transition: all 0.5s ease-in-out 0s;
+}
+
+.card .bottom {
+  position: absolute;
+  bottom: 2px; /* Adjusted position */
+  left: 2px; /* Adjusted position */
+  right: 2px; /* Adjusted position */
+  background: #fbb9b6;
+  top: 80%;
+  border-radius: 22px; /* Slightly smaller border radius */
+  z-index: 2;
+  box-shadow: rgba(96, 75, 74, 0.188) 0px 4px 4px 0px inset; /* Adjusted shadow */
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
+}
+
+.card .bottom .content {
+  position: absolute;
+  bottom: 0;
+  left: 1rem; /* Adjusted padding */
+  right: 1rem; /* Adjusted padding */
+  height: 120px; /* Reduced height */
+}
+
+.card .bottom .content .name {
+  display: block;
+  font-size: 1rem; /* Smaller font size */
+  color: white;
+  font-weight: bold;
+}
+
+.card .bottom .content .about-me {
+  display: block;
+  font-size: 0.8rem; /* Smaller font size */
+  color: white;
+  margin-top: 0.75rem; /* Adjusted margin */
+}
+
+.card .bottom .bottom-bottom {
+  position: absolute;
+  bottom: 0.75rem; /* Adjusted position */
+  left: 1rem; /* Adjusted padding */
+  right: 1rem; /* Adjusted padding */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card .bottom .bottom-bottom .social-links-container {
+  display: flex;
+  gap: 0.75rem; /* Reduced gap */
+}
+
+.card .bottom .bottom-bottom .social-links-container svg {
+  height: 16px; /* Smaller icons */
+  fill: white;
+  filter: drop-shadow(0 3px 3px rgba(165, 132, 130, 0.133)); /* Adjusted shadow */
+}
+
+.card .bottom .bottom-bottom .social-links-container svg:hover {
+  fill: #f55d56;
+  transform: scale(1.2);
+}
+
+.card .bottom .bottom-bottom .button {
+  background: white;
+  color: #fbb9b6;
+  border: none;
+  border-radius: 16px; /* Slightly smaller border radius */
+  font-size: 0.5rem; /* Smaller font size */
+  padding: 0.3rem 0.5rem; /* Adjusted padding */
+  box-shadow: rgba(165, 132, 130, 0.133) 0px 3px 3px 0px; /* Adjusted shadow */
+}
+
+.card .bottom .bottom-bottom .button:hover {
+  background: #f55d56;
+  color: white;
+}
+
+.card:hover {
+  border-top-left-radius: 45px; /* Adjusted border radius */
+}
+
+.card:hover .bottom {
+  top: 20%;
+  border-radius: 60px 22px 22px 22px; /* Adjusted border radius */
+  transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
+}
+
+.card:hover .profile-pic {
+  width: 80px; /* Smaller profile picture */
+  height: 80px; /* Smaller profile picture */
+  aspect-ratio: 1;
+  top: 8px; /* Adjusted position */
+  left: 8px; /* Adjusted position */
+  border-radius: 50%;
+  z-index: 3;
+  border: 5px solid #fbb9b6; /* Thinner border */
+  box-shadow: rgba(96, 75, 74, 0.188) 0px 3px 3px 0px; /* Adjusted shadow */
+  transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
+}
+
+.card:hover .profile-pic:hover {
+  transform: scale(1.3);
+  border-radius: 0px;
+}
+
+.card:hover .profile-pic img {
+  transform: scale(2); /* Adjusted scale */
+  object-position: 0px 20px; /* Adjusted position */
+  transition: all 0.5s ease-in-out 0.5s;
+}
+
+.card:hover .profile-pic svg {
+  transform: scale(2); /* Adjusted scale */
+  transition: all 0.5s ease-in-out 0.5s;
+}
