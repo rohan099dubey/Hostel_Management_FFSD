@@ -357,9 +357,11 @@ sequelize.sync({ force: true })
     app.post('/feedback', async (req, res) => {
         try {
           const { rating, comment, day, mealType } = req.body;
+          const sanitizedComment = comment.replace(/[\r\n]+/g, ' ').trim();
+
           const newFeedback = {
             rating: rating || 'No rating provided',
-            comment: comment || 'No comment provided',
+            comment: sanitizedComment || 'No comment provided',
             day: day || 'Unknown day',
             mealType: mealType || 'Unknown meal type',
             createdAt: new Date().toISOString()
