@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostelia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-6xl mx-auto py-10">
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-800 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-3 rounded-md">
+                Circulars / Announcements
+            </h1>
+
+            <!-- Add Announcement Button (Visible Only for Warden) -->
+            <% if (role === 'student') { %>
+                <button onclick="openModal()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg mt-4 transition duration-200">
+                    + Add Announcement
+                </button>
+            <% } %>
+
+            <!-- Announcement List -->
+            <div class="mt-6 space-y-6 max-h-[30rem] overflow-y-auto">
+              <% announcements.forEach(announcement => { %>
+                <div class="bg-white shadow-md p-4 rounded-lg flex items-start gap-4">
+                    <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" 
+                         class="w-12 h-12 rounded-full border">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-semibold text-gray-900">Hostel Office</h3>
+                            <span class="text-sm text-gray-500"><%= new Date(announcement.createdAt).toLocaleDateString() %></span>
+                        </div>
+                        <p class="text-gray-700 mt-2 leading-relaxed">
+                            <strong><%= announcement.title %></strong> <br>
+                            <%= announcement.message %>
+                        </p>
+                    </div>
+                </div>
+            <% }); %>
+            
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Announcement -->
+    <div id="announcementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md transition-transform transform scale-95">
+            <h2 class="text-xl font-bold text-gray-900">Add New Announcement</h2>
+            
+            <form action="/services/announcement" method="POST" class="mt-4 space-y-4">
+                <div>
+                    <label class="block font-medium text-gray-700">Title</label>
+                    <input type="text" name="title" 
+                           class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                           required>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-gray-700">Message</label>
+                    <textarea name="message" rows="4"
+                              class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                              required></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal()" 
+                            class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-2 px-4 rounded-md transition">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript for Modal -->
+    <script>
+        function openModal() {
+            document.getElementById("announcementModal").classList.remove("hidden");
+            document.getElementById("announcementModal").querySelector("div").classList.add("scale-100");
+        }
+
+        function closeModal() {
+            document.getElementById("announcementModal").classList.add("hidden");
+        }
+    </script>
+
+    <%- include('partials/footer.ejs') %>
+    <script src="/js/navbar.js"></script>
+</body>
+</html>

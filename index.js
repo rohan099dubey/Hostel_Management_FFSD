@@ -13,6 +13,8 @@ const jwt = require('jsonwebtoken');
 // Database configurations
 const sequelize = require('./config/database');
 const User = require('./models/user');
+const Announcement = require('./models/announcement'); // Import Announcement model
+
 
 
 // Configure express app
@@ -20,6 +22,9 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true })); // Needed for form submissions
+
+
 
 moment().format();
 
@@ -106,6 +111,8 @@ const signup = async (req, res) => {
             await newUser.save();
             console.log("User created successfully")
             console.log(newUser)
+            res.cookie("userid" , newUser.userId)
+            res.cookie("role" , newUser.role)
             return res.status(201).json({
                 userId: newUser.userId,
                 name: newUser.name,
@@ -159,16 +166,17 @@ const login = async (req, res) => {
 
         console.log("user found");
         console.log(user);
-
+        res.cookie("role" , newUser.role)
+        res.cookie("userid" , newUser.userId)   
         return res.status(200).json({
             userId: user.userId,
             name: user.name,
             rollNo: user.rollNo,
             email: user.email,
             hostel: user.hostel,
-            roomNo: user.roomNo,
+            roomNo: user.roomNo,        
             year: user.year,
-            role: user.role
+            role: user.role         
         });
 
     } catch (error) {
@@ -200,8 +208,52 @@ app.get('/services', async (req, res) => {
 })
 
 
+app.get("/services/announcements", async (req, res) => {
+    const { role } = req.cookies; // Get user role
+
+    try {
+        // Fetch all announcements from the database
+        const announcements = await Announcement.findAll({
+            order: [['createdAt', 'DESC']], // ✅ Correct! 'createdAt' exists
+        });
+        
+
+        res.render("announcements.ejs", { role, announcements }); // Send to EJS
+    } catch (error) {
+        console.error("Error fetching announcements:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+app.post("/services/announcement", async (req, res) => {
+    const { title, message } = req.body;
+
+    if (!title || !message) {
+        return res.status(400).send("No title or message provided");
+    }
+
+    try {
+        // Save announcement in DB (assuming you have an Announcement model)
+        const newAnnouncement = await Announcement.create({
+            title,
+            message,
+            date: new Date() // Save timestamp
+        });
+
+        console.log("Announcement Created:", newAnnouncement);
+
+        // Redirect to announcements page
+        res.redirect("/services/announcements");
+
+    } catch (error) {
+        console.error("Error creating announcement:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
 app.get('/problems', async (req, res) => {
-    const problems = await Problem.find({});
+    const problems = {}
     res.render('problems.ejs', { problems });
 })
 
@@ -259,7 +311,7 @@ const dashboardData = {
             { type: 'mess', text: 'Mess menu updated for next week', time: '3 hours ago' }
         ]
     }
-};
+};  
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is listening on port ${process.env.PORT}`);
