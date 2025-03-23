@@ -209,16 +209,15 @@ app.get('/services', async (req, res) => {
 
 
 app.get("/services/announcements", async (req, res) => {
-    const { role } = req.cookies; // Get user role
+    const { role } = req.cookies; 
 
     try {
-        // Fetch all announcements from the database
         const announcements = await Announcement.findAll({
-            order: [['createdAt', 'DESC']], // ✅ Correct! 'createdAt' exists
+            order: [['createdAt', 'DESC']], 
         });
         
 
-        res.render("announcements.ejs", { role, announcements }); // Send to EJS
+        res.render("announcements.ejs", { role, announcements }); 
     } catch (error) {
         console.error("Error fetching announcements:", error);
         res.status(500).send("Internal Server Error");
@@ -232,16 +231,16 @@ app.post("/services/announcement", async (req, res) => {
     }
 
     try {
-        // Save announcement in DB (assuming you have an Announcement model)
+     
         const newAnnouncement = await Announcement.create({
             title,
             message,
-            date: new Date() // Save timestamp
+            date: new Date()
         });
 
         console.log("Announcement Created:", newAnnouncement);
 
-        // Redirect to announcements page
+
         res.redirect("/services/announcements");
 
     } catch (error) {
@@ -250,6 +249,20 @@ app.post("/services/announcement", async (req, res) => {
     }
 });
 
+app.post('/delete-announcement/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find the announcement by ID and delete it
+        await Announcement.destroy({ where: { id } });
+
+        // Redirect back to announcements page
+        res.redirect('/services/announcements');
+    } catch (error) {
+        console.error("Error deleting announcement:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 
 app.get('/problems', async (req, res) => {

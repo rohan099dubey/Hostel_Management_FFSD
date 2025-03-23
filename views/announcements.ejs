@@ -38,8 +38,19 @@
                             <%= announcement.message %>
                         </p>
                     </div>
+            
+                    <!-- Delete Button (Only for Warden/Admins) -->
+                    <% if (role === 'student' || role === 'admin') { %>
+                        <form action="/delete-announcement/<%= announcement.id %>" method="POST">
+                            <button type="submit" 
+                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                                🗑 Delete
+                            </button>
+                        </form>
+                    <% } %>
                 </div>
             <% }); %>
+            
             
             </div>
         </div>
