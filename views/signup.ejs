@@ -199,11 +199,28 @@
         .addEventListener("submit", async function (event) {
           event.preventDefault(); // Prevent default form submission
 
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+          // Validate email and password
+          if (!email.endsWith("@iiits.in")) {
+            document.getElementById("message").innerText =
+              "Use valid email address";
+            return; // Stop form submission
+          }
+
+          if (password !== confirmPassword) {
+            document.getElementById("message").innerText =
+              "Passwords do not match.";
+            return; // Stop form submission
+          }
+
           const formData = {
             name: document.getElementById("name").value,
-            email: document.getElementById("email").value,
-            password: document.getElementById("password").value,
-            confirmPassword: document.getElementById("confirmPassword").value,
+            email: email,
+            password: password,
             rollNo: document.getElementById("rollNo").value,
             hostel: document.getElementById("hostel").value,
             roomNo: document.getElementById("roomNo").value,

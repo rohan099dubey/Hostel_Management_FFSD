@@ -11,10 +11,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs').promises;
 
+
 // Database configurations
 const sequelize = require('./config/database');
 const User = require('./models/user');
 const Announcement = require('./models/announcement'); // Import Announcement model
+const { problems, entryExit } = require('./config/data');
+
 
 
 
@@ -112,8 +115,8 @@ const signup = async (req, res) => {
             await newUser.save();
             console.log("User created successfully")
             console.log(newUser)
-            res.cookie("userid" , newUser.userId)
-            res.cookie("role" , newUser.role)
+            res.cookie("userid", newUser.userId)
+            res.cookie("role", newUser.role)
             return res.status(201).json({
                 userId: newUser.userId,
                 name: newUser.name,
@@ -167,17 +170,17 @@ const login = async (req, res) => {
 
         console.log("user found");
         console.log(user);
-        res.cookie("role" , newUser.role)
-        res.cookie("userid" , newUser.userId)   
+        res.cookie("role", newUser.role)
+        res.cookie("userid", newUser.userId)
         return res.status(200).json({
             userId: user.userId,
             name: user.name,
             rollNo: user.rollNo,
             email: user.email,
             hostel: user.hostel,
-            roomNo: user.roomNo,        
+            roomNo: user.roomNo,
             year: user.year,
-            role: user.role         
+            role: user.role
         });
 
     } catch (error) {
@@ -204,21 +207,20 @@ app.post("/auth/logout", logout)
 
 
 app.get('/services', async (req, res) => {
-    const problems = await Problem.find({});
-    res.render('services.ejs', { problems });
+    res.render('services.ejs');
 })
 
 
 app.get("/services/announcements", async (req, res) => {
-    const { role } = req.cookies; 
+    const { role } = req.cookies;
 
     try {
         const announcements = await Announcement.findAll({
-            order: [['createdAt', 'DESC']], 
+            order: [['createdAt', 'DESC']],
         });
-        
 
-        res.render("announcements.ejs", { role, announcements }); 
+
+        res.render("announcements.ejs", { role, announcements });
     } catch (error) {
         console.error("Error fetching announcements:", error);
         res.status(500).send("Internal Server Error");
@@ -232,7 +234,7 @@ app.post("/services/announcement", async (req, res) => {
     }
 
     try {
-     
+
         const newAnnouncement = await Announcement.create({
             title,
             message,
@@ -265,6 +267,50 @@ app.post('/delete-announcement/:id', async (req, res) => {
     }
 });
 
+
+app.get('/services/hostel', async (req, res) => {
+    res.render('problems.ejs', { problems });
+})
+
+app.get('/services/problems', async (req, res) => {
+    res.render('problems.ejs', { problems });
+})
+
+app.post('/services/problems', async (req, res) => {
+    const { problemTitle, problemDescription, problemImage, studentId, studentName, hostel, roomNo, category, status } = req.body;
+    try {
+        if (!problemTitle || !problemDescription || !problemImage || !studentId || !studentName || !hostel || !roomNo || !category || !status) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        const newProblem = {
+            problemTitle,
+            problemDescription,
+            problemImage,
+            studentId,
+            studentName,
+            hostel,
+            roomNo,
+            category,
+            status
+        };
+
+        await Problem.create(newProblem);
+        await newProblem.save();
+
+        res.status(201).json(newProblem);
+    } catch (error) {
+        console.error("ERROR in creating problem:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+})
+
+app.get('/services/entry-exit', async (req, res) => {
+    res.render('entry_exit.ejs', { entryExit });
+})
+
+app.get('/services/chat-room', async (req, res) => {
+    res.render('chatRoom.ejs');
+})
 
 app.get('/problems', async (req, res) => {
     const problems = {}
@@ -342,52 +388,52 @@ sequelize.sync({ force: true })
     .catch((error) => {
         console.error('Error syncing database:', error);
     });
-    app.get('/menu', async (req, res) => {
-        try {
-            const menuItems = await MenuItems.findAll();
-            res.render('menu', { menuItems, query: req.query });
-        } catch (error) {
-            console.error('Error fetching menu items:', error);
-            res.status(500).send('Internal Server Error');
-        }
-    });
-    const feedbackFilePath = path.join(__dirname, 'feedbackData.json');
+app.get('/services/mess', async (req, res) => {
+    try {
+        const menuItems = await MenuItems.findAll();
+        res.render('menu', { menuItems, query: req.query });
+    } catch (error) {
+        console.error('Error fetching menu items:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+const feedbackFilePath = path.join(__dirname, 'feedbackData.json');
 
-    app.post('/feedback', async (req, res) => {
-        try {
-          const { rating, comment, day, mealType } = req.body;
-          const sanitizedComment = comment.replace(/[\r\n]+/g, ' ').trim();
+app.post('/feedback', async (req, res) => {
+    try {
+        const { rating, comment, day, mealType } = req.body;
+        const sanitizedComment = comment.replace(/[\r\n]+/g, ' ').trim();
 
-          const newFeedback = {
+        const newFeedback = {
             rating: rating || 'No rating provided',
             comment: sanitizedComment || 'No comment provided',
             day: day || 'Unknown day',
             mealType: mealType || 'Unknown meal type',
             createdAt: new Date().toISOString()
-          };
-      
-          let feedbackData = [];
-          try {
+        };
+
+        let feedbackData = [];
+        try {
             const data = await fs.readFile(feedbackFilePath, 'utf-8');
             // Check if data is empty; if so, initialize as empty array
             feedbackData = data.trim() ? JSON.parse(data) : [];
-          } catch (error) {
+        } catch (error) {
             // If the file doesn't exist, set feedbackData as empty array
             if (error.code !== 'ENOENT') {
-              throw error;
+                throw error;
             }
             feedbackData = [];
-          }
-      
-          feedbackData.push(newFeedback);
-      
-          await fs.writeFile(feedbackFilePath, JSON.stringify(feedbackData, null, 2));
-          res.redirect('/menu?feedback=success');
-        } catch (error) {
-          console.error('Error saving feedback:', error);
-          res.status(500).send(error.message);
         }
-      });
+
+        feedbackData.push(newFeedback);
+
+        await fs.writeFile(feedbackFilePath, JSON.stringify(feedbackData, null, 2));
+        res.redirect('/menu?feedback=success');
+    } catch (error) {
+        console.error('Error saving feedback:', error);
+        res.status(500).send(error.message);
+    }
+});
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is listening on port ${process.env.PORT}`);
