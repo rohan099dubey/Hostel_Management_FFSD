@@ -9,6 +9,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs').promises;
 
 // Database configurations
 const sequelize = require('./config/database');
@@ -324,8 +325,70 @@ const dashboardData = {
             { type: 'mess', text: 'Mess menu updated for next week', time: '3 hours ago' }
         ]
     }
-};  
+};
+const loadMenuData = require('./loadmenuData.js'); // Adjust the path
+
+// Load menu data on startup
+loadMenuData()
+//menu
+const { MenuItems, Feedback } = require('./models/menu.js');
+
+// Sync models with the database
+sequelize.sync({ force: true })
+    .then(() => {
+        console.log('Database synced successfully!');
+        return loadMenuData(); // Load menu data after syncing
+    })
+    .catch((error) => {
+        console.error('Error syncing database:', error);
+    });
+    app.get('/menu', async (req, res) => {
+        try {
+            const menuItems = await MenuItems.findAll();
+            res.render('menu', { menuItems, query: req.query });
+        } catch (error) {
+            console.error('Error fetching menu items:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+    const feedbackFilePath = path.join(__dirname, 'feedbackData.json');
+
+    app.post('/feedback', async (req, res) => {
+        try {
+          const { rating, comment, day, mealType } = req.body;
+          const sanitizedComment = comment.replace(/[\r\n]+/g, ' ').trim();
+
+          const newFeedback = {
+            rating: rating || 'No rating provided',
+            comment: sanitizedComment || 'No comment provided',
+            day: day || 'Unknown day',
+            mealType: mealType || 'Unknown meal type',
+            createdAt: new Date().toISOString()
+          };
+      
+          let feedbackData = [];
+          try {
+            const data = await fs.readFile(feedbackFilePath, 'utf-8');
+            // Check if data is empty; if so, initialize as empty array
+            feedbackData = data.trim() ? JSON.parse(data) : [];
+          } catch (error) {
+            // If the file doesn't exist, set feedbackData as empty array
+            if (error.code !== 'ENOENT') {
+              throw error;
+            }
+            feedbackData = [];
+          }
+      
+          feedbackData.push(newFeedback);
+      
+          await fs.writeFile(feedbackFilePath, JSON.stringify(feedbackData, null, 2));
+          res.redirect('/menu?feedback=success');
+        } catch (error) {
+          console.error('Error saving feedback:', error);
+          res.status(500).send(error.message);
+        }
+      });
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is listening on port ${process.env.PORT}`);
-})
+});
