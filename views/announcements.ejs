@@ -24,35 +24,28 @@
 
             <!-- Announcement List -->
             <div class="mt-6 space-y-6 max-h-[30rem] overflow-y-auto">
-              <% announcements.forEach(announcement => { %>
-                <div class="bg-white shadow-md p-4 rounded-lg flex items-start gap-4">
-                    <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" 
-                         class="w-12 h-12 rounded-full border">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-semibold text-gray-900">Hostel Office</h3>
-                            <span class="text-sm text-gray-500"><%= new Date(announcement.createdAt).toLocaleDateString() %></span>
-                        </div>
-                        <p class="text-gray-700 mt-2 leading-relaxed">
-                            <strong><%= announcement.title %></strong> <br>
-                            <%= announcement.message %>
-                        </p>
-                    </div>
-            
-                    <!-- Delete Button (Only for Warden/Admins) -->
-                    <% if (role === 'student' || role === 'admin') { %>
-                        <form action="/delete-announcement/<%= announcement.id %>" method="POST">
-                            <button type="submit" 
-                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition">
-                                🗑 Delete
-                            </button>
-                        </form>
-                    <% } %>
-                </div>
-            <% }); %>
-            
-            
-            </div>
+              <% if (announcements.length === 0) { %>
+                  <p class="text-gray-500 text-center">No announcements available.</p>
+              <% } else { %>
+                  <% announcements.forEach(announcement => { %>
+                      <div class="bg-white shadow-md p-4 rounded-lg flex items-start gap-4">
+                          <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" 
+                               class="w-12 h-12 rounded-full border">
+                          <div class="flex-1">
+                              <div class="flex justify-between items-center">
+                                  <h3 class="font-semibold text-gray-900">Hostel Office</h3>
+                                  <span class="text-sm text-gray-500"><%= new Date(announcement.createdAt).toLocaleDateString() %></span>
+                              </div>
+                              <p class="text-gray-700 mt-2 leading-relaxed">
+                                  <strong><%= announcement.title %></strong> <br>
+                                  <%= announcement.message %>
+                              </p>
+                          </div>
+                      </div>
+                  <% }); %>
+              <% } %>
+          </div>
+          
         </div>
     </div>
 
