@@ -1,0 +1,23 @@
+[
+  {
+    "rating": "No rating provided",
+    "comment": "No comment provided",
+    "day": "Unknown day",
+    "mealType": "Unknown meal type",
+    "createdAt": "2025-03-23T17:16:08.796Z"
+  },
+  {
+    "rating": "No rating provided",
+    "comment": "No comment provided",
+    "day": "Unknown day",
+    "mealType": "Unknown meal type",
+    "createdAt": "2025-03-23T17:19:36.554Z"
+  },
+  {
+    "rating": "2",
+    "comment": "bad\r\n",
+    "day": "Sunday",
+    "mealType": "Breakfast",
+    "createdAt": "2025-03-23T17:20:52.144Z"
+  }
+]
