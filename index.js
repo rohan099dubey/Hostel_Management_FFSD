@@ -305,18 +305,14 @@ app.post("/services/announcement", async (req, res) => {
     }
 });
 
-app.post('/delete-announcement/:id', async (req, res) => {
+app.delete("/announcements/delete/:id", async (req, res) => {
     try {
         const { id } = req.params;
-
-        // Find the announcement by ID and delete it
         await Announcement.destroy({ where: { id } });
-
-        // Redirect back to announcements page
-        res.redirect('/services/announcements');
+        res.status(200).send("Deleted Successfully");
     } catch (error) {
         console.error("Error deleting announcement:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Failed to delete");
     }
 });
 
