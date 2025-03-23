@@ -38,6 +38,43 @@ sequelize.authenticate()
     .then(() => console.log('Connected to SQLite in-memory database'))
     .catch(e => console.log('Error connecting to database:', e));
 
+    
+
+    async function seedAnnouncements() {
+        try {
+            const count = await Announcement.count(); // Check existing announcements
+            if (count === 0) {
+                await Announcement.bulkCreate([
+                    {
+                        title: "Wi-Fi Upgrade Notice",
+                        message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    },
+                    {
+                        title: "Mess Menu Update",
+                        message: "The new mess menu for April has been updated. Check the notice board or website for details.",
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    },
+                    {
+                        title: "Exam Schedule Released",
+                        message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                ]);
+                console.log("Dummy announcements added.");
+            }
+        } catch (error) {
+            console.error("Error seeding announcements:", error);
+        }
+    }
+    
+    // Run the function when the server starts
+    seedAnnouncements();
+    
+
 // routes 
 app.get('/', (req, res) => {
     res.render('homepage.ejs')
@@ -210,20 +247,38 @@ app.get('/services', async (req, res) => {
 
 
 app.get("/services/announcements", async (req, res) => {
-    const { role } = req.cookies; 
-
     try {
-        const announcements = await Announcement.findAll({
-            order: [['createdAt', 'DESC']], 
-        });
-        
+        let announcements = await Announcement.findAll({ order: [["createdAt", "DESC"]] });
 
-        res.render("announcements.ejs", { role, announcements }); 
+        const {role} = req.cookies
+        const dummyAnnouncements = [
+            {
+                title: "Wi-Fi Upgrade Notice",
+                message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
+                createdAt: new Date()
+            },
+            {
+                title: "Mess Menu Update",
+                message: "The new mess menu for April has been updated. Check the notice board or website for details.",
+                createdAt: new Date()
+            },
+            {
+                title: "Exam Schedule Released",
+                message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
+                createdAt: new Date()
+            }
+        ];
+
+        announcements = [...announcements, ...dummyAnnouncements];
+
+        res.render("announcements", { announcements, role});
     } catch (error) {
         console.error("Error fetching announcements:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Error fetching announcements");
     }
 });
+
+
 app.post("/services/announcement", async (req, res) => {
     const { title, message } = req.body;
 
@@ -250,18 +305,14 @@ app.post("/services/announcement", async (req, res) => {
     }
 });
 
-app.post('/delete-announcement/:id', async (req, res) => {
+app.delete("/announcements/delete/:id", async (req, res) => {
     try {
         const { id } = req.params;
-
-        // Find the announcement by ID and delete it
         await Announcement.destroy({ where: { id } });
-
-        // Redirect back to announcements page
-        res.redirect('/services/announcements');
+        res.status(200).send("Deleted Successfully");
     } catch (error) {
         console.error("Error deleting announcement:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Failed to delete");
     }
 });
 
