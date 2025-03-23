@@ -345,7 +345,6 @@ sequelize.sync({ force: true })
     app.get('/menu', async (req, res) => {
         try {
             const menuItems = await MenuItems.findAll();
-            console.log('Fetched menu items:', menuItems); // Debug output in console
             res.render('menu', { menuItems, query: req.query });
         } catch (error) {
             console.error('Error fetching menu items:', error);
