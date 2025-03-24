@@ -1,36 +1,87 @@
-const form = document.querySelector('#entry');
-const grid = document.querySelector('#grid');
+import { cloudinary } from "../config/cloudinary.js";
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const username = form.children.username.value;
-    const problemtext = form.children.problemtext.value;
+document
+    .getElementById("problemForm")
+    .addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-    const h1 = document.createElement('h1');
-    h1.classList = "username";
+        // Get form values
+        const form = event.target;
+        const problemTitle = form.problemTitle.value.trim();
+        const problemDescription = form.problemDescription.value.trim();
+        const problemImage = form.problemImage.files[0];
+        const roomNo = form.roomNo.value.trim();
+        const category = form.category.value;
+        const studentId = form.roll_number.value.trim();
+        const hostel = form.hostel.value;
 
-    const name = document.createElement('span');
-    name.innerText = username;
-    const date = document.createElement('span');
-    const d = new Date();
-    date.innerText = `${d.getHours()}:${d.getMinutes()}`
+        console.log("Form Data:", {
+            problemTitle,
+            problemDescription,
+            problemImage,
+            roomNo,
+            category,
+            studentId,
+            hostel,
+        });
 
-    h1.append(name);
-    h1.append(date);
+        // Check if all fields are filled
+        if (
+            !problemTitle ||
+            !problemDescription ||
+            !problemImage ||
+            !roomNo ||
+            !category ||
+            !studentId ||
+            !hostel
+        ) {
+            return alert("All fields are required.");
+        }
 
-    const p = document.createElement('p');
-    p.innerText = problemtext;
-    p.classList = "p-3"
+        try {
+            // Upload image to Cloudinary
+            const formData = new FormData();
+            formData.append("file", problemImage);
+            formData.append("upload_preset", "hostelia");
 
-    const div = document.createElement('div');
-    div.classList = "card";
-    div.append(h1);
-    div.append(p);
-    grid.prepend(div);
+            const cloudinaryRes = await fetch(
+                "https://api.cloudinary.com/v1_1/dyzoysf4v/image/upload",
+                { method: "POST", body: formData }
+            );
+            const cloudinaryData = await cloudinaryRes.json();
 
-    form.children.username.value = "";
-    form.children.problemtext.value = "";
+            console.log("Cloudinary Response:", cloudinaryData);
 
-    console.log(username);
-    console.log(problemtext);
-})
+            if (!cloudinaryData.secure_url)
+                return alert("Image upload failed.");
+
+            // Send problem data to backend
+            const response = await fetch("/services/problems/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    problemTitle,
+                    problemDescription,
+                    problemImage: cloudinaryData.secure_url,
+                    roomNo: Number(roomNo),
+                    category,
+                    studentId,
+                    hostel,
+                }),
+            });
+
+            console.log("Server Response:", response);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error adding problem:", errorData);
+                return alert("Error adding problem: " + errorData.message);
+            }
+
+            alert("Problem added successfully!");
+            form.reset();
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        }
+    });

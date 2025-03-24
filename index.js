@@ -2,8 +2,6 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const path = require('path');
-// const mongoose = require('mongoose');
-const Problem = require('./models/index.js')
 const moment = require('moment');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -13,13 +11,41 @@ const fs = require('fs').promises;
 
 
 // Database configurations
-const sequelize = require('./config/database');
-const User = require('./models/user');
-const Announcement = require('./models/announcement'); // Import Announcement model
-const { problems, entryExit } = require('./config/data');
+const sequelize = require('./config/database.js');
+const User = require('./models/user.js');
+const hostelProblem = require('./models/problem.js');
+const Announcement = require('./models/announcement.js'); // Import Announcement model
+const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
 
+//cloudinary 
+const { cloudinary } = require('./config/cloudianry.js');
 
+//multer 
+const multer = require("multer");
 
+// Configure Storage
+// Set storage engine
+const storage = multer.diskStorage({
+    destination: "./public/uploads/", // Store images in public/uploads/
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    fileFilter: (req, file, cb) => {
+        const fileTypes = /jpeg|jpg|png/;
+        const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimeType = fileTypes.test(file.mimetype);
+
+        if (mimeType && extName) {
+            return cb(null, true);
+        } else {
+            cb(new Error("Images only!"));
+        }
+    }
+});
 
 // Configure express app
 app.set('view engine', 'ejs');
@@ -41,42 +67,42 @@ sequelize.authenticate()
     .then(() => console.log('Connected to SQLite in-memory database'))
     .catch(e => console.log('Error connecting to database:', e));
 
-    
 
-    async function seedAnnouncements() {
-        try {
-            const count = await Announcement.count(); // Check existing announcements
-            if (count === 0) {
-                await Announcement.bulkCreate([
-                    {
-                        title: "Wi-Fi Upgrade Notice",
-                        message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                    },
-                    {
-                        title: "Mess Menu Update",
-                        message: "The new mess menu for April has been updated. Check the notice board or website for details.",
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                    },
-                    {
-                        title: "Exam Schedule Released",
-                        message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                    }
-                ]);
-                console.log("Dummy announcements added.");
-            }
-        } catch (error) {
-            console.error("Error seeding announcements:", error);
+
+async function seedAnnouncements() {
+    try {
+        const count = await Announcement.count(); // Check existing announcements
+        if (count === 0) {
+            await Announcement.bulkCreate([
+                {
+                    title: "Wi-Fi Upgrade Notice",
+                    message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                },
+                {
+                    title: "Mess Menu Update",
+                    message: "The new mess menu for April has been updated. Check the notice board or website for details.",
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                },
+                {
+                    title: "Exam Schedule Released",
+                    message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }
+            ]);
+            console.log("Dummy announcements added.");
         }
+    } catch (error) {
+        console.error("Error seeding announcements:", error);
     }
-    
-    // Run the function when the server starts
-    seedAnnouncements();
-    
+}
+
+// Run the function when the server starts
+seedAnnouncements();
+
 
 // routes 
 app.get('/', (req, res) => {
@@ -126,9 +152,11 @@ const signup = async (req, res) => {
             return res.status(400).json({ message: "Password must be at least 6 characters in length" });
         }
 
-        const user = await User.findOne({
+        const user1 = await User.findOne({
             where: { email }
         });
+        const user2 = userData.find(user => user.email === email);
+        const user = user1 || user2;
 
         if (!!user) {
             return res.status(400).json({ message: "User already exists / Email already in use" });
@@ -189,26 +217,37 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        const user = await User.findOne({ where: { email } });
+        const user2 = await User.findOne({ where: { email } });
+        const user1 = userData.find(user => user.email === email);
+        const user = user2 || user1;
 
         if (!user) {
             console.log("invalid user");
             return res.status(400).json({ message: "Invalid Credentials" });
         }
+        if (!user1) {
+            const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordCorrect) {
-            console.log("incorrect password");
-            return res.status(400).json({ message: "Invalid Credentials" });
+            if (!isPasswordCorrect) {
+                console.log("incorrect password");
+                return res.status(400).json({ message: "Invalid Credentials" });
+            }
         }
+
+        if (!user2) {
+            if (user1.password !== password) {
+                console.log("incorrect password");
+                return res.status(400).json({ message: "Invalid Credentials" });
+            }
+        }
+
 
         generateToken(user.userId, res);
 
         console.log("user found");
         console.log(user);
-        res.cookie("role", newUser.role)
-        res.cookie("userid", newUser.userId)
+        res.cookie("role", user.role)
+        res.cookie("userid", user.userId)
         return res.status(200).json({
             userId: user.userId,
             name: user.name,
@@ -253,7 +292,7 @@ app.get("/services/announcements", async (req, res) => {
     try {
         let announcements = await Announcement.findAll({ order: [["createdAt", "DESC"]] });
 
-        const {role} = req.cookies
+        const { role } = req.cookies
         const dummyAnnouncements = [
             {
                 title: "Wi-Fi Upgrade Notice",
@@ -274,7 +313,7 @@ app.get("/services/announcements", async (req, res) => {
 
         announcements = [...announcements, ...dummyAnnouncements];
 
-        res.render("announcements", { announcements, role});
+        res.render("announcements", { announcements, role });
     } catch (error) {
         console.error("Error fetching announcements:", error);
         res.status(500).send("Error fetching announcements");
@@ -320,41 +359,139 @@ app.delete("/announcements/delete/:id", async (req, res) => {
 });
 
 
-app.get('/services/hostel', async (req, res) => {
-    res.render('problems.ejs', { problems });
-})
+
 
 app.get('/services/problems', async (req, res) => {
-    res.render('problems.ejs', { problems });
+    let role = req.cookies.role;
+    let userID = req.cookies.userid;
+    console.log("User ID from cookies:", userID); // Debugging log
+
+    let user = await User.findOne({
+        where: { userId: userID },
+        attributes: { exclude: ['password'] }
+    });
+
+    if (!user) {
+        console.log("User not found in database, checking userData...");
+        user = userData.find(u => userID === u.userId);
+
+        if (!user) {
+            console.log("User not found in userData but not in database.");
+            return res.status(404).send("User not found in the database.");
+        }
+    }
+
+    console.log("User found:", user);
+
+    let userProblems1 = await hostelProblem.findAll({
+        where: { hostel: user.hostel }
+    });
+    let userProblems2 = dataProblems.filter(problem => user.hostel === problem.hostel);
+    let problems = [...userProblems1, ...userProblems2];
+    res.render('problems.ejs', { problems, role, userID });
 })
 
-app.post('/services/problems', async (req, res) => {
-    const { problemTitle, problemDescription, problemImage, studentId, studentName, hostel, roomNo, category, status } = req.body;
+// app.post('/services/problems/add', async (req, res) => {
+//     try {
+//         const { problemTitle, problemDescription, problemImage, roomNo, category, studentId, hostel } = req.body;
+
+//         console.log("Received Data:", req.body);
+
+//         // Validate required fields
+//         if (!problemTitle || !problemDescription || !problemImage || !studentId || !hostel || !roomNo || !category) {
+//             return res.status(400).json({ message: "All fields are required" });
+//         }
+
+//         // Validate data types
+//         if (typeof problemTitle !== "string" || typeof problemDescription !== "string" || typeof problemImage !== "string" ||
+//             typeof studentId !== "string" || typeof hostel !== "string" || isNaN(roomNo) ||
+//             !["Electrical", "Plumbing", "Painting", "Carpentry", "Cleaning", "Internet", "Furniture", "Pest Control", "Other"].includes(category)) {
+//             return res.status(400).json({ message: "Invalid data format" });
+//         }
+
+//         // Validate image URL
+//         const cloudinaryRegex = /^https:\/\/res\.cloudinary\.com\/[\w-]+\/image\/upload\/.+$/;
+//         if (!cloudinaryRegex.test(problemImage)) {
+//             return res.status(400).json({ message: "Invalid image URL" });
+//         }
+
+//         // Check for duplicate problem
+//         const existingProblem = await hostelProblem.findOne({ where: { problemTitle, studentId, hostel, roomNo } });
+//         if (existingProblem) {
+//             return res.status(400).json({ message: "You have already reported this problem." });
+//         }
+
+//         // Store problem
+//         const newProblem = await hostelProblem.create({ problemTitle, problemDescription, problemImage, studentId, hostel, roomNo, category, status: "Pending" });
+
+//         res.status(201).json({ message: "Problem reported successfully!", data: newProblem });
+
+//     } catch (error) {
+//         console.error("ERROR:", error);
+//         res.status(500).json({ message: "Internal Server Error", error: error.message });
+//     }
+// });
+app.post("/services/problems/add", upload.single("problemImage"), async (req, res) => {
     try {
-        if (!problemTitle || !problemDescription || !problemImage || !studentId || !studentName || !hostel || !roomNo || !category || !status) {
+        const { problemTitle, problemDescription, roomNo, category, studentId, hostel } = req.body;
+        if (!req.file) {
+            return res.status(400).json({ message: "Image upload is required" });
+        }
+
+        const problemImage = `/uploads/${req.file.filename}`; // Store image path relative to public folder
+
+        console.log("Received data:", req.body);
+        console.log("Uploaded file:", req.file);
+
+        if (!problemTitle || !problemDescription || !problemImage || !studentId || !hostel || !roomNo || !category) {
             return res.status(400).json({ message: "All fields are required" });
         }
+
         const newProblem = {
             problemTitle,
             problemDescription,
             problemImage,
             studentId,
-            studentName,
             hostel,
             roomNo,
             category,
-            status
+            status: "Pending"
         };
 
-        await Problem.create(newProblem);
-        await newProblem.save();
-
+        await hostelProblem.create(newProblem);
         res.status(201).json(newProblem);
     } catch (error) {
         console.error("ERROR in creating problem:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-})
+});
+
+
+app.post('/services/problems/statusChange', async (req, res) => {
+    const { problemId, status } = req.body;
+    try {
+        console.log("Received Data:", req.body);
+        let problem2 = null;
+        const problem1 = await hostelProblem.findOne({ where: { id: Number(problemId) } });
+        if (!problem1) {
+            problem2 = dataProblems.find(problem => problem.problemId === Number(problemId));
+            if (!problem2) {
+                return res.status(404).json({ message: "Problem not found" });
+            }
+        }
+
+        if (!!problem1) {
+            problem1.status = status;
+            await problem1.save();
+        } else if (!!problem2) {
+            problem2.status = status; // Update status for the in-memory problem
+        }
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        console.error("ERROR in status change:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 app.get('/services/entry-exit', async (req, res) => {
     res.render('entry_exit.ejs', { entryExit });

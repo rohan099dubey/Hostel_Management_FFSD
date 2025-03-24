@@ -1,20 +1,21 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Problem = sequelize.define('Problem', {
+const hostelProblem = sequelize.define('Problem', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
+    problemTitle: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    phone: {
-        type: DataTypes.STRING
+    problemDescription: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    rollnum: {
+    problemImage: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -22,27 +23,28 @@ const Problem = sequelize.define('Problem', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    roomnum: {
+    roomNo: {
         type: DataTypes.STRING,
         allowNull: false
     },
     category: {
-        type: DataTypes.STRING
+        type: DataTypes.ENUM('Electrical', 'Plumbing', 'Painting', 'Carpentry', 'Cleaning', 'Internet', 'Furniture', 'Pest Control', 'Other'),
+        allowNull: false
     },
-    text: {
-        type: DataTypes.TEXT,
+    studentId: {
+        type: DataTypes.STRING,
         allowNull: false
     },
     timeCreated: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     },
-    isCompleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
+    status: {
+        type: DataTypes.ENUM('Pending', 'Resolved', 'Rejected'),
+        allowNull: false
     }
 }, {
     timestamps: true
 });
 
-module.exports = Problem;
+module.exports = hostelProblem;
