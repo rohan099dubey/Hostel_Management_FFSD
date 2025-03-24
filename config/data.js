@@ -1,9 +1,9 @@
-const problems = [
+const dataProblems = [
     {
-        problemId: 1,
+        problemId: 100,
         problemTitle: "Broken Fan cutiya",
         problemDescription: "The ceiling fan in room 203 is not working properly and making unusual noise",
-        problemImage: "https://images.unsplash.com/photo-1621274283140-e4450435f2d4",
+        problemImage: "/uploads/1716633600421-fan.jpg",
         studentId: 101,
         roomNumber: 203,
         hostel: "BH-1",
@@ -11,10 +11,10 @@ const problems = [
         status: "Pending"
     },
     {
-        problemId: 2,
+        problemId: 102,
         problemTitle: "Water Leakage",
         problemDescription: "There is continuous water leakage from bathroom pipe causing water logging",
-        problemImage: "https://images.unsplash.com/photo-1585751092218-be8ef3a24d71",
+        problemImage: "/uploads/1716633600421-water.jpg",
         studentId: 102,
         roomNumber: 204,
         hostel: "BH-2",
@@ -22,10 +22,10 @@ const problems = [
         status: "Resolved"
     },
     {
-        problemId: 3,
+        problemId: 103,
         problemTitle: "Broken Chair",
         problemDescription: "The study chair in room 405 is broken and needs immediate replacement",
-        problemImage: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237",
+        problemImage: "/uploads/1716633600421-chair.jpg",
         studentId: 103,
         roomNumber: 405,
         hostel: "BH-3",
@@ -33,10 +33,10 @@ const problems = [
         status: "Pending"
     },
     {
-        problemId: 4,
+        problemId: 104,
         problemTitle: "WiFi Issues",
         problemDescription: "No internet connectivity in the entire 2nd floor since morning",
-        problemImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
+        problemImage: "/uploads/1716633600421-wifi.jpg",
         studentId: 104,
         roomNumber: 205,
         hostel: "BH-4",
@@ -44,10 +44,10 @@ const problems = [
         status: "Pending"
     },
     {
-        problemId: 5,
+        problemId: 105,
         problemTitle: "Paint Peeling",
         problemDescription: "The wall paint in room 302 is peeling off due to moisture",
-        problemImage: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f",
+        problemImage: "/uploads/1716633600421-paint.jpg",
         studentId: 105,
         roomNumber: 302,
         hostel: "BH-1",
@@ -56,7 +56,7 @@ const problems = [
     }
 ];
 
-const entryExit = [
+const dataEntryExit = [
     {
         transitId: 1,
         studentRollNumber: 101,
@@ -114,4 +114,102 @@ const entryExit = [
     }
 ];
 
-module.exports = { problems, entryExit };
+
+const userData = [
+    {
+        userId: "101",
+        name: "John Doe",
+        hostel: "BH-1",
+        roomNo: 203,
+        year: "UG-1",
+        email: "john.doe@gmail.com",
+        password: "password123",
+        role: "student",
+        rollNo: 101,
+    },
+    {
+        userId: "102",
+        name: "Jane Doe",
+        hostel: "BH-2",
+        roomNo: 204,
+        year: "UG-2",
+        email: "jane.doe@gmail.com",
+        password: "password123",
+        role: "student",
+        rollNo: 102,
+    },
+    {
+        userId: "103",
+        name: "Vikas",
+        hostel: "BH-1",
+        roomNo: 203,
+        year: "UG-1",
+        email: "vikas@gmail.com",
+        password: "password123",
+        role: "student",
+        rollNo: 103,
+    },
+    {
+        userId: "104",
+        name: "Raj",
+        hostel: "BH-1",
+        roomNo: 204,
+        year: "UG-2",
+        email: "raj@gmail.com",
+        password: "password123",
+        role: "student",
+        rollNo: 104,
+    },
+    {
+        userId: "105",
+        name: "Pratyush",
+        hostel: "BH-1",
+        roomNo: 203,
+        year: "UG-1",
+        email: "pratyush@gmail.com",
+        password: "password123",
+        role: "student",
+        rollNo: 105,
+    },
+    {
+        userId: "106",
+        name: "Admin",
+        email: "admin@gmail.com",
+        password: "password123",
+        role: "admin",
+    },
+    {
+        userId: "107",
+        name: "Warden1",
+        email: "warden1@gmail.com",
+        password: "password123",
+        role: "warden",
+        hostel: "BH-1",
+    },
+    {
+        userId: "108",
+        name: "Warden2",
+        email: "warden2@gmail.com",
+        password: "password123",
+        role: "warden",
+        hostel: "BH-2",
+    },
+    {
+        userId: "109",
+        name: "Warden3",
+        email: "warden3@gmail.com",
+        password: "password123",
+        role: "warden",
+        hostel: "BH-3",
+    },
+    {
+        userId: "110",
+        name: "Warden4",
+        email: "warden4@gmail.com",
+        password: "password123",
+        role: "warden",
+        hostel: "BH-4",
+    }
+]
+
+module.exports = { dataProblems, dataEntryExit, userData };
