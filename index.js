@@ -69,44 +69,48 @@ sequelize.authenticate()
 
 
 
-    // async function seedAnnouncements() {
-    //     try {
-    //         const count = await Announcement.count(); // Check existing announcements
-    //         if (count === 0) {
-    //             await Announcement.bulkCreate([
-    //                 {
-    //                     title: "Wi-Fi Upgrade Notice",
-    //                     message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
-    //                     createdAt: new Date(),
-    //                     updatedAt: new Date()
-    //                 },
-    //                 {
-    //                     title: "Mess Menu Update",
-    //                     message: "The new mess menu for April has been updated. Check the notice board or website for details.",
-    //                     createdAt: new Date(),
-    //                     updatedAt: new Date()
-    //                 },
-    //                 {
-    //                     title: "Exam Schedule Released",
-    //                     message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
-    //                     createdAt: new Date(),
-    //                     updatedAt: new Date()
-    //                 }
-    //             ]);
-    //             console.log("Dummy announcements added.");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error seeding announcements:", error);
-    //     }
-    // }
-    
-    // // Run the function when the server starts
-    // seedAnnouncements();
-    
+// async function seedAnnouncements() {
+//     try {
+//         const count = await Announcement.count(); // Check existing announcements
+//         if (count === 0) {
+//             await Announcement.bulkCreate([
+//                 {
+//                     title: "Wi-Fi Upgrade Notice",
+//                     message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
+//                     createdAt: new Date(),
+//                     updatedAt: new Date()
+//                 },
+//                 {
+//                     title: "Mess Menu Update",
+//                     message: "The new mess menu for April has been updated. Check the notice board or website for details.",
+//                     createdAt: new Date(),
+//                     updatedAt: new Date()
+//                 },
+//                 {
+//                     title: "Exam Schedule Released",
+//                     message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
+//                     createdAt: new Date(),
+//                     updatedAt: new Date()
+//                 }
+//             ]);
+//             console.log("Dummy announcements added.");
+//         }
+//     } catch (error) {
+//         console.error("Error seeding announcements:", error);
+//     }
+// }
+
+// // Run the function when the server starts
+// seedAnnouncements();
+
 
 // routes 
 app.get('/', (req, res) => {
-    res.render('homepage.ejs')
+    if (req.cookies.jwt) {
+        res.render('homepage.ejs', { loggedIn: true });
+    } else {
+        res.render('homepage.ejs', { loggedIn: false });
+    }
 })
 
 app.get('/about', (req, res) => {
@@ -272,7 +276,7 @@ app.post("/auth/login", login)
 const logout = (req, res) => {
     try {
         res.cookie("jwt", "", { maxAge: 0 })
-        res.status(200).json({ message: "Logged out successfully" });
+        res.redirect('/').status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.log("ERROR in log-out controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
@@ -365,7 +369,6 @@ app.delete("/announcements/delete/:id", async (req, res) => {
 app.get('/services/problems', async (req, res) => {
     let role = req.cookies.role;
     let userID = req.cookies.userid;
-    console.log("User ID from cookies:", userID); // Debugging log
 
     let user = await User.findOne({
         where: { userId: userID },
@@ -373,24 +376,40 @@ app.get('/services/problems', async (req, res) => {
     });
 
     if (!user) {
-        console.log("User not found in database, checking userData...");
         user = userData.find(u => userID === u.userId);
-
-        if (!user) {
-            console.log("User not found in userData but not in database.");
-            return res.status(404).send("User not found in the database.");
-        }
     }
 
-    console.log("User found:", user);
+    let userProblems1 = [];
+    let userProblems2 = [];
 
-    let userProblems1 = await hostelProblem.findAll({
-        where: { hostel: user.hostel }
-    });
-    let userProblems2 = dataProblems.filter(problem => user.hostel === problem.hostel);
+    if (role !== 'admin') {
+        userProblems1 = await hostelProblem.findAll({
+            where: { hostel: user.hostel }
+        });
+
+        if (userProblems1.length > 0) {
+            userProblems1 = userProblems1.map(problem => ({
+                ...problem.toJSON(),
+                roomNumber: problem.roomNo,
+                createdAt: problem.createdAt || new Date()
+            }));
+        }
+
+        userProblems2 = dataProblems.filter(problem => user.hostel === problem.hostel)
+            .map(problem => ({
+                ...problem,
+                createdAt: problem.createdAt || new Date()
+            }));
+
+    } else {
+        userProblems1 = await hostelProblem.findAll();
+        userProblems2 = dataProblems;
+    }
+
     let problems = [...userProblems1, ...userProblems2];
+
     res.render('problems.ejs', { problems, role, userID });
-})
+});
 
 // app.post('/services/problems/add', async (req, res) => {
 //     try {
@@ -475,41 +494,42 @@ app.get('/services/chat-room', async (req, res) => {
 
 app.get('/problems', async (req, res) => {
     const problems = {}
-    res.render('problems.ejs', { problems });})
+    res.render('problems.ejs', { problems });
+})
 
 
-    // res.render('problems.ejs', { problems });
-    app.get("/services/register", async (req, res) => {
-        try {
+// res.render('problems.ejs', { problems });
+app.get("/services/register", async (req, res) => {
+    try {
 
-            const transitEntries = await Transit.findAll();
-    
-            console.log("Fetched Transit Entries:", transitEntries);
-            const formattedEntries = transitEntries.map(entry => ({
-                studentName: entry.studentName,
-                studentHostel: entry.studentHostel,
-                studentRoomNumber: entry.studentRoomNumber,
-                studentRollNumber: entry.studentRollNumber,
-                purpose: entry.purpose,
-                transitStatus: entry.transitStatus,
-                date: entry.createdAt.toISOString().split("T")[0], // Extract YYYY-MM-DD
-                time: entry.createdAt.toISOString().split("T")[1].split(".")[0] // Extract HH:MM:SS
-            }));
-            const mergedData = [...dataEntryExit, ...formattedEntries];
-    
-            res.render("register.ejs", { entryExit: mergedData });
-    
-        } catch (error) {
-            console.error("Error fetching transit data:", error);
-            res.status(500).send("Internal Server Error");
-        }
-    });
-    
-    
-    
+        const transitEntries = await Transit.findAll();
+
+        console.log("Fetched Transit Entries:", transitEntries);
+        const formattedEntries = transitEntries.map(entry => ({
+            studentName: entry.studentName,
+            studentHostel: entry.studentHostel,
+            studentRoomNumber: entry.studentRoomNumber,
+            studentRollNumber: entry.studentRollNumber,
+            purpose: entry.purpose,
+            transitStatus: entry.transitStatus,
+            date: entry.createdAt.toISOString().split("T")[0], // Extract YYYY-MM-DD
+            time: entry.createdAt.toISOString().split("T")[1].split(".")[0] // Extract HH:MM:SS
+        }));
+        const mergedData = [...dataEntryExit, ...formattedEntries];
+
+        res.render("register.ejs", { entryExit: mergedData });
+
+    } catch (error) {
+        console.error("Error fetching transit data:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
 app.post('/services/transit', async (req, res) => {
     try {
-        const { studentRollNumber, purpose, transitStatus , studentName,studentHostel,studentRoomNumber} = req.body;
+        const { studentRollNumber, purpose, transitStatus, studentName, studentHostel, studentRoomNumber } = req.body;
 
         if (!studentRollNumber || !purpose || !transitStatus) {
             return res.status(400).send("All fields are required.");
@@ -646,10 +666,12 @@ app.post('/feedback', async (req, res) => {
     }
 });
 app.get('/chatRoom', (req, res) => {
-    try{const {role} = req.cookies;
-    res.render('chatRoom.ejs',{
-        role: role
-    })} catch (error) {
+    try {
+        const { role } = req.cookies;
+        res.render('chatRoom.ejs', {
+            role: role
+        })
+    } catch (error) {
         console.error("Error loading chat rooms:", error);
         res.status(500).send("Error loading chat rooms");
     }

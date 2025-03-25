@@ -37,6 +37,7 @@ document.addEventListener("scroll", function () {
         header.classList.remove("bg-white");
         header.classList.add("gradient");
 
+
         // Reset action button styles
         if (navaction) {
             navaction.classList.remove("gradient");
@@ -47,8 +48,10 @@ document.addEventListener("scroll", function () {
 
         // Reset toggleColour elements to light text
         toToggle.forEach(element => {
-            element.classList.remove("text-gray-800");
-            element.classList.add("text-white");
+            if (element.textContent !== "hostelia" && element.textContent !== "login") {
+                element.classList.remove("text-gray-800");
+                element.classList.add("text-black");
+            }
         });
 
         header.classList.remove("shadow");
