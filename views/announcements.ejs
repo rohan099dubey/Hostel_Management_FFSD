@@ -1,127 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hostelia</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostelia | Announcements</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-    <div class="max-w-6xl mx-auto py-10">
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h1 class="text-2xl font-bold text-gray-800 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-3 rounded-md">
-                Circulars / Announcements
-            </h1>
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      .gradient {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+      }
+      body {
+        font-family: "Source Sans Pro", sans-serif;
+      }
+    </style>
+    <!-- SweetAlert for better popups -->
+  </head>
 
-            <!-- Add Announcement Button (Visible Only for Warden) -->
-            <% if (role === 'student') { %>
-                <button onclick="openModal()" 
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg mt-4 transition duration-200">
-                    + Add Announcement
-                </button>
-            <% } %>
+  <body class="bg-gray-100">
+    <!-- Navbar -->
+    <%- include('partials/navbar.ejs') %>
 
-            <!-- Announcement List -->
-            <div class="mt-6 space-y-6 max-h-[30rem] overflow-y-auto">
-              <% if (announcements.length > 0) { %>
-                  <% announcements.forEach(announcement => { %>
-                      <div class="bg-white shadow-md p-4 rounded-lg flex items-start gap-4">
-                          <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" 
-                               class="w-12 h-12 rounded-full border">
-                          <div class="flex-1">
-                              <div class="flex justify-between items-center">
-                                  <h3 class="font-semibold text-gray-900">IIITS Academic Office</h3>
-                                  <span class="text-sm text-gray-500"><%= announcement.createdAt.toDateString() %></span>
-                              </div>
-                              <p class="text-gray-700 mt-2 leading-relaxed"><%= announcement.message %></p>
-                          </div>
-                          
-                          <!-- Delete Button (Only for Warden/Admin) -->
-                          <% if (role === 'student') { %>
-                              <button onclick="deleteAnnouncement('<%= announcement.id %>')" 
-                                      class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded-lg">
-                                  Delete
-                              </button>
-                          <% } %>
-                      </div>
-                  <% }); %>
-              <% } else { %>
-                  <p class="text-gray-500">No announcements available.</p>
-              <% } %>
-          </div>
-          
-          <!-- JavaScript for Deleting Announcement -->
-          <script>
-              async function deleteAnnouncement(id) {
-                  if (confirm("Are you sure you want to delete this announcement?")) {
-                      try {
-                          const response = await fetch(`/announcements/delete/${id}`, { method: "DELETE" });
-                          if (response.ok) {
-                              window.location.reload(); // Refresh the page after deletion
-                          } else {
-                              alert("Failed to delete the announcement.");
-                          }
-                      } catch (error) {
-                          console.error("Error deleting:", error);
-                          alert("An error occurred.");
-                      }
-                  }
-              }
-          </script>          
-            
-            
+    <!-- Container -->
+    <div class="max-w-6xl mx-auto py-12 px-6">
+      <!-- Header -->
+      <div
+        class="flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-500 text-white px-6 py-4 rounded-lg shadow-lg mt-16"
+      >
+        <h1 class="text-2xl font-bold">📢 Circulars & Announcements</h1>
+        <% if (role === 'warden' || role === 'admin') { %>
+        <button
+          onclick="openModal()"
+          class="bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-200 transition"
+        >
+          + Add Announcement
+        </button>
+        <% } %>
+      </div>
+
+      <!-- Announcement List -->
+      <div class="mt-6 space-y-6 max-h-[30rem] overflow-y-auto">
+        <% if (announcements.length > 0) { %> <%
+        announcements.forEach(announcement => { %>
+        <div
+          class="bg-white shadow-lg p-5 rounded-lg flex items-start gap-4 transition hover:shadow-xl"
+        >
+          <!-- Profile Icon -->
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            class="w-12 h-12 rounded-full border"
+          />
+          <div class="flex-1">
+            <!-- Title and Date -->
+            <div class="flex justify-between items-center">
+              <h3 class="font-semibold text-gray-900">IIITS Academic Office</h3>
+              <span class="text-sm text-gray-500"
+                ><%= announcement.createdAt.toDateString() %></span
+              >
             </div>
+            <!-- Announcement Message -->
+            <p class="text-gray-700 mt-2 leading-relaxed">
+              <%= announcement.message %>
+            </p>
+          </div>
+
+          <!-- Delete Button (Only for Warden/Admin) -->
+          <% if (role === 'warden' || role === 'admin') { %>
+          <button
+            onclick="deleteAnnouncement('<%= announcement.id %>')"
+            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded-lg transition"
+          >
+            🗑️
+          </button>
+          <% } %>
         </div>
+        <% }); %> <% } else { %>
+        <p class="text-gray-500 text-center">No announcements available.</p>
+        <% } %>
+      </div>
     </div>
+
+    <!-- Floating Add Button (Mobile) -->
+    <% if (role === 'warden' || role === 'admin') { %>
+    <button
+      onclick="openModal()"
+      class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full shadow-lg w-14 h-14 flex items-center justify-center text-2xl hover:bg-blue-700 transition duration-300"
+    >
+      +
+    </button>
+    <% } %>
 
     <!-- Modal for Adding Announcement -->
-    <div id="announcementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md transition-transform transform scale-95">
-            <h2 class="text-xl font-bold text-gray-900">Add New Announcement</h2>
-            
-            <form action="/services/announcement" method="POST" class="mt-4 space-y-4">
-                <div>
-                    <label class="block font-medium text-gray-700">Title</label>
-                    <input type="text" name="title" 
-                           class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                           required>
-                </div>
+    <div
+      id="announcementModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md transform transition-all scale-95"
+      >
+        <h2 class="text-xl font-bold text-gray-900">📢 Add New Announcement</h2>
 
-                <div>
-                    <label class="block font-medium text-gray-700">Message</label>
-                    <textarea name="message" rows="4"
-                              class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                              required></textarea>
-                </div>
+        <form
+          action="/services/announcement"
+          method="POST"
+          class="mt-4 space-y-4"
+        >
+          <div>
+            <label class="block font-medium text-gray-700">Title</label>
+            <input
+              type="text"
+              name="title"
+              class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+            />
+          </div>
 
-                <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeModal()" 
-                            class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-2 px-4 rounded-md transition">
-                        Cancel
-                    </button>
-                    <button type="submit" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition">
-                        Submit
-                    </button>
-                </div>
-            </form>
-        </div>
+          <div>
+            <label class="block font-medium text-gray-700">Message</label>
+            <textarea
+              name="message"
+              rows="4"
+              class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-2">
+            <button
+              type="button"
+              onclick="closeModal()"
+              class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-2 px-4 rounded-md transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
-    <!-- JavaScript for Modal -->
+    <!-- JavaScript for Modal & Delete -->
     <script>
-        function openModal() {
-            document.getElementById("announcementModal").classList.remove("hidden");
-            document.getElementById("announcementModal").querySelector("div").classList.add("scale-100");
-        }
+      function openModal() {
+        const modal = document.getElementById("announcementModal");
+        modal.classList.remove("hidden");
+        setTimeout(
+          () => modal.querySelector("div").classList.add("scale-100"),
+          50
+        );
+      }
 
-        function closeModal() {
-            document.getElementById("announcementModal").classList.add("hidden");
-        }
+      function closeModal() {
+        const modal = document.getElementById("announcementModal");
+        modal.querySelector("div").classList.remove("scale-100");
+        setTimeout(() => modal.classList.add("hidden"), 200);
+      }
+
+      async function deleteAnnouncement(id) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to recover this announcement!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              const response = await fetch(`/announcements/delete/${id}`, {
+                method: "DELETE",
+              });
+              if (response.ok) {
+                Swal.fire(
+                  "Deleted!",
+                  "The announcement has been removed.",
+                  "success"
+                ).then(() => window.location.reload());
+              } else {
+                Swal.fire(
+                  "Error!",
+                  "Failed to delete the announcement.",
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Error deleting:", error);
+              Swal.fire("Error!", "An error occurred.", "error");
+            }
+          }
+        });
+      }
     </script>
 
+    <!-- Footer Wave -->
+    <svg
+      class="wave-top"
+      viewBox="0 0 1439 147"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g fill="#f8fafc">
+        <path
+          d="M1440,84 C1383.555,64.3 1342.555,51.3 1317,45 C1259.5,30.824 1206.707,25.526 1169,22 C1129.711,18.326 1044.426,18.475 980,22 C954.25,23.409 922.25,26.742 884,32 C845.122,37.787 818.455,42.121 804,45 C776.833,50.41 728.136,61.77 713,65 C660.023,76.309 621.544,87.729 584,94 C517.525,105.104 484.525,106.438 429,108 C379.49,106.484 342.823,104.484 319,102 C278.571,97.783 231.737,88.736 205,84 C154.629,75.076 86.296,57.743 0,32 L0,0 L1440,0 L1440,84 Z"
+        />
+      </g>
+    </svg>
+
+    <!-- Footer -->
     <%- include('partials/footer.ejs') %>
     <script src="/js/navbar.js"></script>
-</body>
+  </body>
 </html>
