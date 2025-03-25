@@ -639,7 +639,7 @@ app.post('/feedback', async (req, res) => {
         feedbackData.push(newFeedback);
 
         await fs.writeFile(feedbackFilePath, JSON.stringify(feedbackData, null, 2));
-        res.redirect('/menu?feedback=success');
+        res.redirect('/services/mess?feedback=success');
     } catch (error) {
         console.error('Error saving feedback:', error);
         res.status(500).send(error.message);

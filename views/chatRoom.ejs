@@ -291,27 +291,195 @@
         }
 
         /* Responsive Styles */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3rem;
-            }
+        /* Updated Responsive Styles */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .section-title {
+        font-size: 2.2rem;
+    }
+    
+    .create-chat-form {
+        padding: 2.5rem;
+    }
+    
+    .chat-room-card {
+        height: 320px;
+    }
+}
 
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
+@media (max-width: 768px) {
+    .hero {
+        height: 35vh;
+        min-height: 300px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2.8rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        max-width: 90%;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .create-chat-form {
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+    
+    .chat-rooms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    
+    .chat-room-card {
+        height: 300px;
+        padding: 1.5rem;
+    }
+    
+    .chat-room-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+    
+    .chat-room-title {
+        font-size: 1.3rem;
+    }
+    
+    section {
+        padding: 2rem 0;
+    }
+}
 
-            .section-title {
-                font-size: 2rem;
-            }
+@media (max-width: 640px) {
+    .hero {
+        height: 30vh;
+        min-height: 250px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .chat-rooms-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .btn-primary {
+        padding: 0.6rem 1.5rem;
+    }
+}
 
-            .create-chat-form {
-                padding: 2rem;
-            }
+@media (max-width: 480px) {
+    .hero {
+        height: 28vh;
+        min-height: 220px;
+    }
+    
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    
+    .create-chat-form {
+        padding: 1.2rem;
+    }
+    
+    .chat-room-card {
+        height: 280px;
+        padding: 1.2rem;
+    }
+    
+    .chat-room-icon {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .chat-room-title {
+        font-size: 1.2rem;
+    }
+    
+    .chat-room-description {
+        font-size: 0.95rem;
+        -webkit-line-clamp: 4;
+    }
+}
 
-            .container {
-                padding: 0 1rem;
-            }
-        }
+/* Mobile-specific optimizations */
+@media (max-width: 400px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+    }
+    
+    .chat-room-card {
+        height: 260px;
+    }
+    
+    .form-label {
+        font-size: 0.95rem;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+        font-size: 0.95rem;
+    }
+    
+    .btn-primary {
+        font-size: 0.95rem;
+    }
+    
+    .flex.flex-wrap.gap-3.mt-2 > div {
+        width: 8.5vw;
+        height: 8.5vw;
+        min-width: 32px;
+        min-height: 32px;
+    }
+    
+    .flex.flex-wrap.gap-3.mt-2 > div i {
+        font-size: 0.9rem;
+    }
+}
     </style>
 </head>
 
@@ -334,7 +502,7 @@
             <!-- Main Content -->
             <div class="container">
                 <!-- Create Chat Room Section -->
-                <% if (role==='Admin' || role==='Warden' ) { %>
+                <% if (role==='admin' || role==='warden' ) { %>
                     <section>
                         <h2 class="section-title" data-aos="fade-up">Create New Chat Room</h2>
                         <div class="create-chat-form skeleton" data-aos="fade-up">

@@ -426,53 +426,163 @@
         }
 
         /* Responsive Styles */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .section-title {
-                font-size: 2.5rem;
-            }
-            
-            .mission, .tech-stack {
-                padding: 2rem;
-            }
+        /* Updated Responsive Styles */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .section-title {
+        font-size: 2.8rem;
+    }
+    
+    .mission, .tech-stack {
+        padding: 3rem;
+    }
+}
 
-            .container, .narrow-container {
-                padding: 0 1rem;
-            }
-        }
+@media (max-width: 768px) {
+    .hero {
+        height: 35vh;
+        min-height: 300px;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        max-width: 90%;
+    }
+    
+    .section-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .mission, .tech-stack {
+        padding: 2rem;
+        margin: 1rem auto;
+    }
+    
+    .mission-text {
+        font-size: 1rem;
+    }
+    
+    .features-grid, 
+    .role-cards, 
+    .revenue-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-card, 
+    .role-card, 
+    .revenue-card {
+        padding: 1.5rem;
+    }
+    
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .feature-title, 
+    .role-title, 
+    .revenue-title {
+        font-size: 1.3rem;
+    }
+    
+    section {
+        padding: 3rem 0;
+    }
+}
 
-        /* Scroll Indicator */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-        }
+@media (max-width: 480px) {
+    .hero {
+        height: 30vh;
+        min-height: 250px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .mission, .tech-stack {
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+    
+    .container, .narrow-container {
+        padding: 0 1rem;
+    }
+    
+    .features-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .tech-badges {
+        gap: 0.5rem;
+    }
+    
+    .tech-badge {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .feature-item {
+        padding: 1rem;
+    }
+    
+    .feature-item i {
+        font-size: 1.2rem;
+        margin-right: 0.75rem;
+    }
+}
 
-        .scroll-indicator i {
-            font-size: 2rem;
-            color: black;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0) translateX(-50%);
-            }
-            40% {
-                transform: translateY(-20px) translateX(-50%);
-            }
-            60% {
-                transform: translateY(-10px) translateX(-50%);
-            }
-        }
+/* Additional Mobile Optimizations */
+@media (max-width: 400px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .mission-text, 
+    .feature-description, 
+    .role-list, 
+    .revenue-description {
+        font-size: 0.95rem;
+    }
+    
+    .feature-icon {
+        width: 45px;
+        height: 45px;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-title, 
+    .role-title, 
+    .revenue-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+}
     </style>
 </head>
 
