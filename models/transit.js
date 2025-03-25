@@ -11,6 +11,21 @@ const Transit = sequelize.define('Transit', {
         type: DataTypes.TEXT,
         allowNull: false
     },
+    studentName: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: "Unknown"
+    },
+    studentHostel: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: "Unknown"
+    },
+    studentRoomNumber: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: "Unknown"
+    },
     purpose: {
         type: DataTypes.TEXT,
         allowNull: false
@@ -19,12 +34,18 @@ const Transit = sequelize.define('Transit', {
         type: DataTypes.ENUM('ENTRY', 'EXIT'),
         allowNull: false
     },
-    timeCreated: {
-        type: DataTypes.DATE,
+    date: {
+        type: DataTypes.DATEONLY, // Stores only the date (YYYY-MM-DD)
+        allowNull: false,
         defaultValue: DataTypes.NOW
     },
+    time: {
+        type: DataTypes.TIME, // Stores only the time (HH:MM:SS)
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    }
 }, {
-    timestamps: true
+    timestamps: true // Enables createdAt & updatedAt columns
 });
 
 module.exports = Transit;
