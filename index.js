@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs').promises;
-
+const Transit = require('./models/transit');
 
 // Database configurations
 const sequelize = require('./config/database.js');
@@ -18,7 +18,7 @@ const Announcement = require('./models/announcement.js'); // Import Announcement
 const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
 
 //cloudinary 
-const { cloudinary } = require('./config/cloudianry.js');
+
 
 //multer 
 const multer = require("multer");
@@ -69,40 +69,40 @@ sequelize.authenticate()
 
 
 
-async function seedAnnouncements() {
-    try {
-        const count = await Announcement.count(); // Check existing announcements
-        if (count === 0) {
-            await Announcement.bulkCreate([
-                {
-                    title: "Wi-Fi Upgrade Notice",
-                    message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                },
-                {
-                    title: "Mess Menu Update",
-                    message: "The new mess menu for April has been updated. Check the notice board or website for details.",
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                },
-                {
-                    title: "Exam Schedule Released",
-                    message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                }
-            ]);
-            console.log("Dummy announcements added.");
-        }
-    } catch (error) {
-        console.error("Error seeding announcements:", error);
-    }
-}
-
-// Run the function when the server starts
-seedAnnouncements();
-
+    // async function seedAnnouncements() {
+    //     try {
+    //         const count = await Announcement.count(); // Check existing announcements
+    //         if (count === 0) {
+    //             await Announcement.bulkCreate([
+    //                 {
+    //                     title: "Wi-Fi Upgrade Notice",
+    //                     message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
+    //                     createdAt: new Date(),
+    //                     updatedAt: new Date()
+    //                 },
+    //                 {
+    //                     title: "Mess Menu Update",
+    //                     message: "The new mess menu for April has been updated. Check the notice board or website for details.",
+    //                     createdAt: new Date(),
+    //                     updatedAt: new Date()
+    //                 },
+    //                 {
+    //                     title: "Exam Schedule Released",
+    //                     message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
+    //                     createdAt: new Date(),
+    //                     updatedAt: new Date()
+    //                 }
+    //             ]);
+    //             console.log("Dummy announcements added.");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error seeding announcements:", error);
+    //     }
+    // }
+    
+    // // Run the function when the server starts
+    // seedAnnouncements();
+    
 
 // routes 
 app.get('/', (req, res) => {
@@ -464,38 +464,9 @@ app.post("/services/problems/add", upload.single("problemImage"), async (req, re
         console.error("ERROR in creating problem:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-});
-
-
-app.post('/services/problems/statusChange', async (req, res) => {
-    const { problemId, status } = req.body;
-    try {
-        console.log("Received Data:", req.body);
-        let problem2 = null;
-        const problem1 = await hostelProblem.findOne({ where: { id: Number(problemId) } });
-        if (!problem1) {
-            problem2 = dataProblems.find(problem => problem.problemId === Number(problemId));
-            if (!problem2) {
-                return res.status(404).json({ message: "Problem not found" });
-            }
-        }
-
-        if (!!problem1) {
-            problem1.status = status;
-            await problem1.save();
-        } else if (!!problem2) {
-            problem2.status = status; // Update status for the in-memory problem
-        }
-        res.status(200).json({ message: "Status updated successfully" });
-    } catch (error) {
-        console.error("ERROR in status change:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-});
-
-app.get('/services/entry-exit', async (req, res) => {
-    res.render('entry_exit.ejs', { entryExit });
 })
+
+
 
 app.get('/services/chat-room', async (req, res) => {
     res.render('chatRoom.ejs');
@@ -503,12 +474,62 @@ app.get('/services/chat-room', async (req, res) => {
 
 app.get('/problems', async (req, res) => {
     const problems = {}
-    res.render('problems.ejs', { problems });
-})
+    res.render('problems.ejs', { problems });})
 
-app.post('/services/problems', async (req, res) => {
 
-})
+    // res.render('problems.ejs', { problems });
+    app.get("/services/register", async (req, res) => {
+        try {
+
+            const transitEntries = await Transit.findAll();
+    
+            console.log("Fetched Transit Entries:", transitEntries);
+            const formattedEntries = transitEntries.map(entry => ({
+                studentName: entry.studentName,
+                studentHostel: entry.studentHostel,
+                studentRoomNumber: entry.studentRoomNumber,
+                studentRollNumber: entry.studentRollNumber,
+                purpose: entry.purpose,
+                transitStatus: entry.transitStatus,
+                date: entry.createdAt.toISOString().split("T")[0], // Extract YYYY-MM-DD
+                time: entry.createdAt.toISOString().split("T")[1].split(".")[0] // Extract HH:MM:SS
+            }));
+            const mergedData = [...dataEntryExit, ...formattedEntries];
+    
+            res.render("register.ejs", { entryExit: mergedData });
+    
+        } catch (error) {
+            console.error("Error fetching transit data:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+    
+    
+    
+app.post('/services/transit', async (req, res) => {
+    try {
+        const { studentRollNumber, purpose, transitStatus , studentName,studentHostel,studentRoomNumber} = req.body;
+
+        if (!studentRollNumber || !purpose || !transitStatus) {
+            return res.status(400).send("All fields are required.");
+        }
+
+        await Transit.create({
+            studentRollNumber,
+            purpose,
+            transitStatus,
+            studentName,
+            studentHostel,
+            studentRoomNumber
+        });
+
+        res.redirect('/services/register'); // Redirect back to the transit page
+    } catch (error) {
+        console.error("Error adding transit entry:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 app.get('/dashboard', (req, res) => {
     res.render('dashboard.ejs', {
         user: mockUser,
