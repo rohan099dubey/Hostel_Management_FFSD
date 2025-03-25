@@ -113,6 +113,7 @@ app.get('/about', (req, res) => {
     res.render('about.ejs')
 })
 
+
 app.get('/contact', (req, res) => {
     res.render('contact.ejs')
 })
@@ -623,6 +624,16 @@ app.post('/feedback', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+app.get('/chatRoom', (req, res) => {
+    try{const {role} = req.cookies;
+    res.render('chatRoom.ejs',{
+        role: role
+    })} catch (error) {
+        console.error("Error loading chat rooms:", error);
+        res.status(500).send("Error loading chat rooms");
+    }
+})
+
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is listening on port ${process.env.PORT}`);

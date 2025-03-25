@@ -1,6 +1,503 @@
-<div class="bg-white rounded-lg shadow-lg p-6">
-  <h2 class="text-3xl font-bold text-gray-800 mb-6">Chat Room</h2>
+<!DOCTYPE html>
+<html lang="en">
 
-  <!-- Add your chat room content here -->
-  <div class="text-gray-600">Chat room functionality coming soon...</div>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Rooms - Hostelia</title>
+    <!-- Add AOS library for scroll animations -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #32D74B;
+            --dark: #121212;
+            --light: #F5F5F7;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient {
+            background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 2rem;
+            /* Added margin-top to push hero section down */
+            padding-top: 1.5rem;
+            /* Added padding-top for additional spacing */
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: whitesmoke;
+            transform: perspective(500px) rotateX(15deg);
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Chat Room Cards */
+        .chat-rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chat-room-card {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 101, 132, 0.1));
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            height: 350px;
+            /* Fixed height */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-room-card:hover {
+            transform: perspective(1000px) translateZ(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-room-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transform: translateZ(20px);
+        }
+
+        .chat-room-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .chat-room-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: black;
+        }
+
+        .chat-room-description {
+            color: rgba(23, 22, 22, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+            /* Allows description to take available space */
+            overflow: hidden;
+            /* Prevents text overflow */
+            text-overflow: ellipsis;
+            /* Adds ellipsis if text is too long */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            /* Limits to 3 lines */
+            -webkit-box-orient: vertical;
+        }
+
+        /* Create Chat Room Form */
+        .create-chat-form {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.15), rgba(255, 101, 132, 0.15));
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .chat-room-card>div:last-child {
+            margin-top: auto;
+            /* Pushes to bottom */
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Skeleton Loading Animation */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .create-chat-form {
+                padding: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <body>
+        <!-- Navbar Section -->
+        <%- include('partials/navbar.ejs') %>
+
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-bg"></div>
+                <div class="hero-content">
+                    <h1 class="hero-title" data-aos="zoom-in">CHAT ROOMS</h1>
+                    <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">Connect with students and wardens
+                        through dedicated chat rooms</p>
+                </div>
+            </section>
+
+            <!-- Main Content -->
+            <div class="container">
+                <!-- Create Chat Room Section -->
+                <% if (role==='Admin' || role==='Warden' ) { %>
+                    <section>
+                        <h2 class="section-title" data-aos="fade-up">Create New Chat Room</h2>
+                        <div class="create-chat-form skeleton" data-aos="fade-up">
+                            <div class="form-group">
+                                <label for="roomName" class="form-label">Chat Room Name</label>
+                                <input type="text" id="roomName" class="form-input" placeholder="Enter chat room name">
+                            </div>
+                            <div class="form-group">
+                                <label for="roomType" class="form-label">Room Type</label>
+                                <select id="roomType" class="form-select">
+                                    <option value="">Select room type</option>
+                                    <option value="general">General Discussion</option>
+                                    <option value="announcement">Announcements</option>
+                                    <option value="hostel">Hostel Specific</option>
+                                    <option value="event">Event Planning</option>
+                                    <option value="issue">Issue Resolution</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="roomDescription" class="form-label">Description</label>
+                                <textarea id="roomDescription" class="form-textarea"
+                                    placeholder="Describe the purpose of this chat room"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="roomAccess" class="form-label">Access Level</label>
+                                <select id="roomAccess" class="form-select">
+                                    <option value="">Select access level</option>
+                                    <option value="all">Everyone</option>
+                                    <option value="students">Students Only</option>
+                                    <option value="wardens">Wardens Only</option>
+                                    <option value="admins">Admins Only</option>
+                                    <option value="custom">Custom (Select below)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Room Icon (Optional)</label>
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center cursor-pointer hover:bg-purple-200 transition-all">
+                                        <i class="fas fa-comments text-purple-600"></i>
+                                    </div>
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center cursor-pointer hover:bg-blue-200 transition-all">
+                                        <i class="fas fa-bullhorn text-blue-600"></i>
+                                    </div>
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center cursor-pointer hover:bg-green-200 transition-all">
+                                        <i class="fas fa-home text-green-600"></i>
+                                    </div>
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center cursor-pointer hover:bg-red-200 transition-all">
+                                        <i class="fas fa-exclamation-circle text-red-600"></i>
+                                    </div>
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center cursor-pointer hover:bg-yellow-200 transition-all">
+                                        <i class="fas fa-calendar-alt text-yellow-600"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-primary w-full mt-4">Create Chat Room</button>
+                        </div>
+                    </section>
+                    <% } %>
+
+                        <!-- Existing Chat Rooms Section -->
+                        <section>
+                            <h2 class="section-title" data-aos="fade-up">Available Chat Rooms</h2>
+                            <div class="chat-rooms-grid">
+                                <!-- Chat Room Card 1 -->
+                                <div class="chat-room-card skeleton" data-aos="flip-left" data-aos-delay="100">
+                                    <div class="chat-room-icon">
+                                        <i class="fas fa-bullhorn"></i>
+                                    </div>
+                                    <h3 class="chat-room-title">Announcements</h3>
+                                    <p class="chat-room-description">
+                                        Official announcements from hostel administration and wardens.
+                                    </p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-gray-500">
+                                            <i class="fas fa-users mr-1"></i> All Users
+                                        </span>
+                                        <button class="btn-primary">Join</button>
+                                    </div>
+                                </div>
+
+                                <!-- Chat Room Card 2 -->
+                                <div class="chat-room-card skeleton" data-aos="flip-left" data-aos-delay="200">
+                                    <div class="chat-room-icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <h3 class="chat-room-title">Hostel A Discussion</h3>
+                                    <p class="chat-room-description">
+                                        General discussion for residents of Hostel A.
+                                    </p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-gray-500">
+                                            <i class="fas fa-users mr-1"></i> Hostel A Residents
+                                        </span>
+                                        <button class="btn-primary">Join</button>
+                                    </div>
+                                </div>
+
+                                <!-- Chat Room Card 3 -->
+                                <div class="chat-room-card skeleton" data-aos="flip-left" data-aos-delay="300">
+                                    <div class="chat-room-icon">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <h3 class="chat-room-title">Issue Resolution</h3>
+                                    <p class="chat-room-description">
+                                        Discuss and resolve common hostel issues with wardens and administration.
+                                    </p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-gray-500">
+                                            <i class="fas fa-users mr-1"></i> All Users
+                                        </span>
+                                        <button class="btn-primary">Join</button>
+                                    </div>
+                                </div>
+
+                                <!-- Chat Room Card 4 -->
+                                <div class="chat-room-card skeleton" data-aos="flip-left" data-aos-delay="400">
+                                    <div class="chat-room-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <h3 class="chat-room-title">Events & Activities</h3>
+                                    <p class="chat-room-description">
+                                        Discuss upcoming events, activities, and cultural programs.
+                                    </p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-gray-500">
+                                            <i class="fas fa-users mr-1"></i> All Users
+                                        </span>
+                                        <button class="btn-primary">Join</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+            </div>
+
+            <!-- Footer Section -->
+            <%- include('partials/footer.ejs') %>
+
+                <!-- AOS Animation Library -->
+                <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+                <script>
+                    // Initialize AOS animation library
+                    AOS.init({
+                        duration: 800,
+                        easing: 'ease',
+                        once: true
+                    });
+
+                    // Remove skeleton loading animation after page load
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const skeletons = document.querySelectorAll('.skeleton');
+                        skeletons.forEach((skeleton, index) => {
+                            setTimeout(() => {
+                                skeleton.classList.remove('skeleton');
+                            }, index * 200);
+                        });
+                    });
+                </script>
+                <script src="/js/navbar.js"></script>
+    </body>
+
+</html>
