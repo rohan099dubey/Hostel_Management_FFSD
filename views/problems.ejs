@@ -58,6 +58,7 @@
         <h1 class="text-2xl font-bold">Problem Tracker</h1>
 
         <!-- Modal toggle -->
+        <% if (role === 'student') { %>
         <button
           data-modal-target="crud-modal"
           data-modal-toggle="crud-modal"
@@ -66,7 +67,7 @@
         >
           Register New Problem
         </button>
-
+        <% } %>
         <!-- Main modal -->
         <div
           id="crud-modal"
@@ -110,65 +111,71 @@
                 </button>
               </div>
               <!-- Modal body -->
-              <form class="p-4 md:p-5">
+
+              <form id="problemForm" class="p-4 md:p-5">
                 <div class="grid gap-4 mb-4 grid-cols-2">
                   <div class="col-span-2">
                     <label
-                      for="name"
+                      for="problemTitle"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >Problem Title</label
                     >
                     <input
                       type="text"
-                      name="name"
-                      id="name"
+                      name="problemTitle"
+                      id="problemTitle"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Type product name"
+                      placeholder="Type problem title"
                       required=""
                     />
+                    <!-- Input for Problem Title -->
                   </div>
                   <div class="col-span-2">
                     <label
-                      for="description"
+                      for="problemDescription"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >Product Description</label
+                      >Problem Description</label
                     >
                     <textarea
-                      id="description"
+                      id="problemDescription"
                       rows="4"
                       class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Write product description here"
+                      placeholder="Write problem description here"
+                      required=""
                     ></textarea>
+                    <!-- Input for Problem Description -->
                   </div>
                   <div class="col-span-2">
                     <label
-                      for="image"
+                      for="problemImage"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >Upload Image</label
                     >
                     <input
                       type="file"
-                      name="image"
-                      id="image"
+                      name="problemImage"
+                      id="problemImage"
                       accept="image/*"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       required
                     />
+                    <!-- Input for Problem Image -->
                   </div>
                   <div class="col-span-2 sm:col-span-1">
                     <label
-                      for="room_number"
+                      for="roomNo"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >Room Number</label
                     >
                     <input
                       type="text"
-                      name="room_number"
-                      id="room_number"
+                      name="roomNo"
+                      id="roomNo"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="room number"
                       required=""
                     />
+                    <!-- Input for Room Number -->
                   </div>
                   <div class="col-span-2 sm:col-span-1">
                     <label
@@ -178,7 +185,9 @@
                     >
                     <select
                       id="category"
+                      name="category"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      required
                     >
                       <option selected="">Select category</option>
                       <option value="Electrical">Electrical</option>
@@ -191,6 +200,7 @@
                       <option value="Pest Control">Pest Control</option>
                       <option value="Other">Other</option>
                     </select>
+                    <!-- Input for Category -->
                   </div>
                   <div class="col-span-2 sm:col-span-1">
                     <label
@@ -206,6 +216,7 @@
                       placeholder="roll number"
                       required=""
                     />
+                    <!-- Input for Roll Number -->
                   </div>
                   <div class="col-span-2 sm:col-span-1">
                     <label
@@ -215,7 +226,9 @@
                     >
                     <select
                       id="hostel"
+                      name="hostel"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      required
                     >
                       <option selected="">Select category</option>
                       <option value="BH-1">BH-1</option>
@@ -223,6 +236,7 @@
                       <option value="BH-3">BH-3</option>
                       <option value="BH-4">BH-4</option>
                     </select>
+                    <!-- Input for Hostel -->
                   </div>
                 </div>
                 <button
@@ -241,7 +255,7 @@
                       clip-rule="evenodd"
                     ></path>
                   </svg>
-                  Add new product
+                  Add Problem
                 </button>
               </form>
             </div>
@@ -316,6 +330,7 @@
               <h2 id="detailsTitle" class="text-xl font-bold">
                 <%= problem.problemTitle %>
               </h2>
+
               <button
                 type="button"
                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -404,6 +419,42 @@
                     </div>
                   </div>
                 </div>
+                <!--change status-->
+                <% if (role !== 'student') { %>
+                <div class="border-t pt-4">
+                  <h4 class="text-sm font-medium text-gray-700 mb-2">
+                    Change Status
+                  </h4>
+                  <form id="statusForm" class="flex items-center space-x-2">
+                    <input
+                      id="problemId"
+                      type="hidden"
+                      name="problemId"
+                      value="<%= problem.problemId %>"
+                    />
+                    <select
+                      name="status"
+                      id="status"
+                      class="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option selected value="Select Status">
+                        Select Status
+                      </option>
+                      <option value="Pending">Pending</option>
+                      <option value="Resolved">Resolved</option>
+                      <% if (role === 'admin') { %>
+                      <option value="Rejected">Rejected</option>
+                      <% } %>
+                    </select>
+                    <button
+                      type="submit"
+                      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-md transition duration-200"
+                    >
+                      Change Status
+                    </button>
+                  </form>
+                </div>
+                <% } %>
               </div>
             </div>
           </div>
@@ -415,5 +466,182 @@
     </div>
     <%- include('partials/footer.ejs') %>
     <script src="/js/navbar.js"></script>
+    <script>
+      // document
+      //   .getElementById("problemForm")
+      //   .addEventListener("submit", async function (event) {
+      //     event.preventDefault();
+
+      //     // Get form values
+      //     const form = event.target;
+      //     const problemTitle = form.problemTitle.value.trim();
+      //     const problemDescription = form.problemDescription.value.trim();
+      //     const problemImage = form.problemImage.files[0];
+      //     const roomNo = form.roomNo.value.trim();
+      //     const category = form.category.value;
+      //     const studentId = form.roll_number.value.trim();
+      //     const hostel = form.hostel.value;
+
+      //     console.log("Form Data:", {
+      //       problemTitle,
+      //       problemDescription,
+      //       problemImage,
+      //       roomNo,
+      //       category,
+      //       studentId,
+      //       hostel,
+      //     });
+
+      //     // Check if all fields are filled
+      //     if (
+      //       !problemTitle ||
+      //       !problemDescription ||
+      //       !problemImage ||
+      //       !roomNo ||
+      //       !category ||
+      //       !studentId ||
+      //       !hostel
+      //     ) {
+      //       return alert("All fields are required.");
+      //     }
+
+      //     try {
+      //       // Upload image to Cloudinary
+      //       const formData = new FormData();
+      //       formData.append("file", problemImage);
+      //       formData.append("upload_preset", "hostelia");
+
+      //       const cloudinaryRes = await fetch(
+      //         "https://api.cloudinary.com/v1_1/dyzoysf4v/image/upload",
+      //         { method: "POST", body: formData }
+      //       );
+      //       const cloudinaryData = await cloudinaryRes.json();
+
+      //       console.log("Cloudinary Response:", cloudinaryData);
+
+      //       if (!cloudinaryData.secure_url)
+      //         return alert("Image upload failed.");
+
+      //       // Send problem data to backend
+      //       const response = await fetch("/services/problems/add", {
+      //         method: "POST",
+      //         headers: { "Content-Type": "application/json" },
+      //         body: JSON.stringify({
+      //           problemTitle,
+      //           problemDescription,
+      //           problemImage: cloudinaryData.secure_url,
+      //           roomNo: Number(roomNo),
+      //           category,
+      //           studentId,
+      //           hostel,
+      //         }),
+      //       });
+
+      //       console.log("Server Response:", response);
+
+      //       if (!response.ok) {
+      //         const errorData = await response.json();
+      //         console.error("Error adding problem:", errorData);
+      //         return alert("Error adding problem: " + errorData.message);
+      //       }
+
+      //       alert("Problem added successfully!");
+      //       form.reset();
+      //     } catch (error) {
+      //       console.error("Error:", error);
+      //       alert("An error occurred.");
+      //     }
+      //   });
+      document
+        .getElementById("problemForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const formData = new FormData();
+          formData.append(
+            "problemTitle",
+            document.getElementById("problemTitle").value.trim()
+          );
+          formData.append(
+            "problemDescription",
+            document.getElementById("problemDescription").value.trim()
+          );
+          formData.append(
+            "problemImage",
+            document.getElementById("problemImage").files[0]
+          ); // Image file
+          formData.append(
+            "roomNo",
+            document.getElementById("roomNo").value.trim()
+          );
+          formData.append(
+            "category",
+            document.getElementById("category").value
+          );
+          formData.append(
+            "studentId",
+            Number(document.getElementById("roll_number").value.trim())
+          );
+          formData.append("hostel", document.getElementById("hostel").value);
+
+          try {
+            const response = await fetch("/services/problems/add", {
+              method: "POST",
+              body: formData, // No need to set Content-Type, fetch handles it automatically
+            });
+
+            const data = await response.json();
+            console.log("Response from server:", data);
+
+            if (response.ok) {
+              alert("Problem added successfully!");
+              this.reset();
+              location.reload();
+            } else {
+              console.error("Error adding problem:", data);
+              alert("Error adding problem.");
+            }
+          } catch (error) {
+            console.error("Error in problem form submission:", error);
+            alert("An error occurred while adding the problem.");
+          }
+        });
+    </script>
+    <script>
+      document
+        .getElementById("statusForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          const status = document.getElementById("status").value;
+          const problemId = document.getElementById("problemId").value; // Ensure this exists in your form
+
+          if (!problemId) {
+            alert("Problem ID is missing.");
+            return;
+          }
+
+          try {
+            const response = await fetch("/services/problems/statusChange", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ status, problemId }),
+            });
+
+            if (response.ok) {
+              alert("Status updated successfully!");
+              location.reload(); // Reload to reflect changes
+            } else {
+              const error = await response.json();
+              alert("Error updating status: " + error.message);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while updating the status.");
+          }
+        });
+    </script>
   </body>
 </html>
