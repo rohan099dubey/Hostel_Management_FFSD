@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .gradient {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+      }
+      .meal-item {
+        padding: 0.5rem;
+        border-bottom: 1px solid #e5e7eb; /* Light gray border between items */
+      }
+      .meal-item:last-child {
+        border-bottom: none; /* Remove border for the last item */
+      }
+    </style>
+  </head>
+  <body class="">
+    <%- include('../navbar.ejs',{loggedIn: true}) %>
+
+    <h1 class="text-5xl font-bold text-gray-900 pt-40 text-center">
+      Dashboard
+      <div class="w-full mb-10">
+        <div
+          class="h-1 mx-auto bg-gradient-to-r from-pink-500 to-purple-600 w-64 opacity-50 my-4 rounded"
+        ></div>
+      </div>
+    </h1>
+
+    <div class="flex justify-center items-center w-full bg-gray-100 p-20 px-20">
+      <div class="bg-white p-8 rounded-2xl shadow-xl w-full">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <!-- Profile Image -->
+          <div class="md:w-1/3 flex justify-center">
+            <div class="relative">
+              <img
+                src="/images/OIP.jpg"
+                alt="Profile Photo"
+                class="w-48 h-48 rounded-full object-cover border-4 border-yellow-800 shadow-lg"
+              />
+              <div
+                class="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
+              >
+                <span
+                  class="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-medium"
+                  >Warden</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Details -->
+          <div class="md:w-2/3 space-y-4">
+            <div class="text-center md:text-left">
+              <h2 class="text-3xl font-bold text-gray-800">
+                <%=userInfo.name %>
+              </h2>
+              <p class="text-blue-600 font-medium"><%=userInfo.rollNo %></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <p class="text-gray-500 text-sm">Email</p>
+                <p class="text-gray-800 font-medium"><%=userInfo.email %></p>
+              </div>
+
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <p class="text-gray-500 text-sm">Hostel</p>
+                <p class="text-gray-800 font-medium"><%=userInfo.hostel %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-8">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Problem Tracker</h1>
+
+        <!-- Modal toggle -->
+        <% if (userInfo.role === 'student') { %>
+        <button
+          data-modal-target="crud-modal"
+          data-modal-toggle="crud-modal"
+          class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
+          type="button"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Register New Problem
+        </button>
+        <% } %>
+
+        <!-- Main modal -->
+        <div
+          id="crud-modal"
+          tabindex="-1"
+          aria-hidden="true"
+          class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50"
+        >
+          <div class="relative p-4 w-full max-w-xl max-h-full">
+            <!-- Modal content -->
+            <div
+              class="relative bg-white rounded-xl shadow-2xl dark:bg-gray-700"
+            >
+              <!-- Modal header -->
+              <div
+                class="flex items-center justify-between p-6 border-b rounded-t dark:border-gray-600 border-gray-200"
+              >
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                  Register New Problem
+                </h3>
+                <button
+                  type="button"
+                  class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center transition-colors duration-200"
+                  data-modal-toggle="crud-modal"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+                </button>
+              </div>
+              <!-- Modal body -->
+
+              <form id="problemForm" class="p-6">
+                <div class="grid gap-6 mb-6 grid-cols-2">
+                  <div class="col-span-2">
+                    <label
+                      for="problemTitle"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Problem Title</label
+                    >
+                    <input
+                      type="text"
+                      name="problemTitle"
+                      id="problemTitle"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
+                      placeholder="Enter problem title"
+                      required=""
+                    />
+                  </div>
+                  <div class="col-span-2">
+                    <label
+                      for="problemDescription"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Problem Description</label
+                    >
+                    <textarea
+                      id="problemDescription"
+                      rows="4"
+                      class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                      placeholder="Describe your problem in detail"
+                      required=""
+                    ></textarea>
+                  </div>
+                  <div class="col-span-2">
+                    <label
+                      for="problemImage"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Upload Image</label
+                    >
+                    <input
+                      type="file"
+                      name="problemImage"
+                      id="problemImage"
+                      accept="image/*"
+                      class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none p-3"
+                      required
+                    />
+                  </div>
+                  <div class="col-span-2 sm:col-span-1">
+                    <label
+                      for="roomNo"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Room Number</label
+                    >
+                    <input
+                      type="text"
+                      name="roomNo"
+                      id="roomNo"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
+                      placeholder="Enter room number"
+                      required=""
+                    />
+                  </div>
+                  <div class="col-span-2 sm:col-span-1">
+                    <label
+                      for="category"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Category</label
+                    >
+                    <select
+                      id="category"
+                      name="category"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
+                      required
+                    >
+                      <option selected="" disabled>Select category</option>
+                      <option value="Electrical">Electrical</option>
+                      <option value="Plumbing">Plumbing</option>
+                      <option value="Painting">Painting</option>
+                      <option value="Carpentry">Carpentry</option>
+                      <option value="Cleaning">Cleaning</option>
+                      <option value="Internet">Internet</option>
+                      <option value="Furniture">Furniture</option>
+                      <option value="Pest Control">Pest Control</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-span-2 sm:col-span-1">
+                    <label
+                      for="roll_number"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Roll Number</label
+                    >
+                    <input
+                      type="text"
+                      name="roll_number"
+                      id="roll_number"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
+                      placeholder="Enter roll number"
+                      required=""
+                    />
+                  </div>
+                  <div class="col-span-2 sm:col-span-1">
+                    <label
+                      for="hostel"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Hostel</label
+                    >
+                    <select
+                      id="hostel"
+                      name="hostel"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
+                      required
+                    >
+                      <option selected="" disabled>Select hostel</option>
+                      <option value="BH-1">BH-1</option>
+                      <option value="BH-2">BH-2</option>
+                      <option value="BH-3">BH-3</option>
+                      <option value="BH-4">BH-4</option>
+                    </select>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="inline-flex items-center justify-center w-full px-5 py-3 mt-4 text-white bg-blue-900 hover:bg-blue-700 font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
+                >
+                  <svg
+                    class="w-5 h-5 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  Submit Problem
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="problem-container"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-h-[800px] overflow-y-auto p-4"
+      >
+        <% problems.forEach(problem => { %>
+        <div
+          data-modal-target="problem-modal<%= problem.problemId %>"
+          data-modal-toggle="problem-modal<%= problem.problemId %>"
+          class="problem-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          data-id="<%= problem.problemId %>"
+        >
+          <div class="relative h-56 w-full">
+            <img
+              src="<%=problem.problemImage%>"
+              alt="<%=problem.problemTitle%>"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute top-4 right-4">
+              <% if (problem.status === "Pending") { %>
+              <span
+                class="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"
+              >
+                Pending
+              </span>
+              <% } else if (problem.status === "Resolved") { %>
+              <span
+                class="px-3 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800"
+              >
+                Resolved
+              </span>
+              <% } else if (problem.status === "Rejected") { %>
+              <span
+                class="px-3 py-1.5 rounded-full text-sm font-medium bg-red-100 text-red-800"
+              >
+                Rejected
+              </span>
+              <% } %>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-3">
+              <%= problem.problemTitle %>
+            </h3>
+            <div class="flex items-center space-x-3">
+              <span
+                class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-sm font-medium"
+              >
+                <%= problem.category %>
+              </span>
+              <span class="text-gray-600 text-sm flex items-center">
+                <svg
+                  class="w-4 h-4 mr-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+                  />
+                </svg>
+                <%= problem.hostel %>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="problem-modal<%= problem.problemId %>"
+          class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50"
+        >
+          <div
+            class="bg-white rounded-xl p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4"
+          >
+            <div class="flex justify-between items-center mb-6">
+              <h2 id="detailsTitle" class="text-2xl font-bold text-gray-900">
+                <%= problem.problemTitle %>
+              </h2>
+
+              <button
+                type="button"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                data-modal-toggle="problem-modal<%= problem.problemId %>"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="rounded-xl overflow-hidden shadow-lg">
+                <img
+                  id="detailsImage"
+                  src="<%=problem.problemImage%>"
+                  alt="<%=problem.problemTitle%>"
+                  class="w-full h-auto object-cover"
+                />
+              </div>
+
+              <div class="space-y-6">
+                <div class="flex items-center space-x-3">
+                  <% if (problem.status === "Pending") { %>
+                  <span
+                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"
+                  >
+                    Pending
+                  </span>
+                  <% } else if (problem.status === "Resolved") { %>
+                  <span
+                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                  >
+                    Resolved
+                  </span>
+                  <% } else if (problem.status === "Rejected") { %>
+                  <span
+                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-red-100 text-red-800"
+                  >
+                    Rejected
+                  </span>
+                  <% } %>
+                  <span
+                    class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-sm font-medium"
+                  >
+                    <%= problem.category %>
+                  </span>
+                </div>
+
+                <div>
+                  <h4 class="text-sm font-semibold text-gray-600 mb-2">
+                    Description
+                  </h4>
+                  <p class="text-gray-800 leading-relaxed">
+                    <%= problem.problemDescription %>
+                  </p>
+                </div>
+
+                <div class="border-t border-gray-200 pt-6">
+                  <h4 class="text-sm font-semibold text-gray-600 mb-4">
+                    Problem Details
+                  </h4>
+                  <div class="grid grid-cols-2 gap-6">
+                    <div>
+                      <p class="text-sm text-gray-600">Roll Number</p>
+                      <p class="font-medium text-gray-900">
+                        <%= problem.studentId %>
+                      </p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Hostel</p>
+                      <p class="font-medium text-gray-900">
+                        <%= problem.hostel %>
+                      </p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Room Number</p>
+                      <p class="font-medium text-gray-900">
+                        <%= problem.roomNumber %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <% if (userInfo.role !== 'student' && problem.status !==
+                'Resolved' && problem.status !== 'Rejected') { %>
+                <div class="border-t border-gray-200 pt-6">
+                  <h4 class="text-sm font-semibold text-gray-600 mb-4">
+                    Update Status
+                  </h4>
+                  <form id="statusForm" class="flex items-center space-x-4">
+                    <input
+                      type="hidden"
+                      name="problemId"
+                      id="problemId"
+                      value="<%= problem.problemId %>"
+                    />
+                    <select
+                      name="status"
+                      id="status"
+                      class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-3 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                    >
+                      <option disabled selected>Select Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Resolved">Resolved</option>
+                      <% if (userInfo.role === 'admin') { %>
+                      <option value="Rejected">Rejected</option>
+                      <% } %>
+                    </select>
+                    <button
+                      type="submit"
+                      class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
+                    >
+                      Update
+                    </button>
+                  </form>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-8">
+      <!-- Problem Statistics Card -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-xl font-bold text-gray-900">Problem Statistics</h3>
+
+          <!-- Date Filter Dropdown -->
+          <select
+            id="dateFilter"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+          >
+            <option value="all">All Time</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+          </select>
+        </div>
+
+        <!-- Pie Chart Container -->
+        <div id="problemsPieChart" class="w-full h-[400px]"></div>
+
+        <!-- Statistics Summary -->
+        <div class="grid grid-cols-3 gap-4 mt-6">
+          <div class="bg-yellow-50 p-4 rounded-lg">
+            <h4 class="text-yellow-800 font-semibold">Pending</h4>
+            <p id="pendingCount" class="text-2xl font-bold text-yellow-600">
+              0
+            </p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg">
+            <h4 class="text-green-800 font-semibold">Resolved</h4>
+            <p id="resolvedCount" class="text-2xl font-bold text-green-600">
+              0
+            </p>
+          </div>
+          <div class="bg-red-50 p-4 rounded-lg">
+            <h4 class="text-red-800 font-semibold">Rejected</h4>
+            <p id="rejectedCount" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-8">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">
+              Resolution Time Analysis
+            </h3>
+            <p class="text-sm text-gray-500">
+              Average time taken to resolve problems by category
+            </p>
+          </div>
+        </div>
+
+        <!-- Bar Chart Container -->
+        <div id="resolutionTimeChart" class="w-full h-[400px]"></div>
+      </div>
+    </div>
+
+    <input
+      type="hidden"
+      id="allProblemsData"
+      value="<%= JSON.stringify(problems) %>"
+    />
+
+    <%- include('../footer.ejs') %>
+    <script>
+      document
+        .getElementById("statusForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          const status = document.getElementById("status").value;
+          const problemId = document.getElementById("problemId").value; // Ensure this exists in your form
+
+          if (!problemId) {
+            alert("Problem ID is missing.");
+            return;
+          }
+
+          try {
+            const response = await fetch("/services/problems/statusChange", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ status, problemId }),
+            });
+
+            if (response.ok) {
+              alert("Status updated successfully!");
+              location.reload(); // Reload to reflect changes
+            } else {
+              const error = await response.json();
+              alert("Error updating status: " + error.message);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while updating the status.");
+          }
+        });
+    </script>
+    <script src="/js/wardenDashboard.js"></script>
+  </body>
+</html>
