@@ -138,29 +138,43 @@
     document.addEventListener("DOMContentLoaded", function () {
       const dropdownBtn = document.getElementById("dropdown-btn");
       const dropdownMenu = document.getElementById("dropdown-menu");
+      const navLinks = document.querySelectorAll(
+        "nav ul li a:not(#dropdown-menu a)"
+      );
+      const dropdownMenuLinks = document.querySelectorAll("#dropdown-menu a");
 
-      // Function to update text color based on background
-      function updateTextColor() {
-        const backgroundColor = window.getComputedStyle(
-          document.body
-        ).backgroundColor;
-        const isGradient = backgroundColor.includes("gradient");
-        const textColor = isGradient ? "white" : "black";
-        dropdownBtn.style.color = textColor;
-        dropdownMenu.style.color = textColor;
+      // Function to apply gradient text
+      function applyGradientText(element) {
+        element.style.background =
+          "linear-gradient(90deg, #004aad 0%, #cb6ce6 100%)";
+        element.style.webkitBackgroundClip = "text";
+        element.style.webkitTextFillColor = "transparent";
+        element.style.color = "transparent";
       }
 
-      // Initial text color update
-      updateTextColor();
+      // Function to reset text color
+      function resetTextColor(element) {
+        element.style.background = "";
+        element.style.webkitBackgroundClip = "";
+        element.style.webkitTextFillColor = "";
+        element.style.color = "white";
+      }
 
+      // Dropdown toggle functionality
       dropdownBtn.addEventListener("click", function () {
-        if (dropdownMenu.classList.contains("hidden")) {
-          dropdownMenu.classList.remove("hidden");
-          dropdownMenu.classList.add("opacity-100");
-          updateTextColor(); // Update text color when dropdown is shown
+        const isDropdownOpen = !dropdownMenu.classList.contains("hidden");
+
+        // Toggle dropdown visibility
+        dropdownMenu.classList.toggle("hidden");
+        dropdownMenu.classList.toggle("opacity-100");
+
+        // Toggle arrow
+        if (isDropdownOpen) {
+          // Closing dropdown - change to down arrow
+          dropdownBtn.innerHTML = `Services ▼`;
         } else {
-          dropdownMenu.classList.add("hidden");
-          dropdownMenu.classList.remove("opacity-100");
+          // Opening dropdown - change to up arrow
+          dropdownBtn.innerHTML = `Services ▲`;
         }
       });
 
@@ -172,6 +186,36 @@
         ) {
           dropdownMenu.classList.add("hidden");
           dropdownMenu.classList.remove("opacity-100");
+
+          // Reset to down arrow
+          dropdownBtn.innerHTML = `Services ▼`;
+        }
+      });
+
+      // Color change on scroll
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 0) {
+          // Change text color to gradient when scrolled (excluding dropdown menu links)
+          navLinks.forEach((link) => applyGradientText(link));
+
+          // Apply gradient to dropdown button
+          applyGradientText(dropdownBtn);
+
+          // Keep dropdown menu links white
+          dropdownMenuLinks.forEach((link) => {
+            link.style.color = "white";
+          });
+        } else {
+          // Revert to white when at the top
+          navLinks.forEach((link) => resetTextColor(link));
+
+          // Reset dropdown button color
+          resetTextColor(dropdownBtn);
+
+          // Ensure dropdown menu links remain white
+          dropdownMenuLinks.forEach((link) => {
+            link.style.color = "white";
+          });
         }
       });
     });
