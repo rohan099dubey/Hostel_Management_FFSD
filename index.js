@@ -551,58 +551,141 @@ app.post('/services/transit', async (req, res) => {
     }
 });
 
-app.get('/dashboard', (req, res) => {
-    res.render('dashboard.ejs', {
-        user: mockUser,
-        data: dashboardData[mockUser.role.toLowerCase()],
-    })
-})
-const mockUser = {
-    name: "John Doe",
-    role: "STUDENT", // Change this to "ADMIN" or "WARDEN" to see different dashboards
-    email: "john@example.com"
-};
 
-// Mock dashboard data
-const dashboardData = {
-    admin: {
-        totalStudents: 450,
-        pendingIssues: 15,
-        feeDefaulters: 25,
-        recentActivities: [
-            { type: 'issue', text: 'New complaint registered for Block A', time: '2 hours ago' },
-            { type: 'fee', text: 'Fee payment received from Room 203', time: '3 hours ago' },
-            { type: 'notice', text: 'Published new mess menu', time: '5 hours ago' }
-        ],
-        statistics: {
-            issuesResolved: 85,
-            feeCollection: 92,
-            messRating: 4.2
-        }
-    },
-    warden: {
-        assignedIssues: 8,
-        pendingApprovals: 5,
-        todayAttendance: 95,
-        recentActivities: [
-            { type: 'complaint', text: 'Water issue in Block B resolved', time: '1 hour ago' },
-            { type: 'entry', text: 'Late entry request from Room 105', time: '4 hours ago' }
-        ]
-    },
-    student: {
-        pendingFees: 12500,
-        messCredits: 45,
-        activeComplaints: 2,
-        notices: [
-            { title: 'Hostel Day Celebration', date: '2024-03-25' },
-            { title: 'Maintenance Work', date: '2024-03-20' }
-        ],
-        recentActivities: [
-            { type: 'complaint', text: 'Your complaint #123 has been resolved', time: '1 hour ago' },
-            { type: 'mess', text: 'Mess menu updated for next week', time: '3 hours ago' }
-        ]
+app.get('/dashboard', async (req, res) => {
+    const role = req.cookies.role;
+    const userId = req.cookies.userid;
+
+    let userInfo = await User.findOne({ where: { userId: userId }, attributes: { exclude: ['password'] } });
+
+    if (!userInfo) {
+        userInfo = userData.find(user => userId === user.userId);
     }
-};
+
+    if (role === "student") {
+
+        let userProblems1 = await hostelProblem.findAll({
+            where: { hostel: userInfo.hostel, studentId: userInfo.userId }
+        });
+
+        if (!!userProblems1) {
+            userProblems1 = userProblems1.map(problem => ({
+                ...problem.toJSON(),
+                roomNumber: problem.roomNo // Change roomNo to roomNumber
+            }));
+        }
+
+        let userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel && problem.studentId === userInfo.userId);
+        let problems = [...userProblems1, ...userProblems2];
+
+        res.render('partials/dashboard/student.ejs', { userInfo, problems })
+
+    } else if (role === "warden") {
+
+        let userProblems1 = await hostelProblem.findAll({
+            where: { hostel: userInfo.hostel }
+        });
+
+        if (!!userProblems1) {
+            userProblems1 = userProblems1.map(problem => ({
+                ...problem.toJSON(),
+                roomNumber: problem.roomNo // Change roomNo to roomNumber
+            }));
+        }
+
+        let userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel);
+        let problems = [...userProblems1, ...userProblems2];
+
+        res.render('partials/dashboard/warden.ejs', { userInfo, problems });
+
+    } else if (role === "admin") {
+
+        // Get all users for admin dashboard
+        let allUsers = await User.findAll({
+            attributes: { exclude: ['password'] }
+        });
+
+        // Add mock users if needed
+        if (userData && userData.length > 0) {
+            // Filter out duplicates that might already exist in allUsers
+            const existingUserIds = allUsers.map(user => user.userId);
+            const uniqueMockUsers = userData.filter(user => !existingUserIds.includes(user.userId));
+
+            // Combine real and mock users
+            allUsers = [...allUsers, ...uniqueMockUsers];
+        }
+
+        let userProblems1 = await hostelProblem.findAll({
+        });
+
+        if (!!userProblems1) {
+            userProblems1 = userProblems1.map(problem => ({
+                ...problem.toJSON(),
+                roomNumber: problem.roomNo // Change roomNo to roomNumber
+            }));
+        }
+
+        let userProblems2 = dataProblems;
+        let problems = [...userProblems1, ...userProblems2];
+
+        res.render('partials/dashboard/admin.ejs', { userInfo, problems, allUsers });
+    }
+})
+
+app.post('/services/users/add-warden', async (req, res) => {
+    try {
+        const { name, email, hostel, password, role } = req.body;
+
+        const newWarden = await User.create({
+            name,
+            email,
+            hostel,
+            password, // In production, make sure to hash the password
+            role: 'warden'
+        });
+
+        res.status(201).json({ message: 'Warden added successfully', warden: newWarden });
+    } catch (error) {
+        console.error('Error adding warden:', error);
+        res.status(500).json({ message: 'Error adding warden', error: error.message });
+    }
+});
+
+// Delete Warden
+app.delete('/services/users/delete-warden/:id', async (req, res) => {
+    try {
+        const wardenId = req.params.id;
+        const deletedCount = await User.destroy({
+            where: {
+                userId: wardenId,
+                role: 'warden'
+            }
+        });
+        console.log(wardenId)
+        // Find the warden in userData array if it exists
+        const userToDelete = userData.find(user => user.userId === wardenId);
+
+        if (userToDelete) {
+            console.log(`Found warden to delete: ${userToDelete.name} (${userToDelete.email})`);
+            userData = userData.filter(user => user.userId !== wardenId);
+        } else {
+            console.log(`Warden with ID ${wardenId} not found in userData array`);
+        }
+        if (!deletedCount) {
+            // Fix the error by not reassigning to userData constant
+            // Instead, modify the global userData variable if it exists
+            if (typeof userData !== 'undefined') {
+                // Filter the array without reassignment
+                userData = userData.filter(user => user.userId !== wardenId);
+            }
+        }
+        res.json({ message: 'Warden deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting warden:', error);
+        res.status(500).json({ message: 'Error deleting warden', error: error.message });
+    }
+});
+
 const loadMenuData = require('./loadmenuData.js'); // Adjust the path
 
 // Load menu data on startup
@@ -665,7 +748,7 @@ app.post('/feedback', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-app.get('/chatRoom', (req, res) => {
+app.get('/services/chatRoom', (req, res) => {
     try {
         const { role } = req.cookies;
         res.render('chatRoom.ejs', {
