@@ -59,34 +59,43 @@
       id="nav-content"
     >
       <ul class="list-reset lg:flex justify-end flex-1 items-center">
-        <li class="mr-3">
-          <a
-            class="inline-block py-2 px-4 text-black font-bold no-underline"
-            href="/services/problems"
-            >Hostel</a
+        <!-- Dropdown Menu for Services -->
+        <li class="relative">
+          <button
+            id="dropdown-btn"
+            class="inline-block py-2 px-4 text-white font-bold no-underline cursor-pointer focus:outline-none"
           >
-        </li>
-        <li class="mr-3">
-          <a
-            class="inline-block py-2 px-4 text-white font-bold no-underline"
-            href="/services/announcements"
-            >Announcements</a
+            Services ▼
+          </button>
+          <ul
+            id="dropdown-menu"
+            class="absolute left-0 mt-2 hidden bg-purple-500 shadow-lg rounded-md w-40 transition-opacity duration-300 ease-in-out opacity-0"
           >
+            <li>
+              <a
+                class="block px-4 py-2 text-white hover:bg-gray-700"
+                href="/services/mess"
+                >Mess</a
+              >
+            </li>
+            <li>
+              <a
+                class="block px-4 py-2 text-white hover:bg-gray-700"
+                href="/services/announcements"
+              >
+                Announcements</a
+              >
+            </li>
+            <li>
+              <a
+                class="block px-4 py-2 text-white hover:bg-gray-700"
+                href="/services/problems"
+                >Hostel</a
+              >
+            </li>
+          </ul>
         </li>
-        <li class="mr-3">
-          <a
-            class="inline-block py-2 px-4 text-white font-bold no-underline"
-            href="/services/mess"
-            >Mess</a
-          >
-        </li>
-        <li class="mr-3">
-          <a
-            class="inline-block py-2 px-4 text-white font-bold no-underline"
-            href="/services"
-            >Services</a
-          >
-        </li>
+
         <li class="mr-3">
           <a
             class="inline-block text-white no-underline hover:text-gray-400 hover:text-underline py-2 px-4"
@@ -102,6 +111,7 @@
           >
         </li>
       </ul>
+
       <button
         id="navAction"
         class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
@@ -112,3 +122,32 @@
   </div>
   <hr class="border-b border-gray-100 opacity-25 my-0 py-0" />
 </nav>
+
+<!-- JavaScript for Dropdown -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropdownBtn = document.getElementById("dropdown-btn");
+    const dropdownMenu = document.getElementById("dropdown-menu");
+
+    dropdownBtn.addEventListener("click", function () {
+      if (dropdownMenu.classList.contains("hidden")) {
+        dropdownMenu.classList.remove("hidden");
+        dropdownMenu.classList.add("opacity-100");
+      } else {
+        dropdownMenu.classList.add("hidden");
+        dropdownMenu.classList.remove("opacity-100");
+      }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+      if (
+        !dropdownBtn.contains(event.target) &&
+        !dropdownMenu.contains(event.target)
+      ) {
+        dropdownMenu.classList.add("hidden");
+        dropdownMenu.classList.remove("opacity-100");
+      }
+    });
+  });
+</script>
