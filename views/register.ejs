@@ -3,298 +3,250 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
-    <title>Home Page - Hostelia</title>
-
-    <meta name="description" content="Home Page of Hostelia" />
-    <meta name="keywords" content="Home Page of Hostelia" />
-    <meta name="author" content="Home Page of Hostelia" />
-
-    <!-- External Resources -->
+    <title>Hostelia | Entry/Exit Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link
-      rel="stylesheet"
-      href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Custom Styles -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
       .gradient {
         background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
       }
-
       body {
-        font-family: "Source Sans Pro", sans-serif;
+        font-family: "Poppins", sans-serif;
       }
-
-      /* Custom Animations */
-      @keyframes slideInLeft {
-        from {
-          transform: translateX(-100%);
-          opacity: 0;
+      
+      .hero-section {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 0 1rem;
+      }
+      
+      .hero-section::before {
+        content: '';
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="rgba(255,255,255,0.05)"/></svg>');
+        opacity: 0.1;
+      }
+      
+      .table-container {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      
+      .table-header {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+        color: white;
+        border-radius: 1rem 1rem 0 0;
+      }
+      
+      .table-row {
+        transition: all 0.2s ease;
+      }
+      
+      .table-row:hover {
+        background-color: #f8fafc;
+        transform: translateY(-1px);
+      }
+      
+      @media (max-width: 768px) {
+        .hero-section {
+          min-height: 250px;
         }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-
-      @keyframes slideInRight {
-        from {
-          transform: translateX(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-
-      @keyframes slideInUp {
-        from {
-          transform: translateY(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-
-      .animate-slideInLeft {
-        animation: slideInLeft 0.8s ease-out;
-      }
-
-      .animate-slideInRight {
-        animation: slideInRight 0.8s ease-out;
-      }
-
-      .animate-slideInUp {
-        animation: slideInUp 0.8s ease-out;
-      }
-
-      /* Card Hover Effect */
-      .card-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .card-hover:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      }
-
-      /* Button Hover Effect */
-      .btn-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .btn-hover:hover {
-        transform: scale(1.05);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-
-      /* Image Hover Effect */
-      .img-hover {
-        transition: transform 0.3s ease;
-      }
-
-      .img-hover:hover {
-        transform: scale(1.05);
       }
     </style>
   </head>
-
-  <body class="leading-normal tracking-normal ">
-    <div id="transitModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden position: absolute;
-    z-index: 1000;">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-[800px]">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Create Transit Entry</h2>
-    
-            <form action="/services/transit" method="POST">
-                <!-- Row 1 -->
-                <div class="flex space-x-4 mb-3">
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Student Name</label>
-                        <input type="text" name="studentName" class="w-full p-2 border rounded" required>
-                    </div>
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Roll Number</label>
-                        <input type="number" name="studentRollNumber" class="w-full p-2 border rounded" required>
-                    </div>
-                </div>
-    
-                <!-- Row 2 -->
-                <div class="flex space-x-4 mb-3">
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Hostel</label>
-                        <input type="text" name="studentHostel" class="w-full p-2 border rounded" required>
-                    </div>
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Room Number</label>
-                        <input type="number" name="studentRoomNumber" class="w-full p-2 border rounded" required>
-                    </div>
-                </div>
-    
-                <!-- Row 3 -->
-                <div class="flex space-x-4 mb-3">
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Purpose</label>
-                        <input type="text" name="purpose" class="w-full p-2 border rounded" required>
-                    </div>
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Entry/Exit</label>
-                        <select name="transitStatus" class="w-full p-2 border rounded" required>
-                            <option value="ENTRY">Entry</option>
-                            <option value="EXIT">Exit</option>
-                        </select>
-                    </div>
-                </div>
-    
-                <!-- Row 4 -->
-                <div class="flex space-x-4 mb-3">
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Date</label>
-                        <input type="date" name="date" class="w-full p-2 border rounded" required>
-                    </div>
-                    <div class="w-1/2">
-                        <label class="block text-gray-700">Time</label>
-                        <input type="time" name="time" class="w-full p-2 border rounded" required>
-                    </div>
-                </div>
-    
-                <!-- Buttons -->
-                <div class="flex justify-between mt-4">
-                    <button type="button" onclick="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded-lg">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Navigation -->
+  <body class="bg-gray-50">
     <%- include('partials/navbar.ejs') %>
-    
-    <br>
-    <div class="pt-24">
-      <div
-        class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
-      >
-        <h1 class="text-6xl font-bold leading-tight text-center w-full">
-          Hostel Services
-        </h1>
+
+    <!-- Hero Section -->
+    <div class="hero-section relative">
+      <div class="max-w-6xl mx-auto relative z-10 px-4 mt-32">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Hostel Services</h1>
+        <p class="text-xl md:text-2xl opacity-90 mb-8">Access all hostel-related services in one place</p>
+        
+        <!-- Service Navigation Buttons -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <a href="/services/problems" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Problem Tracker
+          </a>
+          <a href="/services/register" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Entry/Exit
+          </a>
+          <a href="/services/chatRoom" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            Chat Room
+          </a>
+        </div>
       </div>
     </div>
-    <!-- Buttons for Loading Components -->
-    <div class="container mx-auto text-center py-8">
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/services/problems">Problem</a>
-      </button>
-      <button
-        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/services/register">Entry/Exit</a>
-      </button>
-      <button
-        class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/services/chat-room">Chat Room</a>
-      </button>
-    </div>  
-    <h1 class="text-2xl font-bold text-gray-800 text-center text-white px-4 py-3 rounded-md">
-        Entry / Exit Register
-    </h1>
-    <div class="flex justify-center mt-5">
-        <button onclick="openModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Create an Entry</button>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Page Title and Action Button -->
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900">Entry/Exit Register</h2>
+        <button
+          onclick="openModal()"
+          class="bg-gradient-to-r from-blue-600 to-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Create New Entry
+        </button>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-container overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="table-header">
+              <tr>
+                <th scope="col" class="px-6 py-4 font-medium">Student Name</th>
+                <th scope="col" class="px-6 py-4 font-medium">Roll Number</th>
+                <th scope="col" class="px-6 py-4 font-medium">Hostel</th>
+                <th scope="col" class="px-6 py-4 font-medium">Room Number</th>
+                <th scope="col" class="px-6 py-4 font-medium">Purpose</th>
+                <th scope="col" class="px-6 py-4 font-medium">Entry/Exit</th>
+                <th scope="col" class="px-6 py-4 font-medium">Date</th>
+                <th scope="col" class="px-6 py-4 font-medium">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% entryExit.forEach(student => { %>
+                <tr class="table-row border-b border-gray-200">
+                  <td class="px-6 py-4 font-medium text-gray-900"><%= student.studentName %></td>
+                  <td class="px-6 py-4 text-gray-600"><%= student.studentRollNumber %></td>
+                  <td class="px-6 py-4 text-gray-600"><%= student.studentHostel %></td>
+                  <td class="px-6 py-4 text-gray-600"><%= student.studentRoomNumber %></td>
+                  <td class="px-6 py-4 text-gray-600"><%= student.purpose %></td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-sm font-medium <%= student.transitStatus === 'ENTRY' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                      <%= student.transitStatus %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600"><%= student.date %></td>
+                  <td class="px-6 py-4 text-gray-600"><%= student.time %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
-    <!-- Modal -->
-     
-    <!-- Hero Section -->
-    <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-        <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
-            <!-- Start coding here -->
-            
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">Student Name</th>
-                                <th scope="col" class="px-4 py-3">Roll Number</th>
-                                <th scope="col" class="px-4 py-3">Hostel</th>
-                                <th scope="col" class="px-4 py-3">Room Number</th>
-                                <th scope="col" class="px-4 py-3">Purpose</th>
-                                <th scope="col" class="px-4 py-3">Entry/Exit</th>
-                                <th scope="col" class="px-4 py-3">Date</th>
-                                <th scope="col" class="px-4 py-3">Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% entryExit.forEach(student => { %>
-                                <tr class="border-b dark:border-gray-700">
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= student.studentName %></td>
-                                    <td class="px-4 py-3"><%= student.studentRollNumber %></td>
-                                    <td class="px-4 py-3"><%= student.studentHostel %></td>
-                                    <td class="px-4 py-3"><%= student.studentRoomNumber %></td>
-                                    <td class="px-4 py-3"><%= student.purpose %></td>
-                                    <td class="px-4 py-3"><%= student.transitStatus %></td>
-                                    <td class="px-4 py-3"><%= student.date %></td>
-                                    <td class="px-4 py-3"><%= student.time %></td>
-                                </tr>
-                                <% }); %>
-                        </tbody>
-                    </table>
-                </div>
-                
-            </div>
+    <!-- Transit Modal -->
+    <div id="transitModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4">
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 class="text-2xl font-bold text-gray-900">Create Transit Entry</h2>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        </section>
 
-    <!-- Footer Wave -->
-    <svg
-      class="wave-top"
-      viewBox="0 0 1439 147"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g fill="#f8fafc">
-        <path
-          d="M1440,84 C1383.555,64.3 1342.555,51.3 1317,45 C1259.5,30.824 1206.707,25.526 1169,22 C1129.711,18.326 1044.426,18.475 980,22 C954.25,23.409 922.25,26.742 884,32 C845.122,37.787 818.455,42.121 804,45 C776.833,50.41 728.136,61.77 713,65 C660.023,76.309 621.544,87.729 584,94 C517.525,105.104 484.525,106.438 429,108 C379.49,106.484 342.823,104.484 319,102 C278.571,97.783 231.737,88.736 205,84 C154.629,75.076 86.296,57.743 0,32 L0,0 L1440,0 L1440,84 Z"
-        />
-      </g>
-    </svg>
+        <form action="/services/transit" method="POST" class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Student Name</label>
+              <input type="text" name="studentName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Roll Number</label>
+              <input type="number" name="studentRollNumber" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Hostel</label>
+              <select name="studentHostel" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+                <option value="">Select Hostel</option>
+                <option value="BH-1">BH-1</option>
+                <option value="BH-2">BH-2</option>
+                <option value="BH-3">BH-3</option>
+                <option value="BH-4">BH-4</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Room Number</label>
+              <input type="number" name="studentRoomNumber" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Purpose</label>
+              <input type="text" name="purpose" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Entry/Exit</label>
+              <select name="transitStatus" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+                <option value="ENTRY">Entry</option>
+                <option value="EXIT">Exit</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+              <input type="date" name="date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Time</label>
+              <input type="time" name="time" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" required>
+            </div>
+          </div>
 
-    <!-- Footer -->
+          <div class="flex justify-end gap-4 mt-6">
+            <button type="button" onclick="closeModal()" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
+              Cancel
+            </button>
+            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <%- include('partials/footer.ejs') %>
-
-    <!-- Scripts -->
     <script src="/js/navbar.js"></script>
     <script>
-        function openModal() {
-    const modal = document.getElementById("transitModal");
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-}
+      function openModal() {
+        const modal = document.getElementById("transitModal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
 
-function closeModal() {
-    const modal = document.getElementById("transitModal");
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-}
+      function closeModal() {
+        const modal = document.getElementById("transitModal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
 
-// Close modal when clicking outside of it
-window.onclick = function(event) {
-    const modal = document.getElementById("transitModal");
-    if (event.target === modal) {
-        closeModal();
-    }
-};
-
-    </script>    
-    
+      // Close modal when clicking outside of it
+      window.onclick = function(event) {
+        const modal = document.getElementById("transitModal");
+        if (event.target === modal) {
+          closeModal();
+        }
+      };
+    </script>
   </body>
 </html>
