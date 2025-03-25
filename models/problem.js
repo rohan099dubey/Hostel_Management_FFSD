@@ -42,6 +42,11 @@ const hostelProblem = sequelize.define('Problem', {
     status: {
         type: DataTypes.ENUM('Pending', 'Resolved', 'Rejected'),
         allowNull: false
+    },
+    timeResolved: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
     }
 }, {
     timestamps: true

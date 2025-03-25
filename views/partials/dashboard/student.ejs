@@ -3,66 +3,107 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Problem Tracker</title>
+    <title>Student Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css"
-      rel="stylesheet"
-    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       .gradient {
         background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
       }
-      body {
-        font-family: "Source Sans Pro", sans-serif;
+      .meal-item {
+        padding: 0.5rem;
+        border-bottom: 1px solid #e5e7eb; /* Light gray border between items */
+      }
+      .meal-item:last-child {
+        border-bottom: none; /* Remove border for the last item */
       }
     </style>
   </head>
-  <body class="bg-gray-50">
-    <!--header starts-->
-    <%- include('partials/navbar.ejs') %>
+  <body class="">
+    <%- include('../navbar.ejs',{loggedIn: true}) %>
 
-    <!-- Hero Section -->
-    <div class="pt-24">
-      <div
-        class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
-      >
-        <h1 class="text-6xl font-bold leading-tight text-center w-full">
-          Hostel Services
-        </h1>
+    <h1 class="text-5xl font-bold text-gray-900 pt-40 text-center">
+      Dashboard
+      <div class="w-full mb-10">
+        <div
+          class="h-1 mx-auto bg-gradient-to-r from-pink-500 to-purple-600 w-64 opacity-50 my-4 rounded"
+        ></div>
+      </div>
+    </h1>
+
+    <div class="flex justify-center items-center w-full bg-gray-100 p-20 px-20">
+      <div class="bg-white p-8 rounded-2xl shadow-xl w-full">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <!-- Profile Image -->
+          <div class="md:w-1/3 flex justify-center">
+            <div class="relative">
+              <img
+                src="/images/OIP.jpg"
+                alt="Profile Photo"
+                class="w-48 h-48 rounded-full object-cover border-4 border-blue-500 shadow-lg"
+              />
+              <div
+                class="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
+              >
+                <span
+                  class="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium"
+                  >Student</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Details -->
+          <div class="md:w-2/3 space-y-4">
+            <div class="text-center md:text-left">
+              <h2 class="text-3xl font-bold text-gray-800">
+                <%=userInfo.name %>
+              </h2>
+              <p class="text-blue-600 font-medium"><%=userInfo.rollNo %></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <p class="text-gray-500 text-sm">Email</p>
+                <p class="text-gray-800 font-medium"><%=userInfo.email %></p>
+              </div>
+
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <p class="text-gray-500 text-sm">Year</p>
+                <p class="text-gray-800 font-medium"><%=userInfo.year %></p>
+              </div>
+
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <p class="text-gray-500 text-sm">Hostel</p>
+                <p class="text-gray-800 font-medium"><%=userInfo.hostel %></p>
+              </div>
+
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <p class="text-gray-500 text-sm">Room Number</p>
+                <p class="text-gray-800 font-medium"><%=userInfo.roomNo %></p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- Buttons for Loading Components -->
-    <div class="container mx-auto text-center py-8">
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/services/problems">Problem</a>
-      </button>
-      <button
-        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/services/register">Entry/Exit</a>
-      </button>
-      <button
-        class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/services/chatRoom">Chat Room</a>
-      </button>
-    </div>
-    <!--header ends-->
+
     <div class="container mx-auto px-6 py-8">
       <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Problem Tracker</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Your Problem Tracker</h1>
 
         <!-- Modal toggle -->
-        <% if (role === 'student') { %>
+        <% if (userInfo.role === 'student') { %>
         <button
           data-modal-target="crud-modal"
           data-modal-toggle="crud-modal"
-          class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
+          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
           type="button"
         >
           <svg
@@ -248,7 +289,7 @@
                 </div>
                 <button
                   type="submit"
-                  class="inline-flex items-center justify-center w-full px-5 py-3 mt-4 text-white bg-blue-900 hover:bg-blue-700 font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
+                  class="inline-flex items-center justify-center w-full px-5 py-3 mt-4 text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:bg-blue-700 font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
                 >
                   <svg
                     class="w-5 h-5 mr-2"
@@ -262,7 +303,7 @@
                       clip-rule="evenodd"
                     ></path>
                   </svg>
-                  Submit Problem
+                  Submit Proble
                 </button>
               </form>
             </div>
@@ -441,8 +482,7 @@
                   </div>
                 </div>
 
-                <% if (role !== 'student' && problem.status !== 'Resolved' &&
-                problem.status !== 'Rejected') { %>
+                <% if (userInfo.role !== 'student') { %>
                 <div class="border-t border-gray-200 pt-6">
                   <h4 class="text-sm font-semibold text-gray-600 mb-4">
                     Update Status
@@ -451,24 +491,22 @@
                     <input
                       type="hidden"
                       name="problemId"
-                      id="problemId"
                       value="<%= problem.problemId %>"
                     />
                     <select
                       name="status"
-                      id="status"
                       class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-3 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                     >
                       <option disabled selected>Select Status</option>
                       <option value="Pending">Pending</option>
                       <option value="Resolved">Resolved</option>
-                      <% if (role === 'admin') { %>
+                      <% if (userInfo.role === 'admin') { %>
                       <option value="Rejected">Rejected</option>
                       <% } %>
                     </select>
                     <button
                       type="submit"
-                      class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
+                      class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 transform hover:scale-105"
                     >
                       Update
                     </button>
@@ -482,9 +520,94 @@
         <% }) %>
       </div>
     </div>
-    <%- include('partials/footer.ejs') %>
-    <script src="/js/navbar.js"></script>
+
+    <%- include('../footer.ejs') %>
     <script>
+      // document
+      //   .getElementById("problemForm")
+      //   .addEventListener("submit", async function (event) {
+      //     event.preventDefault();
+
+      //     // Get form values
+      //     const form = event.target;
+      //     const problemTitle = form.problemTitle.value.trim();
+      //     const problemDescription = form.problemDescription.value.trim();
+      //     const problemImage = form.problemImage.files[0];
+      //     const roomNo = form.roomNo.value.trim();
+      //     const category = form.category.value;
+      //     const studentId = form.roll_number.value.trim();
+      //     const hostel = form.hostel.value;
+
+      //     console.log("Form Data:", {
+      //       problemTitle,
+      //       problemDescription,
+      //       problemImage,
+      //       roomNo,
+      //       category,
+      //       studentId,
+      //       hostel,
+      //     });
+
+      //     // Check if all fields are filled
+      //     if (
+      //       !problemTitle ||
+      //       !problemDescription ||
+      //       !problemImage ||
+      //       !roomNo ||
+      //       !category ||
+      //       !studentId ||
+      //       !hostel
+      //     ) {
+      //       return alert("All fields are required.");
+      //     }
+
+      //     try {
+      //       // Upload image to Cloudinary
+      //       const formData = new FormData();
+      //       formData.append("file", problemImage);
+      //       formData.append("upload_preset", "hostelia");
+
+      //       const cloudinaryRes = await fetch(
+      //         "https://api.cloudinary.com/v1_1/dyzoysf4v/image/upload",
+      //         { method: "POST", body: formData }
+      //       );
+      //       const cloudinaryData = await cloudinaryRes.json();
+
+      //       console.log("Cloudinary Response:", cloudinaryData);
+
+      //       if (!cloudinaryData.secure_url)
+      //         return alert("Image upload failed.");
+
+      //       // Send problem data to backend
+      //       const response = await fetch("/services/problems/add", {
+      //         method: "POST",
+      //         headers: { "Content-Type": "application/json" },
+      //         body: JSON.stringify({
+      //           problemTitle,
+      //           problemDescription,
+      //           problemImage: cloudinaryData.secure_url,
+      //           roomNo: Number(roomNo),
+      //           category,
+      //           studentId,
+      //           hostel,
+      //         }),
+      //       });
+
+      //       console.log("Server Response:", response);
+
+      //       if (!response.ok) {
+      //         const errorData = await response.json();
+      //         console.error("Error adding problem:", errorData);
+      //         return alert("Error adding problem: " + errorData.message);
+      //       }
+
+      //       alert("Problem added successfully!");
+      //       form.reset();
+      //     } catch (error) {
+      //       console.error("Error:", error);
+      //       alert("An error occurred.");
+      //     }
+      //   });
       document
         .getElementById("problemForm")
         .addEventListener("submit", async function (event) {
@@ -537,42 +660,6 @@
           } catch (error) {
             console.error("Error in problem form submission:", error);
             alert("An error occurred while adding the problem.");
-          }
-        });
-    </script>
-    <script>
-      document
-        .getElementById("statusForm")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault(); // Prevent default form submission
-
-          const status = document.getElementById("status").value;
-          const problemId = document.getElementById("problemId").value; // Ensure this exists in your form
-
-          if (!problemId) {
-            console.log("Problem ID is missing.");
-            return;
-          }
-
-          try {
-            const response = await fetch("/services/problems/statusChange", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ status, problemId }),
-            });
-
-            if (response.ok) {
-              alert("Status updated successfully!");
-              location.reload(); // Reload to reflect changes
-            } else {
-              const error = await response.json();
-              alert("Error updating status: " + error.message);
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred while updating the status.");
           }
         });
     </script>
