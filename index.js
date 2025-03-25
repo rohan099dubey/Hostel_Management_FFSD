@@ -10,12 +10,13 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs').promises;
 const Transit = require('./models/transit');
 
-// Database configurations
+
 const sequelize = require('./config/database.js');
 const User = require('./models/user.js');
 const hostelProblem = require('./models/problem.js');
 const Announcement = require('./models/announcement.js'); // Import Announcement model
 const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
+const { MenuItems, Feedback } = require('./models/menu.js');
 
 //cloudinary 
 
@@ -23,7 +24,6 @@ const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
 //multer 
 const multer = require("multer");
 
-// Configure Storage
 // Set storage engine
 const storage = multer.diskStorage({
     destination: "./public/uploads/", // Store images in public/uploads/
@@ -54,73 +54,55 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true })); // Needed for form submissions
 
-
-
 moment().format();
-
-// mongoose.connect(process.env.MONGO_URI)
-//     .then(() => console.log('Connected to database'))
-//     .catch((e) => console.log('error in connecting to database', e));
 
 sequelize.authenticate()
     .then(() => sequelize.sync()) // Sync models with database
     .then(() => console.log('Connected to SQLite in-memory database'))
     .catch(e => console.log('Error connecting to database:', e));
 
-
-
-// async function seedAnnouncements() {
-//     try {
-//         const count = await Announcement.count(); // Check existing announcements
-//         if (count === 0) {
-//             await Announcement.bulkCreate([
-//                 {
-//                     title: "Wi-Fi Upgrade Notice",
-//                     message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
-//                     createdAt: new Date(),
-//                     updatedAt: new Date()
-//                 },
-//                 {
-//                     title: "Mess Menu Update",
-//                     message: "The new mess menu for April has been updated. Check the notice board or website for details.",
-//                     createdAt: new Date(),
-//                     updatedAt: new Date()
-//                 },
-//                 {
-//                     title: "Exam Schedule Released",
-//                     message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
-//                     createdAt: new Date(),
-//                     updatedAt: new Date()
-//                 }
-//             ]);
-//             console.log("Dummy announcements added.");
-//         }
-//     } catch (error) {
-//         console.error("Error seeding announcements:", error);
-//     }
-// }
-
-// // Run the function when the server starts
-// seedAnnouncements();
-
-
-// routes 
-app.get('/', (req, res) => {
-    if (req.cookies.jwt) {
-        res.render('homepage.ejs', { loggedIn: true });
-    } else {
-        res.render('homepage.ejs', { loggedIn: false });
+// First, move the authMiddleware definition to the top after all the initial configurations
+const authMiddleware = (req, res, next) => {
+    const publicRoutes = ['/auth/login', '/auth/logout', '/signup', '/about', '/contact', '/', '/login'];
+    if (!req.cookies.jwt && !publicRoutes.includes(req.path)) {
+        return res.redirect('/login');
     }
-})
+    next();
+};
+
+
+
+
+
+// Apply middleware globally to all routes except public ones
+app.use(authMiddleware);
+
+// Public routes (no auth required)
+app.get('/', (req, res) => {
+    const isLoggedIn = Boolean(req.cookies.jwt);
+    res.render('homepage.ejs', { loggedIn: isLoggedIn });
+});
 
 app.get('/about', (req, res) => {
-    res.render('about.ejs')
-})
-
+    const isLoggedIn = Boolean(req.cookies.jwt);
+    res.render('about.ejs', { loggedIn: isLoggedIn });
+});
 
 app.get('/contact', (req, res) => {
-    res.render('contact.ejs')
-})
+    const isLoggedIn = Boolean(req.cookies.jwt);
+    res.render('contact.ejs', { loggedIn: isLoggedIn });
+});
+
+app.get('/login', (req, res) => {
+    const isLoggedIn = Boolean(req.cookies.jwt);
+    res.render('login.ejs', { loggedIn: isLoggedIn });
+});
+
+app.get('/signup', (req, res) => {
+    const isLoggedIn = Boolean(req.cookies.jwt);
+    res.render('signup.ejs', { loggedIn: isLoggedIn });
+});
+
 //routes for login and signup
 
 const generateToken = (userID, res) => {
@@ -142,10 +124,6 @@ const generateToken = (userID, res) => {
 }
 
 //signup
-app.get('/signup', (req, res) => {
-    res.render('signup.ejs')
-})
-
 const signup = async (req, res) => {
     const { name, rollNo, email, hostel, roomNo, year, password } = req.body;
     try {
@@ -211,10 +189,6 @@ const signup = async (req, res) => {
 app.post("/auth/signup", signup);
 
 //login
-app.get('/login', (req, res) => {
-    res.render('login.ejs')
-})
-
 const login = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -276,7 +250,7 @@ app.post("/auth/login", login)
 const logout = (req, res) => {
     try {
         res.cookie("jwt", "", { maxAge: 0 })
-        res.redirect('/').status(200).json({ message: "Logged out successfully" });
+        res.redirect('/');
     } catch (error) {
         console.log("ERROR in log-out controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
@@ -285,19 +259,16 @@ const logout = (req, res) => {
 
 app.post("/auth/logout", logout)
 
+// app.get('/services', async (req, res) => {
+//     res.render('services.ejs');
+// })
 
 
-app.get('/services', async (req, res) => {
-    res.render('services.ejs');
-})
-
-
-app.get("/services/announcements", async (req, res) => {
-
+app.get("/services/announcements", authMiddleware, async (req, res) => {
     try {
+        const isLoggedIn = Boolean(req.cookies.jwt);
         let announcements = await Announcement.findAll({ order: [["createdAt", "DESC"]] });
-
-        const { role } = req.cookies
+        const { role } = req.cookies;
         const dummyAnnouncements = [
             {
                 title: "Wi-Fi Upgrade Notice",
@@ -318,7 +289,7 @@ app.get("/services/announcements", async (req, res) => {
 
         announcements = [...announcements, ...dummyAnnouncements];
 
-        res.render("announcements", { announcements, role });
+        res.render("announcements", { announcements, role, loggedIn: isLoggedIn });
     } catch (error) {
         console.error("Error fetching announcements:", error);
         res.status(500).send("Error fetching announcements");
@@ -366,7 +337,8 @@ app.delete("/announcements/delete/:id", async (req, res) => {
 
 
 
-app.get('/services/problems', async (req, res) => {
+app.get('/services/problems', authMiddleware, async (req, res) => {
+    const isLoggedIn = Boolean(req.cookies.jwt);
     let role = req.cookies.role;
     let userID = req.cookies.userid;
 
@@ -408,49 +380,9 @@ app.get('/services/problems', async (req, res) => {
 
     let problems = [...userProblems1, ...userProblems2];
 
-    res.render('problems.ejs', { problems, role, userID });
+    res.render('problems.ejs', { problems, role, userID, loggedIn: isLoggedIn });
 });
 
-// app.post('/services/problems/add', async (req, res) => {
-//     try {
-//         const { problemTitle, problemDescription, problemImage, roomNo, category, studentId, hostel } = req.body;
-
-//         console.log("Received Data:", req.body);
-
-//         // Validate required fields
-//         if (!problemTitle || !problemDescription || !problemImage || !studentId || !hostel || !roomNo || !category) {
-//             return res.status(400).json({ message: "All fields are required" });
-//         }
-
-//         // Validate data types
-//         if (typeof problemTitle !== "string" || typeof problemDescription !== "string" || typeof problemImage !== "string" ||
-//             typeof studentId !== "string" || typeof hostel !== "string" || isNaN(roomNo) ||
-//             !["Electrical", "Plumbing", "Painting", "Carpentry", "Cleaning", "Internet", "Furniture", "Pest Control", "Other"].includes(category)) {
-//             return res.status(400).json({ message: "Invalid data format" });
-//         }
-
-//         // Validate image URL
-//         const cloudinaryRegex = /^https:\/\/res\.cloudinary\.com\/[\w-]+\/image\/upload\/.+$/;
-//         if (!cloudinaryRegex.test(problemImage)) {
-//             return res.status(400).json({ message: "Invalid image URL" });
-//         }
-
-//         // Check for duplicate problem
-//         const existingProblem = await hostelProblem.findOne({ where: { problemTitle, studentId, hostel, roomNo } });
-//         if (existingProblem) {
-//             return res.status(400).json({ message: "You have already reported this problem." });
-//         }
-
-//         // Store problem
-//         const newProblem = await hostelProblem.create({ problemTitle, problemDescription, problemImage, studentId, hostel, roomNo, category, status: "Pending" });
-
-//         res.status(201).json({ message: "Problem reported successfully!", data: newProblem });
-
-//     } catch (error) {
-//         console.error("ERROR:", error);
-//         res.status(500).json({ message: "Internal Server Error", error: error.message });
-//     }
-// });
 app.post("/services/problems/add", upload.single("problemImage"), async (req, res) => {
     try {
         const { problemTitle, problemDescription, roomNo, category, studentId, hostel } = req.body;
@@ -486,22 +418,10 @@ app.post("/services/problems/add", upload.single("problemImage"), async (req, re
     }
 })
 
-
-
-app.get('/services/chat-room', async (req, res) => {
-    res.render('chatRoom.ejs');
-})
-
-app.get('/problems', async (req, res) => {
-    const problems = {}
-    res.render('problems.ejs', { problems });
-})
-
-
 // res.render('problems.ejs', { problems });
-app.get("/services/register", async (req, res) => {
+app.get("/services/register", authMiddleware, async (req, res) => {
     try {
-
+        const isLoggedIn = Boolean(req.cookies.jwt);
         const transitEntries = await Transit.findAll();
 
         console.log("Fetched Transit Entries:", transitEntries);
@@ -517,15 +437,13 @@ app.get("/services/register", async (req, res) => {
         }));
         const mergedData = [...dataEntryExit, ...formattedEntries];
 
-        res.render("register.ejs", { entryExit: mergedData });
+        res.render("register.ejs", { entryExit: mergedData, loggedIn: isLoggedIn });
 
     } catch (error) {
         console.error("Error fetching transit data:", error);
         res.status(500).send("Internal Server Error");
     }
 });
-
-
 
 app.post('/services/transit', async (req, res) => {
     try {
@@ -552,7 +470,8 @@ app.post('/services/transit', async (req, res) => {
 });
 
 
-app.get('/dashboard', async (req, res) => {
+app.get('/dashboard', authMiddleware, async (req, res) => {
+    const isLoggedIn = Boolean(req.cookies.jwt);
     const role = req.cookies.role;
     const userId = req.cookies.userid;
 
@@ -578,7 +497,7 @@ app.get('/dashboard', async (req, res) => {
         let userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel && problem.studentId === userInfo.userId);
         let problems = [...userProblems1, ...userProblems2];
 
-        res.render('partials/dashboard/student.ejs', { userInfo, problems })
+        res.render('partials/dashboard/student.ejs', { userInfo, problems, loggedIn: isLoggedIn });
 
     } else if (role === "warden") {
 
@@ -596,7 +515,7 @@ app.get('/dashboard', async (req, res) => {
         let userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel);
         let problems = [...userProblems1, ...userProblems2];
 
-        res.render('partials/dashboard/warden.ejs', { userInfo, problems });
+        res.render('partials/dashboard/warden.ejs', { userInfo, problems, loggedIn: isLoggedIn });
 
     } else if (role === "admin") {
 
@@ -628,7 +547,7 @@ app.get('/dashboard', async (req, res) => {
         let userProblems2 = dataProblems;
         let problems = [...userProblems1, ...userProblems2];
 
-        res.render('partials/dashboard/admin.ejs', { userInfo, problems, allUsers });
+        res.render('partials/dashboard/admin.ejs', { userInfo, problems, allUsers, loggedIn: isLoggedIn });
     }
 })
 
@@ -691,7 +610,6 @@ const loadMenuData = require('./loadmenuData.js'); // Adjust the path
 // Load menu data on startup
 loadMenuData()
 //menu
-const { MenuItems, Feedback } = require('./models/menu.js');
 
 // Sync models with the database
 sequelize.sync({ force: true })
@@ -702,10 +620,12 @@ sequelize.sync({ force: true })
     .catch((error) => {
         console.error('Error syncing database:', error);
     });
+
 app.get('/services/mess', async (req, res) => {
     try {
+        const isLoggedIn = Boolean(req.cookies.jwt);
         const menuItems = await MenuItems.findAll();
-        res.render('menu', { menuItems, query: req.query });
+        res.render('menu', { menuItems, query: req.query, loggedIn: isLoggedIn });
     } catch (error) {
         console.error('Error fetching menu items:', error);
         res.status(500).send('Internal Server Error');
@@ -748,12 +668,15 @@ app.post('/feedback', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-app.get('/services/chatRoom', (req, res) => {
+
+app.get('/services/chatRoom', authMiddleware, (req, res) => {
     try {
+        const isLoggedIn = Boolean(req.cookies.jwt);
         const { role } = req.cookies;
         res.render('chatRoom.ejs', {
-            role: role
-        })
+            role: role,
+            loggedIn: isLoggedIn
+        });
     } catch (error) {
         console.error("Error loading chat rooms:", error);
         res.status(500).send("Error loading chat rooms");
@@ -763,4 +686,5 @@ app.get('/services/chatRoom', (req, res) => {
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is listening on port ${process.env.PORT}`);
+    console.log(`Server running on http://localhost:${process.env.PORT}/`)
 });

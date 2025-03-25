@@ -21,8 +21,12 @@
       </style>
 </head>
 
-<body class="bg-gray-50 font-['Poppins']">
-    <%- include('partials/navbar.ejs') %>
+<body>
+
+    <body>
+        <!-- Navbar Section -->
+        <%- include('partials/navbar.ejs', { loggedIn }) %>
+
 
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-r from-blue-600 to-purple-500 md:min-h-[350px] flex items-center justify-center text-center px-4">

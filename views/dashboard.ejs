@@ -33,7 +33,8 @@
   </head>
   <body class="bg-gray-50 font-poppins" style="font-family: 'Source Sans Pro', sans-serif">
     <!-- Navbar Partial (assumed fixed) -->
-    <%- include('partials/navbar.ejs') %>
+    <%- include('partials/navbar.ejs', { loggedIn }) %>
+
 
     <!-- Dashboard Header: Only the heading has the gradient background -->
     <!-- The container is pushed down to avoid overlap with the fixed navbar -->
