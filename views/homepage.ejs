@@ -547,158 +547,160 @@
       </div>
     </section>
 
-    <!-- Hostel Reviews Section -->
-    <section class="bg-white border-b py-12">
-      <div class="container mx-auto">
-        <h2
-          class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800 animate-slideInUp"
-        >
-          What Students Say About Our Hostel
+    <!--flip card-->
+    <section class="py-12 bg-gray-100">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
+          Our Hostels
         </h2>
-        <div class="w-full mb-8">
-          <div
-            class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"
-          ></div>
-        </div>
-
-        <!-- Testimonials Grid -->
-        <div
-          class="grid mb-8 border border-gray-200 rounded-lg shadow-lg dark:border-gray-700 md:grid-cols-2 lg:grid-cols-2 bg-white dark:bg-gray-800"
-        >
-          <!-- Testimonial 1 -->
-          <figure
-            class="flex flex-col items-center justify-center p-8 text-center bg-white border-b border-gray-200 rounded-t-lg md:rounded-t-none md:rounded-ss-lg md:border-e dark:bg-gray-800 dark:border-gray-700 animate-slideInLeft"
-          >
-            <blockquote
-              class="max-w-2xl mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400"
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Increased gap -->
+          <!-- Card 1 -->
+          <div class="perspective h-96 w-100">
+            <!-- Increased height to h-96 (384px) -->
+            <div
+              class="relative w-full h-full transform-style-3d transition-transform duration-500"
             >
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Feels Like Home
-              </h3>
-              <p class="my-4">
-                "The hostel environment is amazing! The rooms are clean, the
-                common areas are well-maintained, and the staff is always
-                helpful. It truly feels like a second home."
-              </p>
-            </blockquote>
-            <figcaption class="flex items-center justify-center">
-              <img
-                class="rounded-full w-9 h-9"
-                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/karen-nelson.png"
-                alt="profile picture"
-              />
+              <!-- Front Side -->
               <div
-                class="space-y-0.5 font-medium dark:text-white text-left ms-3"
+                class="absolute inset-0 flex flex-col items-center justify-center bg-white shadow-xl rounded-xl p-8 backface-hidden"
               >
-                <div>Aditi Sharma</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                  B.Tech Student, UG4
-                </div>
-              </div>
-            </figcaption>
-          </figure>
+                <!-- Increased padding to p-8 -->
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/1537/1537657.png"
+                  alt="Rooms"
+                  class="w-24 h-24 mb-6"
+                  Increased
+                  icon
+                  size
+                  --
+                />
 
-          <!-- Testimonial 2 -->
-          <figure
-            class="flex flex-col items-center justify-center p-8 text-center bg-white border-b border-gray-200 md:rounded-se-lg dark:bg-gray-800 dark:border-gray-700 animate-slideInRight"
-          >
-            <blockquote
-              class="max-w-2xl mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400"
-            >
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Great Facilities & Cleanliness
-              </h3>
-              <p class="my-4">
-                "The hostel has great facilities, including high-speed WiFi,
-                study rooms, and a well-equipped gym. Plus, the cleaning staff
-                ensures the premises remain spotless!"
-              </p>
-            </blockquote>
-            <figcaption class="flex items-center justify-center">
-              <img
-                class="rounded-full w-9 h-9"
-                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/roberta-casas.png"
-                alt="profile picture"
-              />
-              <div
-                class="space-y-0.5 font-medium dark:text-white text-left ms-3"
-              >
-                <div>Rohan Verma</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                  B.Tech Student UG3
-                </div>
+                <h3 class="text-2xl font-bold mb-4">Cozy Rooms</h3>
+                <!-- Increased text size -->
+                <p class="text-lg text-gray-600 text-center">
+                  <!-- Increased text size -->
+                  Well-maintained, comfortable rooms for all students.
+                </p>
               </div>
-            </figcaption>
-          </figure>
+              <!-- Back Side -->
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center bg-blue-500 text-white shadow-xl rounded-xl p-8 rotate-y-180 backface-hidden"
+              >
+                <p class="text-lg text-center">
+                  <!-- Increased text size -->
+                  Each room comes with study space, beds, and high-speed WiFi.
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <!-- Testimonial 3 -->
-          <figure
-            class="flex flex-col items-center justify-center p-8 text-center bg-white border-b border-gray-200 md:rounded-es-lg md:border-b-0 md:border-e dark:bg-gray-800 dark:border-gray-700 animate-slideInLeft"
-          >
-            <blockquote
-              class="max-w-2xl mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400"
+          <!-- Repeat similar structure for other cards with same size modifications -->
+          <!-- Card 2 -->
+          <div class="perspective h-96 w-full">
+            <div
+              class="relative w-full h-full transform-style-3d transition-transform duration-500"
             >
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Safe & Secure
-              </h3>
-              <p class="my-4">
-                "One thing I love about this hostel is the security. The
-                biometric entry system and 24/7 guards make me feel very safe,
-                even when I come back late from the library."
-              </p>
-            </blockquote>
-            <figcaption class="flex items-center justify-center">
-              <img
-                class="rounded-full w-9 h-9"
-                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
-                alt="profile picture"
-              />
               <div
-                class="space-y-0.5 font-medium dark:text-white text-left ms-3"
+                class="absolute inset-0 flex flex-col items-center justify-center bg-white shadow-xl rounded-xl p-8 backface-hidden"
               >
-                <div>Meera Nair</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                  B-tech student UG1
-                </div>
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/2284/2284947.png"
+                  alt="Food"
+                  class="w-24 h-24 mb-6"
+                />
+                <h3 class="text-2xl font-bold mb-4">Delicious Food</h3>
+                <p class="text-lg text-gray-600 text-center">
+                  Healthy and tasty meals every day.
+                </p>
               </div>
-            </figcaption>
-          </figure>
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center bg-green-500 text-white shadow-xl rounded-xl p-8 rotate-y-180 backface-hidden"
+              >
+                <p class="text-lg text-center">
+                  Mess serves a variety of cuisines with hygiene as a priority.
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <!-- Testimonial 4 -->
-          <figure
-            class="flex flex-col items-center justify-center p-8 text-center bg-white border-gray-200 rounded-b-lg md:rounded-se-lg dark:bg-gray-800 dark:border-gray-700 animate-slideInRight"
-          >
-            <blockquote
-              class="max-w-2xl mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400"
+          <!-- Card 3 -->
+          <div class="perspective h-96 w-full">
+            <div
+              class="relative w-full h-full transform-style-3d transition-transform duration-500"
             >
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Good Food & Friendly Vibes
-              </h3>
-              <p class="my-4">
-                "The mess food is way better than I expected! They have a
-                variety of options, and the quality is good. Plus, the hostel
-                community is very welcoming and friendly."
-              </p>
-            </blockquote>
-            <figcaption class="flex items-center justify-center">
-              <img
-                class="rounded-full w-9 h-9"
-                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png"
-                alt="profile picture"
-              />
               <div
-                class="space-y-0.5 font-medium dark:text-white text-left ms-3"
+                class="absolute inset-0 flex flex-col items-center justify-center bg-white shadow-xl rounded-xl p-8 backface-hidden"
               >
-                <div>Aditya Rao</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                  B.Tech Student, UG2
-                </div>
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/1656/1656850.png"
+                  alt="Security"
+                  class="w-24 h-24 mb-6"
+                />
+                <h3 class="text-2xl font-bold mb-4">24/7 Security</h3>
+                <p class="text-lg text-gray-600 text-center">
+                  Your safety is our top priority.
+                </p>
               </div>
-            </figcaption>
-          </figure>
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center bg-red-500 text-white shadow-xl rounded-xl p-8 rotate-y-180 backface-hidden"
+              >
+                <p class="text-lg text-center">
+                  Equipped with biometric entry, CCTV, and security guards.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="perspective h-96 w-full">
+            <div
+              class="relative w-full h-full transform-style-3d transition-transform duration-500"
+            >
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center bg-white shadow-xl rounded-xl p-8 backface-hidden"
+              >
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/1891/1891347.png"
+                  alt="WiFi"
+                  class="w-24 h-24 mb-6"
+                />
+                <h3 class="text-2xl font-bold mb-4">High-Speed WiFi</h3>
+                <p class="text-lg text-gray-600 text-center">
+                  Stay connected anywhere on campus.
+                </p>
+              </div>
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center bg-purple-500 text-white shadow-xl rounded-xl p-8 rotate-y-180 backface-hidden"
+              >
+                <p class="text-lg text-center">
+                  Seamless WiFi access in rooms and common areas.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <style>
+      .perspective {
+        perspective: 1200px;
+      }
+      .transform-style-3d {
+        transform-style: preserve-3d;
+      }
+      .backface-hidden {
+        backface-visibility: hidden;
+      }
+      .rotate-y-180 {
+        transform: rotateY(180deg);
+      }
+
+      .perspective:hover .transform-style-3d {
+        transform: rotateY(180deg);
+      }
+    </style>
 
     <!-- Footer Wave -->
     <svg

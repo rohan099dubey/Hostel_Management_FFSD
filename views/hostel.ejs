@@ -8,28 +8,18 @@
     <meta name="description" content="Hostel services" />
     <meta name="keywords" content="hostel services" />
     <meta name="author" content="Hostelia" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      .problem-details {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-      }
-      .problem-details.expanded {
-        max-height: 500px;
-      }
-    </style>
 
-    <!-- External Resources -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css"
       rel="stylesheet"
     />
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-    <style>
-      /* Styles for problem details section */
-    </style>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
     <link
       rel="stylesheet"
       href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -38,19 +28,51 @@
       href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
       rel="stylesheet"
     />
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css"
-      rel="stylesheet"
-      type="text/css"
-    />
 
     <!-- Custom Styles -->
     <style>
+      /* Gradient Background */
       .gradient {
         background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
       }
       body {
         font-family: "Source Sans Pro", sans-serif;
+      }
+
+      /* Enhanced Button Styles */
+      .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px; /* Space between buttons */
+        flex-wrap: wrap; /* Ensure responsiveness */
+        margin-top: 30px;
+      }
+      .custom-btn {
+        width: 200px;
+        padding: 14px 0;
+        font-size: 17px;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+        text-align: center;
+        border: 2px solid transparent;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0)
+        );
+        backdrop-filter: blur(8px);
+      }
+      .custom-btn a {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .custom-btn:hover {
+        transform: scale(1.07);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
       }
     </style>
   </head>
@@ -60,36 +82,28 @@
     <%- include('partials/navbar.ejs') %>
 
     <!-- Hero Section -->
-    <div class="pt-24">
-      <div
-        class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
-      >
-        <h1 class="text-6xl font-bold leading-tight text-center w-full">
-          Hostel Services
-        </h1>
-      </div>
-    </div>
-    <!-- Buttons for Loading Components -->
-    <div class="container mx-auto text-center py-8">
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/problems">Problem</a>
-      </button>
-      <button
-        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/partials/entry_exit"></a>Entry/Exit</a>
-      </button>
-      <button
-        class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded m-2"
-      >
-        <a href="/partials/chatroom">Chat Room</a>
-      </button>
+    <div class="pt-24 text-center">
+      <h1 class="text-6xl font-extrabold leading-tight">🏠 Hostel Services</h1>
+      <p class="text-xl mt-4 opacity-90">
+        Manage your hostel-related queries and interactions with ease.
+      </p>
     </div>
 
-    <!-- Main Content -->
-    
+    <!-- Buttons for Loading Components -->
+    <div class="container mx-auto text-center py-8">
+      <div class="btn-container">
+        <button class="custom-btn bg-blue-500 hover:bg-blue-700 text-white">
+          <a href="/problems">🚀 Problem</a>
+        </button>
+        <button class="custom-btn bg-green-500 hover:bg-green-700 text-white">
+          <a href="/partials/entry_exit">🔑 Entry/Exit</a>
+        </button>
+        <button class="custom-btn bg-purple-500 hover:bg-purple-700 text-white">
+          <a href="/partials/chatroom">💬 Chat Room</a>
+        </button>
+      </div>
+    </div>
+
     <!-- Footer -->
     <%- include('partials/footer.ejs') %>
 
