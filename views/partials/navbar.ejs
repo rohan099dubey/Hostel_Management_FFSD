@@ -43,12 +43,15 @@
       class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden bg-black lg:bg-transparent text-white p-4 lg:p-0 z-20"
       id="nav-content"
     >
-      <ul class="list-reset lg:flex justify-end flex-1 items-center">
+      <ul
+        class="toggleColour list-reset lg:flex justify-end flex-1 items-center"
+      >
         <!-- Dropdown Menu for Services -->
         <li class="relative">
           <button
             id="dropdown-btn"
-            class="inline-block py-2 px-4 text-white font-bold no-underline cursor-pointer focus:outline-none"
+            class="toggleColour inline-block py-2 px-4 text-white font-bold no-underline cursor-pointer focus:outline-none"
+            style="color: white"
           >
             Services ▼
           </button>
@@ -80,7 +83,13 @@
             </li>
           </ul>
         </li>
-
+        <li class="mr-3">
+          <a
+            class="toggleColour inline-block text-white no-underline hover:text-gray-400 hover:text-underline py-2 px-4"
+            href="/dashboard"
+            ><strong>Dashboard</strong></a
+          >
+        </li>
         <li class="mr-3">
           <a
             class="toggleColour inline-block text-white no-underline hover:text-gray-400 hover:text-underline py-2 px-4"
@@ -88,6 +97,7 @@
             >About Us</a
           >
         </li>
+
         <li class="mr-3">
           <a
             class="toggleColour inline-block text-white no-underline hover:text-gray-400 hover:text-underline py-2 px-4"
@@ -97,20 +107,20 @@
         </li>
       </ul>
 
+      <!-- <button
+        id="navAction"
+        class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+      >
+        <a href="/login">Log In</a>
+      </button> -->
+      <% if (!loggedIn) { %> <% %>
       <button
         id="navAction"
         class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
       >
         <a href="/login">Log In</a>
       </button>
-      <!-- <%# if (!loggedIn) { %> <%#  %>
-      <button
-        id="navAction"
-        class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-      >
-        <a href="/login">Log In</a>
-      </button>
-      <%# }else{ %>
+      <% }else{ %>
       <form action="/auth/logout" method="POST" class="inline">
         <button
           id="navAction"
@@ -119,38 +129,51 @@
           Log Out
         </button>
       </form>
-      <%# } %> -->
+      <% } %>
     </div>
   </div>
   <hr class="border-b border-gray-100 opacity-25 my-0 py-0" />
   <script src="/js/navbar.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const dropdownBtn = document.getElementById("dropdown-btn");
+      const dropdownMenu = document.getElementById("dropdown-menu");
+
+      // Function to update text color based on background
+      function updateTextColor() {
+        const backgroundColor = window.getComputedStyle(
+          document.body
+        ).backgroundColor;
+        const isGradient = backgroundColor.includes("gradient");
+        const textColor = isGradient ? "white" : "black";
+        dropdownBtn.style.color = textColor;
+        dropdownMenu.style.color = textColor;
+      }
+
+      // Initial text color update
+      updateTextColor();
+
+      dropdownBtn.addEventListener("click", function () {
+        if (dropdownMenu.classList.contains("hidden")) {
+          dropdownMenu.classList.remove("hidden");
+          dropdownMenu.classList.add("opacity-100");
+          updateTextColor(); // Update text color when dropdown is shown
+        } else {
+          dropdownMenu.classList.add("hidden");
+          dropdownMenu.classList.remove("opacity-100");
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        if (
+          !dropdownBtn.contains(event.target) &&
+          !dropdownMenu.contains(event.target)
+        ) {
+          dropdownMenu.classList.add("hidden");
+          dropdownMenu.classList.remove("opacity-100");
+        }
+      });
+    });
+  </script>
 </nav>
-
-<!-- JavaScript for Dropdown -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const dropdownBtn = document.getElementById("dropdown-btn");
-    const dropdownMenu = document.getElementById("dropdown-menu");
-
-    dropdownBtn.addEventListener("click", function () {
-      if (dropdownMenu.classList.contains("hidden")) {
-        dropdownMenu.classList.remove("hidden");
-        dropdownMenu.classList.add("opacity-100");
-      } else {
-        dropdownMenu.classList.add("hidden");
-        dropdownMenu.classList.remove("opacity-100");
-      }
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", function (event) {
-      if (
-        !dropdownBtn.contains(event.target) &&
-        !dropdownMenu.contains(event.target)
-      ) {
-        dropdownMenu.classList.add("hidden");
-        dropdownMenu.classList.remove("opacity-100");
-      }
-    });
-  });
-</script>

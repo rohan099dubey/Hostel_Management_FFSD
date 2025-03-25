@@ -29,7 +29,8 @@
   <body
     class="bg-[#E8E9ED] w-screen overflow-x-hidden leading-normal tracking-normal text-white gradient"
   >
-    <%- include('partials/navbar.ejs') %>
+    <%- include('partials/navbar.ejs', { loggedIn }) %>
+
     <div class="pt-24">
       <div
         class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
