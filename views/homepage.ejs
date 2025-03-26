@@ -134,25 +134,31 @@
     <%- include('partials/navbar.ejs', { loggedIn }) %>
 
     <!-- Hero Section -->
-    <section class="pt-40 pb-16 flex items-center justify-center bg-white">
-      <div class="container mx-auto px-10 max-w-7xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+    <section
+      class="pt-32 pb-16 flex items-center justify-center bg-white mt-10"
+    >
+      <div class="container mx-auto px-4 sm:px-6 lg:px-10 max-w-7xl">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center"
+        >
           <!-- Left Side: Text -->
           <div class="text-center md:text-left">
-            <h1 class="text-6xl font-extrabold text-gray-900">
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight"
+            >
               Smart Hostel Management Made Simple
             </h1>
-            <p class="mt-6 text-xl text-gray-700 max-w-lg">
+            <p class="mt-6 text-lg sm:text-xl text-gray-700 max-w-lg">
               Welcome to your all-in-one hostel management solution. Our
               platform streamlines everything from reporting problems and fee
               payments to visitor logs and maintenance requests. Get real-time
               updates, seamless communication, and hassle-free operations
               through our intuitive dashboard - whether you're an admin or
-              student. Start simplifying your hostel management today.
+              student.
             </p>
             <a
               href="#about"
-              class="mt-8 inline-flex items-center px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition"
+              class="mt-8 inline-flex items-center px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Explore
               <svg
@@ -171,12 +177,17 @@
           </div>
 
           <!-- Right Side: Image -->
-          <div class="flex justify-center">
-            <img
-              src="/images/hostelimage.jpg"
-              alt="Hostel mockup"
-              class="w-full max-w-md"
-            />
+          <div class="flex justify-center md:justify-end relative">
+            <div class="relative w-full max-w-lg xl:max-w-xl">
+              <div
+                class="absolute inset-0 bg-gradient-to-tr from-blue-100 to-purple-100 rounded-2xl transform rotate-3"
+              ></div>
+              <img
+                src="/images/hostelimage.jpg"
+                alt="Hostel mockup"
+                class="relative w-full h-[400px] object-cover rounded-2xl shadow-lg"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -185,7 +196,7 @@
     <!-- About Our Hostel -->
     <section
       id="about"
-      class="min-h-screen py-20 bg-gray-50 mt-16 opacity-0 transform translate-y-10 transition-opacity duration-700 ease-in-out"
+      class="min-h-screen py-20 bg-gray-50 mt-6 opacity-0 transform translate-y-10 transition-opacity duration-700 ease-in-out"
     >
       <div class="container mx-auto text-center px-10 max-w-7xl">
         <h2 class="text-6xl font-extrabold text-gray-900">About Our Project</h2>
@@ -278,7 +289,7 @@
     </script>
 
     <!-- Main Content Sections -->
-    <section class="bg-white border-b py-16 mt-56">
+    <section class="bg-white border-b py-16 mt-24">
       <div class="container max-w-7xl mx-auto px-6">
         <!-- Title -->
         <h2
@@ -427,7 +438,7 @@
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="py-20 bg-white">
+    <section id="faq" class="py-16 bg-white pb-20">
       <div class="container mx-auto px-4 max-w-4xl">
         <div class="text-center mb-12">
           <h2 class="text-4xl md:text-5xl font-bold text-black mb-4">

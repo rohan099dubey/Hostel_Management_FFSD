@@ -17,7 +17,7 @@
       body {
         font-family: "Poppins", sans-serif;
       }
-      
+
       /* Hero section styling */
       .hero-section {
         background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
@@ -32,9 +32,9 @@
         position: relative;
         overflow: hidden;
       }
-      
+
       .hero-section::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
@@ -43,45 +43,45 @@
         background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="rgba(255,255,255,0.05)"/></svg>');
         opacity: 0.1;
       }
-      
+
       /* Responsive adjustments */
       @media (max-width: 768px) {
         .hero-section {
           height: 35vh;
           min-height: 300px;
         }
-        
+
         .hero-title {
           font-size: 2rem !important;
         }
-        
+
         .accordion-button {
           padding: 1rem !important;
         }
-        
+
         .meal-button {
           padding: 0.75rem !important;
         }
-        
+
         .feedback-form {
           padding: 1rem !important;
         }
       }
-      
+
       @media (max-width: 480px) {
         .hero-section {
           height: 30vh;
           min-height: 250px;
         }
-        
+
         .hero-title {
           font-size: 1.75rem !important;
         }
-        
+
         .day-name {
           font-size: 1rem !important;
         }
-        
+
         .meal-name {
           font-size: 0.875rem !important;
         }
@@ -91,30 +91,43 @@
   <body class="bg-gray-50">
     <%- include('partials/navbar.ejs', { loggedIn }) %>
 
-
     <!-- Hero Section -->
     <div class="hero-section shadow-lg relative">
       <div class="max-w-4xl mx-auto relative z-10 mt-20">
-        <h1 class="hero-title text-4xl md:text-5xl font-bold mb-6 text-white">MESS MENU</h1>
-        <p class="text-xl md:text-2xl opacity-90 mb-8">Check out this week's delicious meals and provide your feedback</p>
-        <div class="flex justify-center space-x-4">
-          <div class="bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full">
-            <span class="text-lg">7 Days</span>
+        <h1 class="hero-title text-4xl md:text-5xl font-bold mb-6 text-white">
+          MESS MENU
+        </h1>
+        <p class="text-xl md:text-2xl opacity-90 mb-8">
+          Check out this week's delicious meals and provide your feedback
+        </p>
+        <div class="flex justify-center items-center space-x-4 mb-8">
+          <div
+            class="bg-white/10 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-full"
+          >
+            <span class="text-base sm:text-lg">7 Days</span>
           </div>
-          <div class="bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full">
-            <span class="text-lg">4 Meals</span>
+          <div
+            class="bg-white/10 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-full"
+          >
+            <span class="text-base sm:text-lg">4 Meals</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 mb-4">
       <% if (query.feedback === 'success') { %>
-      <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-sm">
+      <div
+        class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-sm"
+      >
         <div class="flex items-center">
           <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"
+            />
           </svg>
           Thank you for your feedback!
         </div>
@@ -122,8 +135,11 @@
       <% } %>
 
       <div id="accordion-menu" class="space-y-6">
-        <% ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].forEach((day, dayIndex) => { %>
-        <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200">
+        <% ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+        'Saturday'].forEach((day, dayIndex) => { %>
+        <div
+          class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
+        >
           <h2 id="accordion-heading-<%= dayIndex %>">
             <button
               type="button"
@@ -152,7 +168,8 @@
           </h2>
 
           <div id="accordion-body-<%= dayIndex %>" class="hidden">
-            <% ['Breakfast', 'Lunch', 'Snacks', 'Dinner'].forEach((meal, mealIndex) => { %>
+            <% ['Breakfast', 'Lunch', 'Snacks', 'Dinner'].forEach((meal,
+            mealIndex) => { %>
             <div class="border-t border-gray-100 p-4">
               <button
                 type="button"
@@ -184,16 +201,19 @@
                 class="hidden mt-4 bg-white rounded-lg p-4 border border-gray-200"
               >
                 <div class="space-y-2">
-                  <% menuItems.filter(item => item.day === day && item.mealType === meal).forEach(item => { %>
+                  <% menuItems.filter(item => item.day === day && item.mealType
+                  === meal).forEach(item => { %>
                   <div class="flex items-center py-2 text-gray-700">
                     <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
                     <span class="text-base">
-                      <%= item.name %> 
-                      <% if(item.alternateWeek) { %>
-                      <span class="text-gray-400 italic ml-2 text-sm">(Alternate)</span>
-                      <% } %> 
-                      <% if(item.seasonal) { %>
-                      <span class="text-green-500 font-medium ml-2 text-sm">(Seasonal)</span>
+                      <%= item.name %> <% if(item.alternateWeek) { %>
+                      <span class="text-gray-400 italic ml-2 text-sm"
+                        >(Alternate)</span
+                      >
+                      <% } %> <% if(item.seasonal) { %>
+                      <span class="text-green-500 font-medium ml-2 text-sm"
+                        >(Seasonal)</span
+                      >
                       <% } %>
                     </span>
                   </div>
@@ -201,14 +221,20 @@
                 </div>
 
                 <!-- Feedback Form -->
-                <div class="mt-6 bg-gray-50 p-6 rounded-lg border border-gray-200 feedback-form">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-4">Share your feedback</h3>
+                <div
+                  class="mt-6 bg-gray-50 p-6 rounded-lg border border-gray-200 feedback-form"
+                >
+                  <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    Share your feedback
+                  </h3>
                   <form action="/feedback" method="POST" class="space-y-4">
                     <input type="hidden" name="day" value="<%= day %>" />
                     <input type="hidden" name="mealType" value="<%= meal %>" />
 
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Rate this meal
                       </label>
                       <select
@@ -225,7 +251,9 @@
                     </div>
 
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Comments
                       </label>
                       <textarea
