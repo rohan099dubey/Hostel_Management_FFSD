@@ -28,29 +28,34 @@
     </style>
   </head>
 
-  <body class="bg-gray-100">
+  <body class="bg-gray-100 overflow-x-hidden min-h-screen">
     <!-- Navbar -->
     <%- include('partials/navbar.ejs', { loggedIn }) %>
 
     <!-- Container -->
-    <div class="max-w-6xl mx-auto py-16 px-6">
+    <div class="max-w-6xl mx-auto py-4 sm:py-16 px-3 sm:px-6 mb-4">
       <!-- Header -->
       <div
-        class="flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-500 text-white px-8 py-6 rounded-xl shadow-lg mt-16"
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white px-3 sm:px-8 py-4 sm:py-6 rounded-xl shadow-lg mt-16"
       >
-        <div class="flex items-center gap-3">
-          <h1 class="text-2xl font-bold">📢 Circulars & Announcements</h1>
-          <span class="text-sm bg-white/20 px-3 py-1 rounded-full"
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto"
+        >
+          <h1 class="text-lg sm:text-2xl font-bold whitespace-nowrap">
+            📢 Circulars & Announcements
+          </h1>
+          <span
+            class="text-xs sm:text-sm bg-white/20 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap"
             >IIITS Academic Office</span
           >
         </div>
         <% if (role === 'warden' || role === 'admin') { %>
         <button
           onclick="openModal()"
-          class="bg-white text-blue-600 font-semibold py-2.5 px-5 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-200 flex items-center gap-2"
+          class="w-full sm:w-auto bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
         >
           <svg
-            class="w-5 h-5"
+            class="w-4 h-4 sm:w-5 sm:h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -68,25 +73,28 @@
       </div>
 
       <!-- Announcement List -->
-      <div class="mt-8 space-y-6 max-h-[35rem] overflow-y-auto pr-2">
+      <div class="mt-4 sm:mt-8 space-y-3 sm:space-y-6">
         <% if (announcements.length > 0) { %> <%
         announcements.forEach(announcement => { %>
         <div
-          class="announcement-card bg-white shadow-md p-6 rounded-xl hover:shadow-lg"
+          class="announcement-card bg-white shadow-md p-3 sm:p-6 rounded-xl hover:shadow-lg"
         >
-          <div class="flex items-start gap-4">
+          <div class="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
             <!-- Profile Icon -->
             <div class="flex-shrink-0">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                class="w-12 h-12 rounded-full border-2 border-blue-100"
+                class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-blue-100"
+                alt="Profile"
               />
             </div>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <!-- Title and Date -->
-              <div class="flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                  <h3 class="font-semibold text-gray-900">
+              <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
+              >
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="font-semibold text-gray-900 text-sm sm:text-base">
                     IIITS Academic Office
                   </h3>
                   <span
@@ -95,7 +103,7 @@
                   >
                 </div>
                 <span
-                  class="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full"
+                  class="text-xs sm:text-sm text-gray-500 bg-gray-50 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap"
                 >
                   <%= new
                   Date(announcement.createdAt).toLocaleDateString('en-US', {
@@ -104,7 +112,9 @@
                 </span>
               </div>
               <!-- Announcement Message -->
-              <p class="text-gray-700 mt-3 leading-relaxed">
+              <p
+                class="text-sm sm:text-base text-gray-700 mt-2 sm:mt-3 leading-relaxed break-words"
+              >
                 <%= announcement.message %>
               </p>
             </div>
@@ -113,11 +123,11 @@
             <% if (role === 'warden' || role === 'admin') { %>
             <button
               onclick="deleteAnnouncement('<%= announcement.id %>')"
-              class="flex-shrink-0 bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors duration-200"
+              class="flex-shrink-0 bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors duration-200 self-start sm:self-center"
               title="Delete announcement"
             >
               <svg
-                class="w-5 h-5"
+                class="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -134,10 +144,10 @@
           </div>
         </div>
         <% }); %> <% } else { %>
-        <div class="text-center py-12">
-          <div class="bg-white rounded-xl shadow-sm p-8">
+        <div class="text-center py-6 sm:py-12">
+          <div class="bg-white rounded-xl shadow-sm p-4 sm:p-8 mx-3">
             <svg
-              class="w-16 h-16 mx-auto text-gray-400 mb-4"
+              class="w-10 h-10 sm:w-16 sm:h-16 mx-auto text-gray-400 mb-3 sm:mb-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -149,10 +159,10 @@
                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
               />
             </svg>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            <h3 class="text-base sm:text-xl font-semibold text-gray-900 mb-2">
               No Announcements Yet
             </h3>
-            <p class="text-gray-500">
+            <p class="text-sm text-gray-500">
               Check back later for updates and important information.
             </p>
           </div>
@@ -161,32 +171,24 @@
       </div>
     </div>
 
-    <!-- Floating Add Button (Mobile) -->
-    <% if (role === 'warden' || role === 'admin') { %>
-    <button
-      onclick="openModal()"
-      class="fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg w-14 h-14 flex items-center justify-center text-2xl hover:shadow-xl transition-all duration-300"
-    >
-      +
-    </button>
-    <% } %>
-
     <!-- Modal for Adding Announcement -->
     <div
       id="announcementModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-3 sm:p-4"
     >
       <div
-        class="bg-white rounded-xl shadow-xl p-6 w-full max-w-md transform transition-all scale-95"
+        class="bg-white rounded-xl shadow-xl p-4 sm:p-6 w-full max-w-md transform transition-all scale-95 mx-3 sm:mx-0"
       >
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-bold text-gray-900">📢 New Announcement</h2>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-base sm:text-xl font-bold text-gray-900">
+            📢 New Announcement
+          </h2>
           <button
             onclick="closeModal()"
             class="text-gray-400 hover:text-gray-600"
           >
             <svg
-              class="w-6 h-6"
+              class="w-5 h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -201,7 +203,7 @@
           </button>
         </div>
 
-        <form action="/services/announcement" method="POST" class="space-y-4">
+        <form action="/services/announcement" method="POST" class="space-y-3">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1"
               >Title</label
@@ -209,7 +211,7 @@
             <input
               type="text"
               name="title"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
               placeholder="Enter announcement title"
               required
             />
@@ -222,23 +224,23 @@
             <textarea
               name="message"
               rows="4"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
               placeholder="Enter your announcement message"
               required
             ></textarea>
           </div>
 
-          <div class="flex justify-end space-x-3">
+          <div class="flex justify-end gap-2">
             <button
               type="button"
               onclick="closeModal()"
-              class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+              class="px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-600 transition-all duration-200"
+              class="px-4 py-2 text-sm bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-600 transition-all duration-200"
             >
               Post Announcement
             </button>
