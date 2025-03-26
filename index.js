@@ -59,7 +59,10 @@ moment().format();
 sequelize.authenticate()
     .then(() => sequelize.sync()) // Sync models with database
     .then(() => console.log('Connected to SQLite in-memory database'))
-    .catch(e => console.log('Error connecting to database:', e));
+    .catch(e => {
+        console.error('Database connection error:', e);
+        console.error('Error stack:', e.stack);
+    });
 
 // First, move the authMiddleware definition to the top after all the initial configurations
 const authMiddleware = (req, res, next) => {
@@ -69,13 +72,6 @@ const authMiddleware = (req, res, next) => {
     }
     next();
 };
-
-
-
-
-
-// Apply middleware globally to all routes except public ones
-app.use(authMiddleware);
 
 // Public routes (no auth required)
 app.get('/', (req, res) => {
@@ -94,13 +90,11 @@ app.get('/contact', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    const isLoggedIn = Boolean(req.cookies.jwt);
-    res.render('login.ejs', { loggedIn: isLoggedIn });
+    res.render('login.ejs');
 });
 
 app.get('/signup', (req, res) => {
-    const isLoggedIn = Boolean(req.cookies.jwt);
-    res.render('signup.ejs', { loggedIn: isLoggedIn });
+    res.render('signup.ejs');
 });
 
 //routes for login and signup
@@ -125,26 +119,26 @@ const generateToken = (userID, res) => {
 
 //signup
 const signup = async (req, res) => {
-    const { name, rollNo, email, hostel, roomNo, year, password } = req.body;
     try {
+        console.log("Received signup request with data:", req.body);
+
+        const { name, rollNo, email, hostel, roomNo, year, password } = req.body;
+
+        // Validate required fields
         if (!name || !rollNo || !email || !hostel || !roomNo || !year || !password) {
             return res.status(400).json({ message: "All fields are required." });
         }
 
-        if (password.length < 6) {
-            return res.status(400).json({ message: "Password must be at least 6 characters in length" });
-        }
-
-        const user1 = await User.findOne({
+        // Check for existing user
+        const existingUser = await User.findOne({
             where: { email }
         });
-        const user2 = userData.find(user => user.email === email);
-        const user = user1 || user2;
 
-        if (!!user) {
-            return res.status(400).json({ message: "User already exists / Email already in use" });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists with this email" });
         }
 
+        // Create new user
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -155,34 +149,32 @@ const signup = async (req, res) => {
             hostel,
             roomNo,
             year,
-            password: hashedPassword
+            password: hashedPassword,
+            role: 'student'
         });
 
-        if (newUser) {
-            generateToken(newUser.userId, res);
-            await newUser.save();
-            console.log("User created successfully")
-            console.log(newUser)
-            res.cookie("userid", newUser.userId)
-            res.cookie("role", newUser.role)
-            return res.status(201).json({
+        // Generate token and set cookies
+        generateToken(newUser.userId, res);
+        res.cookie("userid", newUser.userId);
+        res.cookie("role", newUser.role);
+
+        return res.status(201).json({
+            success: true,
+            user: {
                 userId: newUser.userId,
                 name: newUser.name,
-                rollNo: newUser.rollNo,
                 email: newUser.email,
-                hostel: newUser.hostel,
-                roomNo: newUser.roomNo,
-                year: newUser.year,
                 role: newUser.role
-            });
-
-        } else {
-            return res.status(400).json({ message: "Invalid user data." });
-        }
+            }
+        });
 
     } catch (error) {
-        console.error("ERROR in sign-up controller:", error);
-        res.status(500).json({ message: "Internal Server Error" });
+        console.error("Signup error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error creating user",
+            error: error.message
+        });
     }
 };
 
@@ -339,48 +331,53 @@ app.delete("/announcements/delete/:id", async (req, res) => {
 
 app.get('/services/problems', authMiddleware, async (req, res) => {
     const isLoggedIn = Boolean(req.cookies.jwt);
-    let role = req.cookies.role;
-    let userID = req.cookies.userid;
+    const role = req.cookies.role;
+    const userID = req.cookies.userid;
 
-    let user = await User.findOne({
-        where: { userId: userID },
-        attributes: { exclude: ['password'] }
-    });
-
-    if (!user) {
-        user = userData.find(u => userID === u.userId);
-    }
-
-    let userProblems1 = [];
-    let userProblems2 = [];
-
-    if (role !== 'admin') {
-        userProblems1 = await hostelProblem.findAll({
-            where: { hostel: user.hostel }
+    try {
+        let user = await User.findOne({
+            where: { userId: userID },
+            attributes: { exclude: ['password'] }
         });
 
-        if (userProblems1.length > 0) {
-            userProblems1 = userProblems1.map(problem => ({
-                ...problem.toJSON(),
-                roomNumber: problem.roomNo,
-                createdAt: problem.createdAt || new Date()
-            }));
+        if (!user) {
+            user = userData.find(u => userID === u.userId);
         }
 
-        userProblems2 = dataProblems.filter(problem => user.hostel === problem.hostel)
-            .map(problem => ({
-                ...problem,
-                createdAt: problem.createdAt || new Date()
-            }));
+        let userProblems1 = [];
+        let userProblems2 = [];
 
-    } else {
-        userProblems1 = await hostelProblem.findAll();
-        userProblems2 = dataProblems;
+        if (role !== 'admin') {
+            userProblems1 = await hostelProblem.findAll({
+                where: { hostel: user.hostel }
+            });
+
+            if (userProblems1.length > 0) {
+                userProblems1 = userProblems1.map(problem => ({
+                    ...problem.toJSON(),
+                    roomNumber: problem.roomNo,
+                    createdAt: problem.createdAt || new Date()
+                }));
+            }
+
+            userProblems2 = dataProblems.filter(problem => user.hostel === problem.hostel)
+                .map(problem => ({
+                    ...problem,
+                    createdAt: problem.createdAt || new Date()
+                }));
+
+        } else {
+            userProblems1 = await hostelProblem.findAll();
+            userProblems2 = dataProblems;
+        }
+
+        const problems = [...userProblems1, ...userProblems2];
+
+        res.render('problems.ejs', { problems, role, userID, loggedIn: isLoggedIn, user });
+    } catch (error) {
+        console.error("Error fetching problems:", error);
+        res.status(500).send("Error fetching problems");
     }
-
-    let problems = [...userProblems1, ...userProblems2];
-
-    res.render('problems.ejs', { problems, role, userID, loggedIn: isLoggedIn });
 });
 
 app.post("/services/problems/add", upload.single("problemImage"), async (req, res) => {
@@ -418,6 +415,32 @@ app.post("/services/problems/add", upload.single("problemImage"), async (req, re
     }
 })
 
+app.post('/services/problems/statusChange', async (req, res) => {
+    const { problemId, status } = req.body;
+    try {
+        console.log("Received Data:", req.body);
+        let problem2 = null;
+        const problem1 = await hostelProblem.findOne({ where: { id: Number(problemId) } });
+        if (!problem1) {
+            problem2 = dataProblems.find(problem => problem.problemId === Number(problemId));
+            if (!problem2) {
+                return res.status(404).json({ message: "Problem not found" });
+            }
+        }
+        if (!!problem1) {
+            problem1.status = status;
+            problem1.timeResolved = new Date();
+            await problem1.save();
+        } else if (!!problem2) {
+            problem2.status = status; // Update status for the in-memory problem
+            problem2.timeResolved = new Date();
+        }
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        console.error("ERROR in status change:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 // res.render('problems.ejs', { problems });
 app.get("/services/register", authMiddleware, async (req, res) => {
     try {
@@ -482,9 +505,10 @@ app.get('/dashboard', authMiddleware, async (req, res) => {
     }
 
     if (role === "student") {
-
-        let userProblems1 = await hostelProblem.findAll({
-            where: { hostel: userInfo.hostel, studentId: userInfo.userId }
+        let userProblems1 = [];
+        let userProblems2 = [];
+        userProblems1 = await hostelProblem.findAll({
+            where: { hostel: userInfo.hostel, studentId: userInfo.rollNo }
         });
 
         if (!!userProblems1) {
@@ -494,14 +518,19 @@ app.get('/dashboard', authMiddleware, async (req, res) => {
             }));
         }
 
-        let userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel && problem.studentId === userInfo.userId);
-        let problems = [...userProblems1, ...userProblems2];
+        userProblems2 = dataProblems.filter(problem => problem.studentId === userInfo.rollNo).map(problem => ({
+            ...problem,
+            createdAt: problem.createdAt || new Date()
+        }));
+        const problems = [...userProblems1, ...userProblems2];
 
         res.render('partials/dashboard/student.ejs', { userInfo, problems, loggedIn: isLoggedIn });
 
     } else if (role === "warden") {
+        let userProblems1 = [];
+        let userProblems2 = [];
 
-        let userProblems1 = await hostelProblem.findAll({
+        userProblems1 = await hostelProblem.findAll({
             where: { hostel: userInfo.hostel }
         });
 
@@ -512,8 +541,8 @@ app.get('/dashboard', authMiddleware, async (req, res) => {
             }));
         }
 
-        let userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel);
-        let problems = [...userProblems1, ...userProblems2];
+        userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel);
+        const problems = [...userProblems1, ...userProblems2];
 
         res.render('partials/dashboard/warden.ejs', { userInfo, problems, loggedIn: isLoggedIn });
 

@@ -21,10 +21,7 @@ const User = sequelize.define('User', {
         allowNull: function () {
             return this.role !== 'student';
         },
-        unique: true,
-        validate: {
-            is: /^S\d{11}$/
-        }
+        unique: true
     },
     email: {
         type: DataTypes.STRING,

@@ -559,7 +559,8 @@
                   name="roomNo"
                   id="roomNo"
                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                  placeholder="Enter room number"
+                  placeholder="<%= user.roomNo %>"
+                  value="<%= user.roomNo %>"
                   required
                 />
               </div>
@@ -594,7 +595,8 @@
                   name="roll_number"
                   id="roll_number"
                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                  placeholder="Enter roll number"
+                  placeholder="<%=user.rollNo%>"
+                  value="<%=user.rollNo%>"
                   required
                 />
               </div>
@@ -608,11 +610,7 @@
                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                   required
                 >
-                  <option selected disabled>Select hostel</option>
-                  <option value="BH-1">BH-1</option>
-                  <option value="BH-2">BH-2</option>
-                  <option value="BH-3">BH-3</option>
-                  <option value="BH-4">BH-4</option>
+                  <option value="<%= user.hostel %>"><%= user.hostel %></option>
                 </select>
               </div>
             </div>
@@ -660,7 +658,7 @@
             Number(document.getElementById("roll_number").value.trim())
           );
           formData.append("hostel", document.getElementById("hostel").value);
-
+          console.log(formData);
           try {
             const response = await fetch("/services/problems/add", {
               method: "POST",
@@ -695,17 +693,19 @@
         });
     </script>
     <script>
-      document
-        .getElementById("statusForm")
-        ?.addEventListener("submit", async function (event) {
+      // Add event listeners to all status forms
+      document.querySelectorAll("#statusForm").forEach((form) => {
+        form.addEventListener("submit", async function (event) {
           event.preventDefault();
-          const status = document.getElementById("status").value;
-          const problemId = document.getElementById("problemId").value;
 
-          if (!problemId) {
+          // Find the status and problemId within this specific form
+          const status = this.querySelector("#status").value;
+          const problemId = this.querySelector("#problemId").value;
+
+          if (!status || !problemId) {
             Swal.fire({
               title: "Error!",
-              text: "Problem ID is missing.",
+              text: "Please select a status and ensure problem ID is present.",
               icon: "error",
               confirmButtonColor: "#3085d6",
             });
@@ -721,17 +721,17 @@
               body: JSON.stringify({ status, problemId }),
             });
 
-            if (response.ok) {
-              Swal.fire({
-                title: "Success!",
-                text: "Status updated successfully!",
-                icon: "success",
-                confirmButtonColor: "#3085d6",
-              }).then(() => location.reload());
-            } else {
+            if (!response.ok) {
               const error = await response.json();
               throw new Error(error.message || "Error updating status");
             }
+
+            Swal.fire({
+              title: "Success!",
+              text: "Status updated successfully!",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+            }).then(() => location.reload());
           } catch (error) {
             console.error("Error:", error);
             Swal.fire({
@@ -743,6 +743,7 @@
             });
           }
         });
+      });
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {

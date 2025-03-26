@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
+    <title>Sign Up Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @keyframes fadeIn {
@@ -71,7 +71,7 @@
                 >
                   Enter your details to sign up
                 </div>
-                <p id="message"></p>
+                <p id="message" class="mt-4 text-sm font-medium"></p>
               </div>
 
               <div class="mx-auto max-w-xs">
@@ -90,7 +90,6 @@
                     id="rollNo"
                     name="rollNo"
                     placeholder="Roll Number"
-                    pattern="^S\d{11}$"
                     required
                   />
                   <input
@@ -98,8 +97,7 @@
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Email "
-                    pattern="[a-zA-Z0-9._%+-]+@iiits\.in$"
+                    placeholder="Email (@iiits.in)"
                     required
                   />
                   <select
@@ -197,30 +195,28 @@
       document
         .getElementById("signupForm")
         .addEventListener("submit", async function (event) {
-          event.preventDefault(); // Prevent default form submission
+          event.preventDefault();
 
-          const email = document.getElementById("email").value;
+          // Reset any previous error messages
+          const messageElement = document.getElementById("message");
+          messageElement.className = "mt-4 text-sm font-medium";
+          messageElement.innerText = "";
+
+          // Validate password match
           const password = document.getElementById("password").value;
           const confirmPassword =
             document.getElementById("confirmPassword").value;
 
-          // Validate email and password
-          if (!email.endsWith("@iiits.in")) {
-            document.getElementById("message").innerText =
-              "Use valid email address";
-            return; // Stop form submission
-          }
-
           if (password !== confirmPassword) {
-            document.getElementById("message").innerText =
-              "Passwords do not match.";
-            return; // Stop form submission
+            messageElement.className = "mt-4 text-sm font-medium text-red-600";
+            messageElement.innerText = "Passwords do not match!";
+            return;
           }
 
           const formData = {
             name: document.getElementById("name").value,
-            email: email,
-            password: password,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
             rollNo: document.getElementById("rollNo").value,
             hostel: document.getElementById("hostel").value,
             roomNo: document.getElementById("roomNo").value,
@@ -228,24 +224,34 @@
           };
 
           try {
+            messageElement.className = "mt-4 text-sm font-medium text-blue-600";
+            messageElement.innerText = "Signing up...";
+
             const response = await fetch("/auth/signup", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+              },
               body: JSON.stringify(formData),
             });
 
-            const result = await response.json();
-            if (response.ok) {
-              document.getElementById("message").innerText =
-                "Signup successful!";
-              window.location.href = "/";
-            } else {
-              document.getElementById("message").innerText =
-                result.message || "Signup failed!";
+            if (!response.ok) {
+              const result = await response.json();
+              throw new Error(result.message || "Signup failed");
             }
+
+            const result = await response.json();
+            messageElement.className =
+              "mt-4 text-sm font-medium text-green-600";
+            messageElement.innerText = "Signup successful! Redirecting...";
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1000);
           } catch (error) {
             console.error("Error:", error);
-            document.getElementById("message").innerText = "Error signing up.";
+            messageElement.className = "mt-4 text-sm font-medium text-red-600";
+            messageElement.innerText =
+              error.message || "Error signing up. Please try again.";
           }
         });
     </script>
