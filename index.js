@@ -242,6 +242,11 @@ app.post("/auth/login", login)
 const logout = (req, res) => {
     try {
         res.cookie("jwt", "", { maxAge: 0 })
+        res.cookie("role", "", { maxAge: 0 })
+        res.cookie("userid", "", { maxAge: 0 })
+        res.clearCookie("jwt")
+        res.clearCookie("role")
+        res.clearCookie("userid")
         res.redirect('/');
     } catch (error) {
         console.log("ERROR in log-out controller", error.message);
@@ -408,6 +413,7 @@ app.post("/services/problems/add", upload.single("problemImage"), async (req, re
         };
 
         await hostelProblem.create(newProblem);
+        console.log("Problem created:", newProblem);
         res.status(201).json(newProblem);
     } catch (error) {
         console.error("ERROR in creating problem:", error);
@@ -420,7 +426,7 @@ app.post('/services/problems/statusChange', async (req, res) => {
     try {
         console.log("Received Data:", req.body);
         let problem2 = null;
-        const problem1 = await hostelProblem.findOne({ where: { id: Number(problemId) } });
+        const problem1 = await hostelProblem.findOne({ where: { problemId: Number(problemId) } });
         if (!problem1) {
             problem2 = dataProblems.find(problem => problem.problemId === Number(problemId));
             if (!problem2) {
@@ -582,13 +588,15 @@ app.get('/dashboard', authMiddleware, async (req, res) => {
 
 app.post('/services/users/add-warden', async (req, res) => {
     try {
-        const { name, email, hostel, password, role } = req.body;
+        const { name, email, hostel, password } = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const newWarden = await User.create({
             name,
             email,
             hostel,
-            password, // In production, make sure to hash the password
+            password: hashedPassword, // In production, make sure to hash the password
             role: 'warden'
         });
 
