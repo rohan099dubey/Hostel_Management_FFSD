@@ -224,7 +224,8 @@
                       name="roomNo"
                       id="roomNo"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
-                      placeholder="Enter room number"
+                      placeholder="<%=userInfo.roomNo%>"
+                      value="<%=userInfo.roomNo%>"
                       required=""
                     />
                   </div>
@@ -263,7 +264,8 @@
                       name="roll_number"
                       id="roll_number"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
-                      placeholder="Enter roll number"
+                      placeholder="<%=userInfo.rollNo%>"
+                      value="<%=userInfo.rollNo%>"
                       required=""
                     />
                   </div>
@@ -279,11 +281,9 @@
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
                       required
                     >
-                      <option selected="" disabled>Select hostel</option>
-                      <option value="BH-1">BH-1</option>
-                      <option value="BH-2">BH-2</option>
-                      <option value="BH-3">BH-3</option>
-                      <option value="BH-4">BH-4</option>
+                      <option value="<%=userInfo.hostel%>">
+                        <%=userInfo.hostel%>
+                      </option>
                     </select>
                   </div>
                 </div>
