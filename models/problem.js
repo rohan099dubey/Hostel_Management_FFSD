@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const hostelProblem = sequelize.define('Problem', {
-    id: {
+    problemId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
