@@ -79,7 +79,122 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-6 py-8">
+    <div class="container mx-auto px-20 py-8">
+      <!-- Problem Statistics Card -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-xl font-bold text-gray-900">Problem Statistics</h3>
+          <div class="flex gap-4">
+            <!-- Hostel Filter -->
+            <select
+              id="hostelFilter"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+            >
+              <option value="all">All Hostels</option>
+              <option value="BH-1">BH-1</option>
+              <option value="BH-2">BH-2</option>
+              <option value="BH-3">BH-3</option>
+              <option value="BH-4">BH-4</option>
+            </select>
+
+            <!-- Date Filter -->
+            <select
+              id="dateFilter"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+            >
+              <option value="all">All Time</option>
+              <option value="7">Last 7 Days</option>
+              <option value="30">Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Pie Chart Container -->
+        <div id="problemsPieChart" class="w-full h-[400px]"></div>
+
+        <!-- Statistics Summary -->
+        <div class="grid grid-cols-3 gap-4 mt-6">
+          <div class="bg-yellow-50 p-4 rounded-lg">
+            <h4 class="text-yellow-800 font-semibold">Pending</h4>
+            <p id="pendingCount" class="text-2xl font-bold text-yellow-600">
+              0
+            </p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg">
+            <h4 class="text-green-800 font-semibold">Resolved</h4>
+            <p id="resolvedCount" class="text-2xl font-bold text-green-600">
+              0
+            </p>
+          </div>
+          <div class="bg-red-50 p-4 rounded-lg">
+            <h4 class="text-red-800 font-semibold">Rejected</h4>
+            <p id="rejectedCount" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-20 py-8">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">
+              Resolution Time Analysis
+            </h3>
+            <p class="text-sm text-gray-500">
+              Average time taken to resolve problems by category
+            </p>
+          </div>
+        </div>
+
+        <!-- Bar Chart Container -->
+        <div id="resolutionTimeChart" class="w-full h-[400px]"></div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-20 py-8">
+      <h3 class="text-2xl font-bold text-gray-900 mb-6">
+        Hostel-wise Analysis
+      </h3>
+
+      <!-- Grid for hostel charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- BH-1 Chart -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-xl font-bold text-gray-900">BH-1</h4>
+          </div>
+          <div id="BH-1-chart" class="w-full h-[300px]"></div>
+        </div>
+
+        <!-- BH-2 Chart -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-xl font-bold text-gray-900">BH-2</h4>
+          </div>
+          <div id="BH-2-chart" class="w-full h-[300px]"></div>
+        </div>
+
+        <!-- BH-3 Chart -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-xl font-bold text-gray-900">BH-3</h4>
+          </div>
+          <div id="BH-3-chart" class="w-full h-[300px]"></div>
+        </div>
+
+        <!-- BH-4 Chart -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-xl font-bold text-gray-900">BH-4</h4>
+          </div>
+          <div id="BH-4-chart" class="w-full h-[300px]"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-20 py-8">
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Problem Tracker</h1>
 
@@ -298,7 +413,7 @@
 
       <div
         id="problem-container"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-h-[800px] overflow-y-auto p-4"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4"
       >
         <% problems.forEach(problem => { %>
         <div
@@ -509,122 +624,9 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-6 py-8">
-      <!-- Problem Statistics Card -->
-      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <div class="flex justify-between items-start mb-4">
-          <h3 class="text-xl font-bold text-gray-900">Problem Statistics</h3>
-          <div class="flex gap-4">
-            <!-- Hostel Filter -->
-            <select
-              id="hostelFilter"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-            >
-              <option value="all">All Hostels</option>
-              <option value="BH-1">BH-1</option>
-              <option value="BH-2">BH-2</option>
-              <option value="BH-3">BH-3</option>
-              <option value="BH-4">BH-4</option>
-            </select>
+   
 
-            <!-- Date Filter -->
-            <select
-              id="dateFilter"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-            >
-              <option value="all">All Time</option>
-              <option value="7">Last 7 Days</option>
-              <option value="30">Last 30 Days</option>
-              <option value="90">Last 90 Days</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Pie Chart Container -->
-        <div id="problemsPieChart" class="w-full h-[400px]"></div>
-
-        <!-- Statistics Summary -->
-        <div class="grid grid-cols-3 gap-4 mt-6">
-          <div class="bg-yellow-50 p-4 rounded-lg">
-            <h4 class="text-yellow-800 font-semibold">Pending</h4>
-            <p id="pendingCount" class="text-2xl font-bold text-yellow-600">
-              0
-            </p>
-          </div>
-          <div class="bg-green-50 p-4 rounded-lg">
-            <h4 class="text-green-800 font-semibold">Resolved</h4>
-            <p id="resolvedCount" class="text-2xl font-bold text-green-600">
-              0
-            </p>
-          </div>
-          <div class="bg-red-50 p-4 rounded-lg">
-            <h4 class="text-red-800 font-semibold">Rejected</h4>
-            <p id="rejectedCount" class="text-2xl font-bold text-red-600">0</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container mx-auto px-6 py-8">
-      <div class="bg-white rounded-lg shadow-lg p-6">
-        <div class="flex justify-between items-center mb-6">
-          <div>
-            <h3 class="text-xl font-bold text-gray-900">
-              Resolution Time Analysis
-            </h3>
-            <p class="text-sm text-gray-500">
-              Average time taken to resolve problems by category
-            </p>
-          </div>
-        </div>
-
-        <!-- Bar Chart Container -->
-        <div id="resolutionTimeChart" class="w-full h-[400px]"></div>
-      </div>
-    </div>
-
-    <div class="container mx-auto px-6 py-8">
-      <h3 class="text-2xl font-bold text-gray-900 mb-6">
-        Hostel-wise Analysis
-      </h3>
-
-      <!-- Grid for hostel charts -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- BH-1 Chart -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h4 class="text-xl font-bold text-gray-900">BH-1</h4>
-          </div>
-          <div id="BH-1-chart" class="w-full h-[300px]"></div>
-        </div>
-
-        <!-- BH-2 Chart -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h4 class="text-xl font-bold text-gray-900">BH-2</h4>
-          </div>
-          <div id="BH-2-chart" class="w-full h-[300px]"></div>
-        </div>
-
-        <!-- BH-3 Chart -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h4 class="text-xl font-bold text-gray-900">BH-3</h4>
-          </div>
-          <div id="BH-3-chart" class="w-full h-[300px]"></div>
-        </div>
-
-        <!-- BH-4 Chart -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h4 class="text-xl font-bold text-gray-900">BH-4</h4>
-          </div>
-          <div id="BH-4-chart" class="w-full h-[300px]"></div>
-        </div>
-      </div>
-    </div>
-
-    <div id="warden-details" class="container mx-auto px-6 py-8">
+    <div id="warden-details" class="container mx-auto px-20 py-8">
       <div class="bg-white rounded-lg shadow-lg p-6">
         <div class="flex justify-between items-center mb-6">
           <h3 class="text-xl font-bold text-gray-900">Warden Management</h3>
