@@ -58,157 +58,203 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Create Chat Room Section -->
-        <% if (role === 'admin' || role === 'warden') { %>
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Create New Chat Room</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Chat Room Name</label>
-                    <input type="text" id="roomName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" placeholder="Enter chat room name">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Room Type</label>
-                    <select id="roomType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
-                        <option value="">Select room type</option>
-                        <option value="general">General Discussion</option>
-                        <option value="announcement">Announcements</option>
-                        <option value="hostel">Hostel Specific</option>
-                        <option value="event">Event Planning</option>
-                        <option value="issue">Issue Resolution</option>
-                    </select>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                    <textarea id="roomDescription" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" rows="3" placeholder="Describe the purpose of this chat room"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Access Level</label>
-                    <select id="roomAccess" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
-                        <option value="">Select access level</option>
-                        <option value="all">Everyone</option>
-                        <option value="students">Students Only</option>
-                        <option value="wardens">Wardens Only</option>
-                        <option value="admins">Admins Only</option>
-                        <option value="custom">Custom (Select below)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Room Icon</label>
-                    <div class="flex flex-wrap gap-3 mt-2">
-                        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center cursor-pointer hover:bg-purple-200 transition-all">
-                            <i class="fas fa-comments text-purple-600"></i>
-                        </div>
-                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center cursor-pointer hover:bg-blue-200 transition-all">
-                            <i class="fas fa-bullhorn text-blue-600"></i>
-                        </div>
-                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center cursor-pointer hover:bg-green-200 transition-all">
-                            <i class="fas fa-home text-green-600"></i>
-                        </div>
-                        <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center cursor-pointer hover:bg-red-200 transition-all">
-                            <i class="fas fa-exclamation-circle text-red-600"></i>
-                        </div>
-                        <div class="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center cursor-pointer hover:bg-yellow-200 transition-all">
-                            <i class="fas fa-calendar-alt text-yellow-600"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="md:col-span-2">
-                    <button type="button" class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg font-semibold">
-                        Create Chat Room
-                    </button>
-                </div>
-            </div>
-        </div>
-        <% } %>
-
-        <!-- Available Chat Rooms Section -->
+    <!-- Main Content -->
+        <!-- Create Chat Room Section (only for admin/warden) -->
+<% if (role === 'admin' || role === 'warden') { %>
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Create New Chat Room</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Available Chat Rooms</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Chat Room Card 1 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                    <div class="p-6">
-                        <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-500 rounded-lg flex items-center justify-center mb-4">
-                            <i class="fas fa-bullhorn text-white text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Announcements</h3>
-                        <p class="text-gray-600 mb-4">Official announcements from hostel administration and wardens.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-500 flex items-center">
-                                <i class="fas fa-users mr-1"></i> All Users
-                            </span>
-                            <button class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg">
-                                Join
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat Room Card 2 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                    <div class="p-6">
-                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-4">
-                            <i class="fas fa-home text-white text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Hostel A Discussion</h3>
-                        <p class="text-gray-600 mb-4">General discussion for residents of Hostel A.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-500 flex items-center">
-                                <i class="fas fa-users mr-1"></i> Hostel A Residents
-                            </span>
-                            <button class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-md hover:shadow-lg">
-                                Join
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat Room Card 3 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                    <div class="p-6">
-                        <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
-                            <i class="fas fa-exclamation-circle text-white text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Issue Resolution</h3>
-                        <p class="text-gray-600 mb-4">Discuss and resolve common hostel issues with wardens and administration.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-500 flex items-center">
-                                <i class="fas fa-users mr-1"></i> All Users
-                            </span>
-                            <button class="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg">
-                                Join
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat Room Card 4 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                    <div class="p-6">
-                        <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mb-4">
-                            <i class="fas fa-calendar-alt text-white text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Events & Activities</h3>
-                        <p class="text-gray-600 mb-4">Discuss upcoming events, activities, and cultural programs.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-500 flex items-center">
-                                <i class="fas fa-users mr-1"></i> All Users
-                            </span>
-                            <button class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg">
-                                Join
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Chat Room Name</label>
+          <input type="text" id="roomName" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter chat room name">
         </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Room Type</label>
+          <select id="roomType" class="w-full p-3 border border-gray-300 rounded-lg">
+            <option value="">Select room type</option>
+            <option value="general">General Discussion</option>
+            <option value="announcement">Announcements</option>
+            <option value="hostel">Hostel Specific</option>
+            <option value="event">Event Planning</option>
+            <option value="issue">Issue Resolution</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+          <textarea id="roomDescription" class="w-full p-3 border border-gray-300 rounded-lg" rows="3" placeholder="Describe the purpose of this chat room"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Access Level</label>
+          <select id="roomAccess" class="w-full p-3 border border-gray-300 rounded-lg">
+            <option value="">Select access level</option>
+            <option value="all">Everyone</option>
+            <option value="students">Students Only</option>
+            <option value="wardens">Wardens Only</option>
+            <option value="admins">Admins Only</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Room Icon</label>
+          <div class="flex flex-wrap gap-3 mt-2">
+            <div class="icon-option w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center cursor-pointer hover:bg-purple-200 transition-all" data-icon="fas fa-comments">
+              <i class="fas fa-comments text-purple-600"></i>
+            </div>
+            <div class="icon-option w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center cursor-pointer hover:bg-blue-200 transition-all" data-icon="fas fa-bullhorn">
+              <i class="fas fa-bullhorn text-blue-600"></i>
+            </div>
+            <div class="icon-option w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center cursor-pointer hover:bg-green-200 transition-all" data-icon="fas fa-home">
+              <i class="fas fa-home text-green-600"></i>
+            </div>
+            <div class="icon-option w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center cursor-pointer hover:bg-red-200 transition-all" data-icon="fas fa-exclamation-circle">
+              <i class="fas fa-exclamation-circle text-red-600"></i>
+            </div>
+            <div class="icon-option w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center cursor-pointer hover:bg-yellow-200 transition-all" data-icon="fas fa-calendar-alt">
+              <i class="fas fa-calendar-alt text-yellow-600"></i>
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-2">
+          <button type="button" id="createChatRoom" class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg font-semibold">
+            Create Chat Room
+          </button>
+        </div>
+      </div>
     </div>
+  <% } %>
+  
+  <!-- Available Chat Rooms Section -->
+  <div>
+    <h2 class="text-3xl font-bold text-gray-900 mb-6">Available Chat Rooms</h2>
+    <div id="chatRoomsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% chatRooms.forEach(room => { %>
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
+          <div class="p-6">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-500 rounded-lg flex items-center justify-center mb-4">
+              <i class="<%= room.roomIcon %> text-white text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2"><%= room.roomName %></h3>
+            <p class="text-gray-600 mb-4"><%= room.description %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500 flex items-center">
+                <i class="fas fa-users mr-1"></i> <%= room.accessLevel %>
+              </span>
+              <% if (role === 'admin' || role === 'warden') { %>
+                <button class="delete-chatroom px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg" data-id="<%= room.id %>">
+                  Delete
+                </button>
+              <% } else { %>
+                <button class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg">Join</button>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  </div>
+  
+  <script>
+    // Icon selection
+    let selectedIcon = '';
+    document.querySelectorAll('.icon-option').forEach(icon => {
+      icon.addEventListener('click', function() {
+        // Remove highlight from all
+        document.querySelectorAll('.icon-option').forEach(i => i.classList.remove('border-2', 'border-blue-500'));
+        // Highlight the clicked one and store its icon class
+        this.classList.add('border-2', 'border-blue-500');
+        selectedIcon = this.getAttribute('data-icon');
+      });
+    });
+  
+    // Create Chat Room
+    document.getElementById('createChatRoom').addEventListener('click', function() {
+      const roomName = document.getElementById('roomName').value;
+      const roomType = document.getElementById('roomType').value;
+      const description = document.getElementById('roomDescription').value;
+      const accessLevel = document.getElementById('roomAccess').value;
+  
+      if (!roomName || !roomType || !accessLevel) {
+        Swal.fire('Error', 'Please fill in the required fields', 'error');
+        return;
+      }
+  
+      fetch('/services/chatRoom/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ roomName, roomType, description, accessLevel, roomIcon: selectedIcon })
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to create chat room');
+        }
+        return res.json();
+      })
+      .then(data => {
+        // Create a new chat room card and prepend it to the container
+        const container = document.getElementById('chatRoomsContainer');
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200";
+        card.innerHTML = `
+          <div class="p-6">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-500 rounded-lg flex items-center justify-center mb-4">
+              <i class="${data.roomIcon || 'fas fa-comments'} text-white text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">${data.roomName}</h3>
+            <p class="text-gray-600 mb-4">${data.description}</p>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500 flex items-center">
+                <i class="fas fa-users mr-1"></i> ${data.accessLevel}
+              </span>
+              <button class="delete-chatroom px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg" data-id="${data.id}">
+                Delete
+              </button>
+            </div>
+          </div>`;
+        container.prepend(card);
+        // Clear form fields and reset icon selection
+        document.getElementById('roomName').value = '';
+        document.getElementById('roomType').value = '';
+        document.getElementById('roomDescription').value = '';
+        document.getElementById('roomAccess').value = '';
+        selectedIcon = '';
+        document.querySelectorAll('.icon-option').forEach(i => i.classList.remove('border-2', 'border-blue-500'));
+        Swal.fire('Success', 'Chat room created successfully!', 'success');
+      })
+      .catch(err => {
+        console.error(err);
+        Swal.fire('Error', err.message, 'error');
+      });
+    });
+  
+    // Delete Chat Room (delegated event listener)
+    document.getElementById('chatRoomsContainer').addEventListener('click', function(e) {
+      if (e.target && e.target.matches('button.delete-chatroom')) {
+        const chatRoomId = e.target.getAttribute('data-id');
+        fetch(`/services/chatRoom/delete/${chatRoomId}`, {
+          method: 'DELETE'
+        })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Failed to delete chat room');
+          }
+          // Remove the chat room card from the UI
+          e.target.closest('.bg-white').remove();
+          Swal.fire('Deleted!', 'Chat room deleted successfully.', 'success');
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire('Error', err.message, 'error');
+        });
+      }
+    });
+  </script>
+  
 
-    <%- include('partials/footer.ejs') %>
-    <script src="/js/navbar.js"></script>
+    
 </body>
-
+<%- include('partials/footer.ejs') %>
+    <script src="/js/navbar.js"></script>
 </html>

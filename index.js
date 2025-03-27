@@ -17,6 +17,8 @@ const hostelProblem = require('./models/problem.js');
 const Announcement = require('./models/announcement.js'); // Import Announcement model
 const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
 const { MenuItems, Feedback } = require('./models/menu.js');
+const ChatRoom = require('./models/chatroom');
+
 
 //cloudinary 
 
@@ -706,19 +708,76 @@ app.post('/feedback', async (req, res) => {
     }
 });
 
-app.get('/services/chatRoom', authMiddleware, (req, res) => {
+app.get('/services/chatRoom', authMiddleware, async (req, res) => {
     try {
-        const isLoggedIn = Boolean(req.cookies.jwt);
-        const { role } = req.cookies;
-        res.render('chatRoom.ejs', {
-            role: role,
-            loggedIn: isLoggedIn
-        });
+      const isLoggedIn = Boolean(req.cookies.jwt);
+      const { role } = req.cookies;
+      
+      // Fetch all chat rooms
+      const chatRoomsAll = await ChatRoom.findAll({ order: [['createdAt', 'DESC']] });
+  
+      // Filter rooms based on role and accessLevel
+      const chatRooms = chatRoomsAll.filter(room => {
+        if (room.accessLevel === 'all') return true;
+        if (room.accessLevel === 'admins' && role === 'admin') return true;
+        if (room.accessLevel === 'students' && role === 'student') return true;
+        if (room.accessLevel === 'wardens' && role === 'warden') return true;
+        // If none match, user can't see the room
+        return false;
+      });
+  
+      // Now only the rooms the user can see will be passed to EJS
+      res.render('chatRoom.ejs', { role, loggedIn: isLoggedIn, chatRooms });
     } catch (error) {
-        console.error("Error loading chat rooms:", error);
-        res.status(500).send("Error loading chat rooms");
+      console.error("Error loading chat rooms:", error);
+      res.status(500).send("Error loading chat rooms");
     }
-})
+  });
+  
+  app.post('/services/chatRoom/create', authMiddleware, async (req, res) => {
+    try {
+      const { role, userid } = req.cookies;
+      // Only admin and warden can create a chat room
+      if (role !== 'admin' && role !== 'warden') {
+        return res.status(403).send('Unauthorized');
+      }
+  
+      const { roomName, roomType, description, accessLevel, roomIcon } = req.body;
+      if (!roomName || !roomType || !accessLevel) {
+        return res.status(400).send('Missing required fields');
+      }
+  
+      const newRoom = await ChatRoom.create({
+        roomName,
+        roomType,
+        description,
+        accessLevel,
+        roomIcon: roomIcon || 'fas fa-comments', // default icon if not provided
+        createdBy: userid
+      });
+  
+      res.status(201).json(newRoom);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal server error');
+    }
+  });
+  app.delete('/services/chatRoom/delete/:id', authMiddleware, async (req, res) => {
+    try {
+      const { role } = req.cookies;
+      if (role !== 'admin' && role !== 'warden') {
+        return res.status(403).send('Unauthorized');
+      }
+      
+      const { id } = req.params;
+      await ChatRoom.destroy({ where: { id } });
+      res.status(200).send('Deleted Successfully');
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal server error');
+    }
+  });
+      
 
 
 app.listen(process.env.PORT, () => {
