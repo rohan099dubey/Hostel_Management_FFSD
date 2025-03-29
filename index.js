@@ -646,20 +646,17 @@ app.delete('/services/users/delete-warden/:id', async (req, res) => {
 
 const loadMenuData = require('./loadmenuData.js'); // Adjust the path
 
-// Load menu data on startup
-loadMenuData()
-//menu
 
 // Sync models with the database
 sequelize.sync({ force: true })
     .then(() => {
         console.log('Database synced successfully!');
-        return loadMenuData(); // Load menu data after syncing
+       return loadMenuData(); // Load menu data after syncing
     })
     .catch((error) => {
         console.error('Error syncing database:', error);
     });
-
+   
 app.get('/services/mess', async (req, res) => {
     try {
         const isLoggedIn = Boolean(req.cookies.jwt);
