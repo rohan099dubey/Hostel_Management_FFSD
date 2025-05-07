@@ -241,10 +241,10 @@
       >
         <% problems.forEach(problem => { %>
         <div
-          data-modal-target="problem-modal<%= problem.problemId %>"
-          data-modal-toggle="problem-modal<%= problem.problemId %>"
+          data-modal-target="problem-modal<%= problem._id %>"
+          data-modal-toggle="problem-modal<%= problem._id %>"
           class="problem-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-          data-id="<%= problem.problemId %>"
+          data-id="<%= problem._id %>"
         >
           <div class="relative h-56 w-full">
             <img
@@ -301,7 +301,7 @@
         </div>
 
         <div
-          id="problem-modal<%= problem.problemId %>"
+          id="problem-modal<%= problem._id %>"
           class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50"
         >
           <div
@@ -315,7 +315,7 @@
               <button
                 type="button"
                 class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                data-modal-toggle="problem-modal<%= problem.problemId %>"
+                data-modal-toggle="problem-modal<%= problem._id %>"
               >
                 <svg
                   class="w-6 h-6"
@@ -417,7 +417,7 @@
                       type="hidden"
                       name="problemId"
                       id="problemId"
-                      value="<%= problem.problemId %>"
+                      value="<%= problem._id %>"
                     />
                     <select
                       name="status"

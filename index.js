@@ -302,8 +302,8 @@ app.get('/services/problems', authMiddleware, async (req, res) => {
         let userProblems1 = [];
 
         if (role !== 'admin') {
-            // Changed findAll to find for MongoDB
-            userProblems1 = await hostelProblem.find({ hostel: user.hostel });
+            // Changed findAll to find for MongoDB and sort by createdAt descending
+            userProblems1 = await hostelProblem.find({ hostel: user.hostel }).sort({ createdAt: -1 });
 
             if (userProblems1.length > 0) {
                 userProblems1 = userProblems1.map(problem => ({
@@ -315,7 +315,7 @@ app.get('/services/problems', authMiddleware, async (req, res) => {
 
         } else {
             // For admin, get all problems
-            userProblems1 = await hostelProblem.find();
+            userProblems1 = await hostelProblem.find().sort({ createdAt: -1 });
         }
 
         const problems = userProblems1;
@@ -369,7 +369,6 @@ app.post("/services/problems/add", upload.single("problemImage"), async (req, re
     }
 })
 
-//problem due to id change i will fix it
 app.post('/services/problems/statusChange', async (req, res) => {
     const { problemId, status } = req.body;
     try {
@@ -385,6 +384,35 @@ app.post('/services/problems/statusChange', async (req, res) => {
     } catch (error) {
         console.error("ERROR in status change:", error);
         res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+app.post('/services/problems/student-confirmation', async (req, res) => {
+    try {
+        const { problemId } = req.body;
+
+        // Find and update the problem
+        const problem = await hostelProblem.findById(problemId);
+
+        if (!problem) {
+            return res.status(404).json({ message: "Problem not found" });
+        }
+
+        // Update studentStatus to 'Resolved'
+        problem.studentStatus = 'Resolved';
+        await problem.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Problem resolution confirmed by student"
+        });
+
+    } catch (error) {
+        console.error("Error in student confirmation:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error confirming problem resolution"
+        });
     }
 });
 
