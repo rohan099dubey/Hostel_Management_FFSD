@@ -498,27 +498,54 @@
                     Work In Progress
                   </div>
                   <% } else if(problem.status === 'Resolved'){ %>
-                  <div class="flex items-center space-x-4">
-                    <% if(problem.studentStatus==='Resolved') { %>
+                  <div class="flex flex-col space-y-4">
+                    <% if(problem.studentStatus === true) { %>
                     <div class="text-green-600 font-medium">
                       Problem Resolution Confirmed
                     </div>
                     <% } else { %>
-                    <span class="text-gray-600"
+                    <span class="text-gray-600 mb-2"
                       >Has this problem been resolved?</span
                     >
-                    <form id="studentConfirmation">
-                      <button
-                        type="submit"
-                        class="px-4 py-2 bg-green-500 text-white rounded-3xl hover:bg-green-600"
-                      >
-                        Confirm Resolution
-                      </button>
+                    <form
+                      id="studentConfirmation-<%= problem._id %>"
+                      class="student-confirmation-form flex flex-col space-y-4"
+                      data-problem-id="<%= problem._id %>"
+                    >
+                      <div class="space-y-2">
+                        <div>
+                          <input
+                            type="radio"
+                            name="status"
+                            value="Resolved"
+                            id="resolved"
+                          />
+                          <label for="resolved">Resolved</label>
+                        </div>
+
+                        <div>
+                          <input
+                            type="radio"
+                            name="status"
+                            value="Not Resolved"
+                            id="notResolved"
+                          />
+                          <label for="notResolved">Not Resolved</label>
+                        </div>
+                      </div>
+
                       <input
                         type="hidden"
                         name="problemId"
                         value="<%= problem._id %>"
                       />
+
+                      <button
+                        type="submit"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg w-fit"
+                      >
+                        Submit
+                      </button>
                     </form>
                     <% } %>
                   </div>
@@ -569,49 +596,53 @@
     <%- include('../footer.ejs') %>
     <script>
       document
-        .getElementById("studentConfirmation")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault();
+        .querySelectorAll(".student-confirmation-form")
+        .forEach((form) => {
+          form.addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-          const problemId = this.querySelector('input[name="problemId"]').value;
+            const formData = new FormData(this);
+            const studentStatus = formData.get("status");
+            const problemId = formData.get("problemId");
 
-          try {
-            const response = await fetch(
-              "/services/problems/student-confirmation",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ problemId }),
+            try {
+              const response = await fetch(
+                "/services/problems/student-confirmation",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ problemId, studentStatus }),
+                }
+              );
+
+              const data = await response.json();
+
+              if (data.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Confirmed",
+                  text: "Problem resolution has been confirmed successfully!",
+                }).then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: data.message || "Failed to confirm resolution",
+                });
               }
-            );
-
-            const data = await response.json();
-
-            if (data.success) {
-              Swal.fire({
-                icon: "success",
-                title: "Confirmed",
-                text: "Problem resolution has been confirmed successfully!",
-              }).then(() => {
-                location.reload();
-              });
-            } else {
+            } catch (error) {
+              console.error("Error:", error);
               Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: data.message || "Failed to confirm resolution",
+                text: "Something went wrong. Please try again.",
               });
             }
-          } catch (error) {
-            console.error("Error:", error);
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: "Something went wrong. Please try again.",
-            });
-          }
+          });
         });
     </script>
     <script>

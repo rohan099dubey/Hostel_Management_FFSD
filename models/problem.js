@@ -92,9 +92,8 @@ const problemSchema = new mongoose.Schema({
         default: 'Pending'
     },
     studentStatus: {
-        type: String,
-        enum: ['NotResolved', 'Resolved'],
-        default: 'NotResolved'
+        type: Boolean,
+        default: false
     },
     timeResolved: {
         type: Date,
