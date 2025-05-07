@@ -1,3 +1,4 @@
+//modules imported
 const express = require('express');
 const app = express();
 require('dotenv').config();
@@ -8,6 +9,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs').promises;
 const multer = require("multer");
+
 
 //Databse connection
 const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
