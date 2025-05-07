@@ -3,39 +3,37 @@ const app = express();
 require('dotenv').config();
 const path = require('path');
 const moment = require('moment');
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs').promises;
+const multer = require("multer");
+
+//Databse connection
+const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
+const connectDB = require('./config/database.js');
+connectDB(); // Connect to MongoDB
+
+// Import models
+const User = require('./models/user.js');
+const hostelProblem = require('./models/problem.js');
+const Announcement = require('./models/announcement.js');
+const { MenuItems, Feedback } = require('./models/menu.js');
+const ChatRoom = require('./models/chatroom');
 const Transit = require('./models/transit');
 
 
-const sequelize = require('./config/database.js');
-const User = require('./models/user.js');
-const hostelProblem = require('./models/problem.js');
-const Announcement = require('./models/announcement.js'); // Import Announcement model
-const { dataProblems, dataEntryExit, userData } = require('./config/data.js');
-const { MenuItems, Feedback } = require('./models/menu.js');
-const ChatRoom = require('./models/chatroom');
-
-
-//cloudinary 
-
-
-//multer 
-const multer = require("multer");
-
-// Set storage engine
+// Multer configuration remains the same
 const storage = multer.diskStorage({
-    destination: "./public/uploads/", // Store images in public/uploads/
+    destination: "./public/uploads/",
     filename: (req, file, cb) => {
         cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
     }
 });
+
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const fileTypes = /jpeg|jpg|png/;
         const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
@@ -49,31 +47,41 @@ const upload = multer({
     }
 });
 
-// Configure express app
+// Express configuration remains the same
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: true })); // Needed for form submissions
+app.use(express.urlencoded({ extended: true }));
 
 moment().format();
 
-sequelize.authenticate()
-    .then(() => sequelize.sync()) // Sync models with database
-    .then(() => console.log('Connected to SQLite in-memory database'))
-    .catch(e => {
-        console.error('Database connection error:', e);
-        console.error('Error stack:', e.stack);
-    });
+const generateToken = (userID, res) => {
 
-// First, move the authMiddleware definition to the top after all the initial configurations
+    const token = jwt.sign(
+        { userID },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+    )
+
+    res.cookie("jwt", token, {
+        maxAge: 7 * 24 * 60 * 60 * 1000, // in millisecond
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV !== "development"
+    })
+
+    return token;
+};
+
+// Auth middleware remains the same
 const authMiddleware = (req, res, next) => {
     const publicRoutes = ['/auth/login', '/auth/logout', '/signup', '/about', '/contact', '/', '/login'];
     if (!req.cookies.jwt && !publicRoutes.includes(req.path)) {
         return res.redirect('/login');
     }
     next();
-};
+}
 
 // Public routes (no auth required)
 app.get('/', (req, res) => {
@@ -100,25 +108,6 @@ app.get('/signup', (req, res) => {
 });
 
 //routes for login and signup
-
-const generateToken = (userID, res) => {
-
-    const token = jwt.sign(
-        { userID },
-        process.env.JWT_SECRET,
-        { expiresIn: "7d" }
-    )
-
-    res.cookie("jwt", token, {
-        maxAge: 7 * 24 * 60 * 60 * 1000, // in millisecond
-        httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV !== "development"
-    })
-
-    return token;
-}
-
 //signup
 const signup = async (req, res) => {
     try {
@@ -132,9 +121,7 @@ const signup = async (req, res) => {
         }
 
         // Check for existing user
-        const existingUser = await User.findOne({
-            where: { email }
-        });
+        const existingUser = await User.findOne({ email });
 
         if (existingUser) {
             return res.status(400).json({ message: "User already exists with this email" });
@@ -155,15 +142,14 @@ const signup = async (req, res) => {
             role: 'student'
         });
 
-        // Generate token and set cookies
-        generateToken(newUser.userId, res);
-        res.cookie("userid", newUser.userId);
+        generateToken(newUser._id, res);
+        res.cookie("userid", newUser._id);
         res.cookie("role", newUser.role);
 
         return res.status(201).json({
             success: true,
             user: {
-                userId: newUser.userId,
+                userId: newUser._id,
                 name: newUser.name,
                 email: newUser.email,
                 role: newUser.role
@@ -179,7 +165,6 @@ const signup = async (req, res) => {
         });
     }
 };
-
 app.post("/auth/signup", signup);
 
 //login
@@ -190,39 +175,29 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        const user2 = await User.findOne({ where: { email } });
-        const user1 = userData.find(user => user.email === email);
-        const user = user2 || user1;
+        const user = await User.findOne({ email });
 
         if (!user) {
             console.log("invalid user");
             return res.status(400).json({ message: "Invalid Credentials" });
         }
-        if (!user1) {
-            const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
-            if (!isPasswordCorrect) {
-                console.log("incorrect password");
-                return res.status(400).json({ message: "Invalid Credentials" });
-            }
-        }
-
-        if (!user2) {
-            if (user1.password !== password) {
-                console.log("incorrect password");
-                return res.status(400).json({ message: "Invalid Credentials" });
-            }
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            console.log("incorrect password");
+            return res.status(400).json({ message: "Invalid Credentials" });
         }
 
 
-        generateToken(user.userId, res);
+        generateToken(user._id, res);
+        res.cookie("role", user.role)
+        res.cookie("userid", user._id)
 
         console.log("user found");
         console.log(user);
-        res.cookie("role", user.role)
-        res.cookie("userid", user.userId)
+
         return res.status(200).json({
-            userId: user.userId,
+            userId: user._id,
             name: user.name,
             rollNo: user.rollNo,
             email: user.email,
@@ -237,7 +212,6 @@ const login = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
-
 app.post("/auth/login", login)
 
 //logout
@@ -255,38 +229,14 @@ const logout = (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
-
 app.post("/auth/logout", logout)
-
-// app.get('/services', async (req, res) => {
-//     res.render('services.ejs');
-// })
 
 
 app.get("/services/announcements", authMiddleware, async (req, res) => {
     try {
         const isLoggedIn = Boolean(req.cookies.jwt);
-        let announcements = await Announcement.findAll({ order: [["createdAt", "DESC"]] });
+        let announcements = await Announcement.find().sort({ createdAt: -1 });
         const { role } = req.cookies;
-        const dummyAnnouncements = [
-            {
-                title: "Wi-Fi Upgrade Notice",
-                message: "Dear students, Wi-Fi bandwidth has been increased. If issues persist, contact hosteloffice@iiits.in.",
-                createdAt: new Date()
-            },
-            {
-                title: "Mess Menu Update",
-                message: "The new mess menu for April has been updated. Check the notice board or website for details.",
-                createdAt: new Date()
-            },
-            {
-                title: "Exam Schedule Released",
-                message: "The semester exam schedule has been released. Visit the portal to download the timetable.",
-                createdAt: new Date()
-            }
-        ];
-
-        announcements = [...announcements, ...dummyAnnouncements];
 
         res.render("announcements", { announcements, role, loggedIn: isLoggedIn });
     } catch (error) {
@@ -325,7 +275,7 @@ app.post("/services/announcement", async (req, res) => {
 app.delete("/announcements/delete/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        await Announcement.destroy({ where: { id } });
+        await Announcement.findByIdAndDelete(id);
         res.status(200).send("Deleted Successfully");
     } catch (error) {
         console.error("Error deleting announcement:", error);
@@ -334,53 +284,49 @@ app.delete("/announcements/delete/:id", async (req, res) => {
 });
 
 
-
-
 app.get('/services/problems', authMiddleware, async (req, res) => {
     const isLoggedIn = Boolean(req.cookies.jwt);
     const role = req.cookies.role;
     const userID = req.cookies.userid;
 
     try {
-        let user = await User.findOne({
-            where: { userId: userID },
-            attributes: { exclude: ['password'] }
-        });
+        // First try to find the user in MongoDB
+        let user = await User.findById(userID).select('-password');
 
+
+        // If still no user found, return error
         if (!user) {
-            user = userData.find(u => userID === u.userId);
+            return res.status(404).send("User not found");
         }
 
         let userProblems1 = [];
-        let userProblems2 = [];
 
         if (role !== 'admin') {
-            userProblems1 = await hostelProblem.findAll({
-                where: { hostel: user.hostel }
-            });
+            // Changed findAll to find for MongoDB
+            userProblems1 = await hostelProblem.find({ hostel: user.hostel });
 
             if (userProblems1.length > 0) {
                 userProblems1 = userProblems1.map(problem => ({
-                    ...problem.toJSON(),
+                    ...problem.toObject(), // Changed toJSON to toObject for MongoDB
                     roomNumber: problem.roomNo,
                     createdAt: problem.createdAt || new Date()
                 }));
             }
 
-            userProblems2 = dataProblems.filter(problem => user.hostel === problem.hostel)
-                .map(problem => ({
-                    ...problem,
-                    createdAt: problem.createdAt || new Date()
-                }));
-
         } else {
-            userProblems1 = await hostelProblem.findAll();
-            userProblems2 = dataProblems;
+            // For admin, get all problems
+            userProblems1 = await hostelProblem.find();
         }
 
-        const problems = [...userProblems1, ...userProblems2];
+        const problems = userProblems1;
 
-        res.render('problems.ejs', { problems, role, userID, loggedIn: isLoggedIn, user });
+        res.render('problems.ejs', {
+            problems,
+            role,
+            userID,
+            loggedIn: isLoggedIn,
+            user
+        });
     } catch (error) {
         console.error("Error fetching problems:", error);
         res.status(500).send("Error fetching problems");
@@ -423,39 +369,30 @@ app.post("/services/problems/add", upload.single("problemImage"), async (req, re
     }
 })
 
+//problem due to id change i will fix it
 app.post('/services/problems/statusChange', async (req, res) => {
     const { problemId, status } = req.body;
     try {
-        console.log("Received Data:", req.body);
-        let problem2 = null;
-        const problem1 = await hostelProblem.findOne({ where: { problemId: Number(problemId) } });
-        if (!problem1) {
-            problem2 = dataProblems.find(problem => problem.problemId === Number(problemId));
-            if (!problem2) {
-                return res.status(404).json({ message: "Problem not found" });
-            }
+        const problem = await hostelProblem.findById(problemId);
+        if (!problem) {
+            return res.status(404).json({ message: "Problem not found" });
         }
-        if (!!problem1) {
-            problem1.status = status;
-            problem1.timeResolved = new Date();
-            await problem1.save();
-        } else if (!!problem2) {
-            problem2.status = status; // Update status for the in-memory problem
-            problem2.timeResolved = new Date();
-        }
+
+        problem.status = status;
+        problem.timeResolved = new Date();
+        await problem.save();
         res.status(200).json({ message: "Status updated successfully" });
     } catch (error) {
         console.error("ERROR in status change:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
-// res.render('problems.ejs', { problems });
+
 app.get("/services/register", authMiddleware, async (req, res) => {
     try {
         const isLoggedIn = Boolean(req.cookies.jwt);
-        const transitEntries = await Transit.findAll();
+        const transitEntries = await Transit.find().sort({ createdAt: -1 });
 
-        console.log("Fetched Transit Entries:", transitEntries);
         const formattedEntries = transitEntries.map(entry => ({
             studentName: entry.studentName,
             studentHostel: entry.studentHostel,
@@ -466,7 +403,7 @@ app.get("/services/register", authMiddleware, async (req, res) => {
             date: entry.createdAt.toISOString().split("T")[0], // Extract YYYY-MM-DD
             time: entry.createdAt.toISOString().split("T")[1].split(".")[0] // Extract HH:MM:SS
         }));
-        const mergedData = [...dataEntryExit, ...formattedEntries];
+        const mergedData = formattedEntries;
 
         res.render("register.ejs", { entryExit: mergedData, loggedIn: isLoggedIn });
 
@@ -502,89 +439,70 @@ app.post('/services/transit', async (req, res) => {
 
 
 app.get('/dashboard', authMiddleware, async (req, res) => {
-    const isLoggedIn = Boolean(req.cookies.jwt);
-    const role = req.cookies.role;
-    const userId = req.cookies.userid;
+    try {
+        const isLoggedIn = Boolean(req.cookies.jwt);
+        const role = req.cookies.role;
+        const userId = req.cookies.userid;
 
-    let userInfo = await User.findOne({ where: { userId: userId }, attributes: { exclude: ['password'] } });
+        const userInfo = await User.findById(userId).select('-password');
 
-    if (!userInfo) {
-        userInfo = userData.find(user => userId === user.userId);
-    }
+        if (!userInfo) {
+            return res.status(404).send("User not found");
+        }
 
-    if (role === "student") {
-        let userProblems1 = [];
-        let userProblems2 = [];
-        userProblems1 = await hostelProblem.findAll({
-            where: { hostel: userInfo.hostel, studentId: userInfo.rollNo }
-        });
+        if (role === "student") {
+            const userProblems = await hostelProblem.find({
+                hostel: userInfo.hostel,
+                studentId: userInfo.rollNo
+            }).lean();
 
-        if (!!userProblems1) {
-            userProblems1 = userProblems1.map(problem => ({
-                ...problem.toJSON(),
-                roomNumber: problem.roomNo // Change roomNo to roomNumber
+            const problems = userProblems.map(problem => ({
+                ...problem,
+                roomNumber: problem.roomNo
             }));
-        }
 
-        userProblems2 = dataProblems.filter(problem => problem.studentId === userInfo.rollNo).map(problem => ({
-            ...problem,
-            createdAt: problem.createdAt || new Date()
-        }));
-        const problems = [...userProblems1, ...userProblems2];
+            res.render('partials/dashboard/student.ejs', {
+                userInfo,
+                problems,
+                loggedIn: isLoggedIn
+            });
 
-        res.render('partials/dashboard/student.ejs', { userInfo, problems, loggedIn: isLoggedIn });
+        } else if (role === "warden") {
+            const userProblems = await hostelProblem.find({
+                hostel: userInfo.hostel
+            }).lean();
 
-    } else if (role === "warden") {
-        let userProblems1 = [];
-        let userProblems2 = [];
-
-        userProblems1 = await hostelProblem.findAll({
-            where: { hostel: userInfo.hostel }
-        });
-
-        if (!!userProblems1) {
-            userProblems1 = userProblems1.map(problem => ({
-                ...problem.toJSON(),
-                roomNumber: problem.roomNo // Change roomNo to roomNumber
+            const problems = userProblems.map(problem => ({
+                ...problem,
+                roomNumber: problem.roomNo
             }));
-        }
 
-        userProblems2 = dataProblems.filter(problem => userInfo.hostel === problem.hostel);
-        const problems = [...userProblems1, ...userProblems2];
+            res.render('partials/dashboard/warden.ejs', {
+                userInfo,
+                problems,
+                loggedIn: isLoggedIn
+            });
 
-        res.render('partials/dashboard/warden.ejs', { userInfo, problems, loggedIn: isLoggedIn });
+        } else if (role === "admin") {
+            const allUsers = await User.find().select('-password').lean();
 
-    } else if (role === "admin") {
+            const userProblems = await hostelProblem.find().lean();
 
-        // Get all users for admin dashboard
-        let allUsers = await User.findAll({
-            attributes: { exclude: ['password'] }
-        });
-
-        // Add mock users if needed
-        if (userData && userData.length > 0) {
-            // Filter out duplicates that might already exist in allUsers
-            const existingUserIds = allUsers.map(user => user.userId);
-            const uniqueMockUsers = userData.filter(user => !existingUserIds.includes(user.userId));
-
-            // Combine real and mock users
-            allUsers = [...allUsers, ...uniqueMockUsers];
-        }
-
-        let userProblems1 = await hostelProblem.findAll({
-        });
-
-        if (!!userProblems1) {
-            userProblems1 = userProblems1.map(problem => ({
-                ...problem.toJSON(),
-                roomNumber: problem.roomNo // Change roomNo to roomNumber
+            const problems = userProblems.map(problem => ({
+                ...problem,
+                roomNumber: problem.roomNo
             }));
+
+            res.render('partials/dashboard/admin.ejs', {
+                userInfo,
+                problems,
+                allUsers,
+                loggedIn: isLoggedIn
+            });
         }
-
-        let userProblems2 = dataProblems;
-        let problems = [...userProblems1, ...userProblems2];
-
-        res.render('partials/dashboard/admin.ejs', { userInfo, problems, allUsers, loggedIn: isLoggedIn });
+    } catch (error) {
+        console.error("Error in dashboard route:", error);
+        res.status(500).send("Internal Server Error");
     }
 })
 
@@ -613,62 +531,48 @@ app.post('/services/users/add-warden', async (req, res) => {
 app.delete('/services/users/delete-warden/:id', async (req, res) => {
     try {
         const wardenId = req.params.id;
-        const deletedCount = await User.destroy({
-            where: {
-                userId: wardenId,
-                role: 'warden'
-            }
+        const deletedWarden = await User.findOneAndDelete({
+            _id: wardenId,
+            role: 'warden'
         });
-        console.log(wardenId)
-        // Find the warden in userData array if it exists
-        const userToDelete = userData.find(user => user.userId === wardenId);
 
-        if (userToDelete) {
-            console.log(`Found warden to delete: ${userToDelete.name} (${userToDelete.email})`);
-            userData = userData.filter(user => user.userId !== wardenId);
-        } else {
-            console.log(`Warden with ID ${wardenId} not found in userData array`);
+        if (!deletedWarden) {
+            return res.status(404).json({ message: 'Warden not found' });
         }
-        if (!deletedCount) {
-            // Fix the error by not reassigning to userData constant
-            // Instead, modify the global userData variable if it exists
-            if (typeof userData !== 'undefined') {
-                // Filter the array without reassignment
-                userData = userData.filter(user => user.userId !== wardenId);
-            }
-        }
-        res.json({ message: 'Warden deleted successfully' });
+
+        res.json({ message: 'Warden deleted successfully', deletedWarden });
     } catch (error) {
         console.error('Error deleting warden:', error);
         res.status(500).json({ message: 'Error deleting warden', error: error.message });
     }
 });
 
+
 const loadMenuData = require('./loadmenuData.js'); // Adjust the path
+connectDB().then(async () => {
+    try {
+        await loadMenuData();
+        console.log('Initial menu data loaded');
+    } catch (error) {
+        console.error('Error loading initial menu data:', error);
+    }
+});
 
-
-// Sync models with the database
-sequelize.sync({ force: true })
-    .then(() => {
-        console.log('Database synced successfully!');
-       return loadMenuData(); // Load menu data after syncing
-    })
-    .catch((error) => {
-        console.error('Error syncing database:', error);
-    });
-   
 app.get('/services/mess', async (req, res) => {
     try {
         const isLoggedIn = Boolean(req.cookies.jwt);
-        const menuItems = await MenuItems.findAll();
+        const menuItems = await MenuItems.find();
         res.render('menu', { menuItems, query: req.query, loggedIn: isLoggedIn });
     } catch (error) {
         console.error('Error fetching menu items:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 const feedbackFilePath = path.join(__dirname, 'feedbackData.json');
 
+
+//CHECK temporarirly storing the feedback in a json file
 app.post('/feedback', async (req, res) => {
     try {
         const { rating, comment, day, mealType } = req.body;
@@ -707,74 +611,74 @@ app.post('/feedback', async (req, res) => {
 
 app.get('/services/chatRoom', authMiddleware, async (req, res) => {
     try {
-      const isLoggedIn = Boolean(req.cookies.jwt);
-      const { role } = req.cookies;
-      
-      // Fetch all chat rooms
-      const chatRoomsAll = await ChatRoom.findAll({ order: [['createdAt', 'DESC']] });
-  
-      // Filter rooms based on role and accessLevel
-      const chatRooms = chatRoomsAll.filter(room => {
-        if (room.accessLevel === 'all') return true;
-        if (room.accessLevel === 'admins' && role === 'admin') return true;
-        if (room.accessLevel === 'students' && role === 'student') return true;
-        if (room.accessLevel === 'wardens' && role === 'warden') return true;
-        // If none match, user can't see the room
-        return false;
-      });
-  
-      // Now only the rooms the user can see will be passed to EJS
-      res.render('chatRoom.ejs', { role, loggedIn: isLoggedIn, chatRooms });
+        const isLoggedIn = Boolean(req.cookies.jwt);
+        const { role } = req.cookies;
+
+        // Fetch all chat rooms
+        const chatRoomsAll = await ChatRoom.find().sort({ createdAt: -1 });
+
+        // Filter rooms based on role and accessLevel
+        const chatRooms = chatRoomsAll.filter(room => {
+            if (room.accessLevel === 'all') return true;
+            if (room.accessLevel === 'admins' && role === 'admin') return true;
+            if (room.accessLevel === 'students' && role === 'student') return true;
+            if (room.accessLevel === 'wardens' && role === 'warden') return true;
+            // If none match, user can't see the room
+            return false;
+        });
+
+        // Now only the rooms the user can see will be passed to EJS
+        res.render('chatRoom.ejs', { role, loggedIn: isLoggedIn, chatRooms });
     } catch (error) {
-      console.error("Error loading chat rooms:", error);
-      res.status(500).send("Error loading chat rooms");
+        console.error("Error loading chat rooms:", error);
+        res.status(500).send("Error loading chat rooms");
     }
-  });
-  
-  app.post('/services/chatRoom/create', authMiddleware, async (req, res) => {
+});
+
+app.post('/services/chatRoom/create', authMiddleware, async (req, res) => {
     try {
-      const { role, userid } = req.cookies;
-      // Only admin and warden can create a chat room
-      if (role !== 'admin' && role !== 'warden') {
-        return res.status(403).send('Unauthorized');
-      }
-  
-      const { roomName, roomType, description, accessLevel, roomIcon } = req.body;
-      if (!roomName || !roomType || !accessLevel) {
-        return res.status(400).send('Missing required fields');
-      }
-  
-      const newRoom = await ChatRoom.create({
-        roomName,
-        roomType,
-        description,
-        accessLevel,
-        roomIcon: roomIcon || 'fas fa-comments', // default icon if not provided
-        createdBy: userid
-      });
-  
-      res.status(201).json(newRoom);
+        const { role, userid } = req.cookies;
+        // Only admin and warden can create a chat room
+        if (role !== 'admin' && role !== 'warden') {
+            return res.status(403).send('Unauthorized');
+        }
+
+        const { roomName, roomType, description, accessLevel, roomIcon } = req.body;
+        if (!roomName || !roomType || !accessLevel) {
+            return res.status(400).send('Missing required fields');
+        }
+
+        const newRoom = await ChatRoom.create({
+            roomName,
+            roomType,
+            description,
+            accessLevel,
+            roomIcon: roomIcon || 'fas fa-comments', // default icon if not provided
+            createdBy: userid
+        });
+
+        res.status(201).json(newRoom);
     } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal server error');
+        console.error(err);
+        res.status(500).send('Internal server error');
     }
-  });
-  app.delete('/services/chatRoom/delete/:id', authMiddleware, async (req, res) => {
+});
+
+app.delete('/services/chatRoom/delete/:id', authMiddleware, async (req, res) => {
     try {
-      const { role } = req.cookies;
-      if (role !== 'admin' && role !== 'warden') {
-        return res.status(403).send('Unauthorized');
-      }
-      
-      const { id } = req.params;
-      await ChatRoom.destroy({ where: { id } });
-      res.status(200).send('Deleted Successfully');
+        const { role } = req.cookies;
+        if (role !== 'admin' && role !== 'warden') {
+            return res.status(403).send('Unauthorized');
+        }
+
+        const { id } = req.params;
+        await ChatRoom.findByIdAndDelete(id);
+        res.status(200).send('Deleted Successfully');
     } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal server error');
+        console.error(err);
+        res.status(500).send('Internal server error');
     }
-  });
-      
+});
 
 
 app.listen(process.env.PORT, () => {

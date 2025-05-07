@@ -9,6 +9,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Electrical",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-01-05T09:30:00",
         timeResolved: ""
     },
@@ -22,6 +23,7 @@ const dataProblems = [
         hostel: "BH-2",
         category: "Plumbing",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-01-10T14:20:00",
         timeResolved: "2025-01-12T11:45:00"
     },
@@ -35,6 +37,7 @@ const dataProblems = [
         hostel: "BH-3",
         category: "Furniture",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-01-15T16:45:00",
         timeResolved: ""
     },
@@ -48,6 +51,7 @@ const dataProblems = [
         hostel: "BH-4",
         category: "Internet",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-01-20T08:15:00",
         timeResolved: ""
     },
@@ -61,6 +65,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Painting",
         status: "Rejected",
+        studentStatus: "NotResolved",
         timeCreated: "2025-01-25T11:30:00",
         timeResolved: "2025-01-26T09:20:00"
     },
@@ -74,6 +79,7 @@ const dataProblems = [
         hostel: "BH-2",
         category: "Plumbing",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-01-30T13:45:00",
         timeResolved: ""
     },
@@ -87,6 +93,7 @@ const dataProblems = [
         hostel: "BH-3",
         category: "Carpentry",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-02-01T10:20:00",
         timeResolved: "2025-02-03T15:30:00"
     },
@@ -100,6 +107,7 @@ const dataProblems = [
         hostel: "BH-4",
         category: "Electrical",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-02-05T09:10:00",
         timeResolved: ""
     },
@@ -113,6 +121,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Pest Control",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-02-10T14:30:00",
         timeResolved: "2025-02-12T11:15:00"
     },
@@ -126,6 +135,7 @@ const dataProblems = [
         hostel: "BH-2",
         category: "Carpentry",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-02-15T16:20:00",
         timeResolved: ""
     },
@@ -139,6 +149,7 @@ const dataProblems = [
         hostel: "BH-3",
         category: "Electrical",
         status: "Rejected",
+        studentStatus: "NotResolved",
         timeCreated: "2025-02-20T08:45:00",
         timeResolved: "2025-02-21T10:30:00"
     },
@@ -152,6 +163,7 @@ const dataProblems = [
         hostel: "BH-4",
         category: "Electrical",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-02-25T12:15:00",
         timeResolved: "2025-02-27T09:45:00"
     },
@@ -165,6 +177,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Plumbing",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-01T07:30:00",
         timeResolved: ""
     },
@@ -178,6 +191,7 @@ const dataProblems = [
         hostel: "BH-2",
         category: "Furniture",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-05T15:40:00",
         timeResolved: "2025-03-07T13:20:00"
     },
@@ -191,6 +205,7 @@ const dataProblems = [
         hostel: "BH-3",
         category: "Plumbing",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-08T10:50:00",
         timeResolved: ""
     },
@@ -204,6 +219,7 @@ const dataProblems = [
         hostel: "BH-4",
         category: "Other",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-10T19:25:00",
         timeResolved: "2025-03-12T14:10:00"
     },
@@ -217,6 +233,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Plumbing",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-13T08:35:00",
         timeResolved: ""
     },
@@ -230,6 +247,7 @@ const dataProblems = [
         hostel: "BH-2",
         category: "Cleaning",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-15T11:15:00",
         timeResolved: "2025-03-16T09:30:00"
     },
@@ -243,6 +261,7 @@ const dataProblems = [
         hostel: "BH-3",
         category: "Electrical",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-17T14:50:00",
         timeResolved: ""
     },
@@ -256,6 +275,7 @@ const dataProblems = [
         hostel: "BH-4",
         category: "Furniture",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-18T16:40:00",
         timeResolved: "2025-03-20T13:25:00"
     },
@@ -269,6 +289,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Pest Control",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-19T09:20:00",
         timeResolved: ""
     },
@@ -282,6 +303,7 @@ const dataProblems = [
         hostel: "BH-2",
         category: "Plumbing",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-20T07:30:00",
         timeResolved: "2025-03-21T16:45:00"
     },
@@ -295,6 +317,7 @@ const dataProblems = [
         hostel: "BH-3",
         category: "Furniture",
         status: "Rejected",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-21T13:10:00",
         timeResolved: "2025-03-22T10:20:00"
     },
@@ -308,6 +331,7 @@ const dataProblems = [
         hostel: "BH-4",
         category: "Electrical",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-22T08:50:00",
         timeResolved: ""
     },
@@ -321,6 +345,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Painting",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-23T11:25:00",
         timeResolved: "2025-03-24T14:30:00"
     },
@@ -334,6 +359,7 @@ const dataProblems = [
         hostel: "BH-2",
         category: "Plumbing",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-24T15:40:00",
         timeResolved: ""
     },
@@ -347,6 +373,7 @@ const dataProblems = [
         hostel: "BH-3",
         category: "Electrical",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-24T09:15:00",
         timeResolved: "2025-03-25T12:30:00"
     },
@@ -360,6 +387,7 @@ const dataProblems = [
         hostel: "BH-4",
         category: "Furniture",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-25T17:20:00",
         timeResolved: ""
     },
@@ -373,6 +401,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Cleaning",
         status: "Resolved",
+        studentStatus: "Resolved",
         timeCreated: "2025-03-25T10:35:00",
         timeResolved: "2025-03-25T11:45:00"
     },
@@ -386,6 +415,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Electrical",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-26T10:00:00",
         timeResolved: ""
     },
@@ -399,6 +429,7 @@ const dataProblems = [
         hostel: "BH-1",
         category: "Electrical",
         status: "Pending",
+        studentStatus: "NotResolved",
         timeCreated: "2025-03-27T11:00:00",
         timeResolved: ""
     }
@@ -474,6 +505,10 @@ const userData = [
         password: "password123",
         role: "student",
         rollNo: 101,
+        feeStatus: {
+            hostelFees: false,
+            messFees: true
+        }
     },
     {
         userId: "102",
@@ -485,6 +520,10 @@ const userData = [
         password: "password123",
         role: "student",
         rollNo: 102,
+        feeStatus: {
+            hostelFees: true,
+            messFees: true
+        }
     },
     {
         userId: "103",
@@ -496,6 +535,10 @@ const userData = [
         password: "password123",
         role: "student",
         rollNo: 103,
+        feeStatus: {
+            hostelFees: false,
+            messFees: false
+        }
     },
     {
         userId: "104",
@@ -507,6 +550,10 @@ const userData = [
         password: "password123",
         role: "student",
         rollNo: 104,
+        feeStatus: {
+            hostelFees: true,
+            messFees: false
+        }
     },
     {
         userId: "105",
@@ -518,6 +565,10 @@ const userData = [
         password: "password123",
         role: "student",
         rollNo: 105,
+        feeStatus: {
+            hostelFees: true,
+            messFees: true
+        }
     },
     {
         userId: "106",
@@ -525,6 +576,10 @@ const userData = [
         email: "admin@gmail.com",
         password: "password123",
         role: "admin",
+        feeStatus: {
+            hostelFees: false,
+            messFees: false
+        }
     },
     {
         userId: "107",
@@ -533,6 +588,10 @@ const userData = [
         password: "password123",
         role: "warden",
         hostel: "BH-1",
+        feeStatus: {
+            hostelFees: false,
+            messFees: false
+        }
     },
     {
         userId: "108",
@@ -541,6 +600,10 @@ const userData = [
         password: "password123",
         role: "warden",
         hostel: "BH-2",
+        feeStatus: {
+            hostelFees: false,
+            messFees: false
+        }
     },
     {
         userId: "109",
@@ -549,6 +612,10 @@ const userData = [
         password: "password123",
         role: "warden",
         hostel: "BH-3",
+        feeStatus: {
+            hostelFees: false,
+            messFees: false
+        }
     },
     {
         userId: "110",
@@ -557,6 +624,10 @@ const userData = [
         password: "password123",
         role: "warden",
         hostel: "BH-4",
+        feeStatus: {
+            hostelFees: false,
+            messFees: false
+        }
     }
 ]
 

@@ -13,9 +13,9 @@ const loadMenuData = async () => {
       throw new Error('Menu data must be an array');
     }
 
-    // Sync the table (force: true will drop existing table and recreate it)
-    await MenuItems.sync({ force: true });
-    await MenuItems.bulkCreate(menuData);
+    // For MongoDB, we'll first delete all existing documents and then insert new ones
+    await MenuItems.deleteMany({}); // Clear existing menu items
+    await MenuItems.insertMany(menuData); // Insert new menu items
 
     console.log('✅ Menu data loaded successfully!');
   } catch (error) {
