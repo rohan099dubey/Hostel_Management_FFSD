@@ -391,22 +391,55 @@ app.post('/services/problems/statusChange', async (req, res) => {
 
 app.post('/services/problems/student-confirmation', async (req, res) => {
     try {
-        const { problemId } = req.body;
+        const { problemId, studentStatus } = req.body;
+        console.log('Received student confirmation request:', { problemId, studentStatus });
+
+        if (!problemId || studentStatus === undefined) {
+            return res.status(400).json({
+                success: false,
+                message: "Problem ID and status are required"
+            });
+        }
 
         // Find and update the problem
         const problem = await hostelProblem.findById(problemId);
 
         if (!problem) {
-            return res.status(404).json({ message: "Problem not found" });
+            return res.status(404).json({
+                success: false,
+                message: "Problem not found"
+            });
         }
 
-        // Update studentStatus to 'Resolved'
-        problem.studentStatus = 'Resolved';
+        if (problem.status !== 'Resolved') {
+            return res.status(400).json({
+                success: false,
+                message: "Can only confirm resolved problems"
+            });
+        }
+
+        if (studentStatus === 'Resolved') {
+            console.log('Setting studentStatus to true');
+            problem.studentStatus = true;
+        } else if (studentStatus === 'Not Resolved') {
+            console.log('Setting status to Pending and studentStatus to false');
+            problem.status = 'Pending';
+            problem.timeResolved = null;
+            problem.studentStatus = false;
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid status value"
+            });
+        }
+
+        console.log('Saving problem with updated status:', problem);
         await problem.save();
 
+        console.log('Problem successfully updated');
         res.status(200).json({
             success: true,
-            message: "Problem resolution confirmed by student"
+            message: "Problem resolution confirmation updated successfully"
         });
 
     } catch (error) {
