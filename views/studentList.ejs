@@ -604,39 +604,63 @@
                                 <span class="font-medium text-gray-700 w-28"
                                   >Hostel Fee:</span
                                 >
-                                <% if (student.feeStatus &&
-                                student.feeStatus.hostelFees) { %>
-                                <span
-                                  class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
-                                  ><i class="fas fa-check-circle mr-1"></i>
-                                  Paid</span
-                                >
-                                <% } else { %>
-                                <span
-                                  class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
-                                  ><i class="fas fa-times-circle mr-1"></i>
-                                  Unpaid</span
-                                >
-                                <% } %>
+                                <div class="flex items-center gap-2">
+                                  <% if (student.feeStatus &&
+                                  student.feeStatus.hostelFees) { %>
+                                  <span
+                                    class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  >
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    Paid
+                                  </span>
+                                  <% } else { %>
+                                  <span
+                                    class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  >
+                                    <i class="fas fa-times-circle mr-1"></i>
+                                    Unpaid
+                                  </span>
+                                  <% } %>
+                                  <button
+                                    class="fee-status-btn text-xs px-2 py-1 rounded bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                                    data-student-id="<%= student._id %>"
+                                    data-fee-type="hostelFees"
+                                    data-current-status="<%= student.feeStatus && student.feeStatus.hostelFees ? 'paid' : 'unpaid' %>"
+                                  >
+                                    <i class="fas fa-edit"></i> Change
+                                  </button>
+                                </div>
                               </li>
                               <li class="flex items-center">
                                 <span class="font-medium text-gray-700 w-28"
                                   >Mess Fee:</span
                                 >
-                                <% if (student.feeStatus &&
-                                student.feeStatus.messFees) { %>
-                                <span
-                                  class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
-                                  ><i class="fas fa-check-circle mr-1"></i>
-                                  Paid</span
-                                >
-                                <% } else { %>
-                                <span
-                                  class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
-                                  ><i class="fas fa-times-circle mr-1"></i>
-                                  Unpaid</span
-                                >
-                                <% } %>
+                                <div class="flex items-center gap-2">
+                                  <% if (student.feeStatus &&
+                                  student.feeStatus.messFees) { %>
+                                  <span
+                                    class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  >
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    Paid
+                                  </span>
+                                  <% } else { %>
+                                  <span
+                                    class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  >
+                                    <i class="fas fa-times-circle mr-1"></i>
+                                    Unpaid
+                                  </span>
+                                  <% } %>
+                                  <button
+                                    class="fee-status-btn text-xs px-2 py-1 rounded bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                                    data-student-id="<%= student._id %>"
+                                    data-fee-type="messFees"
+                                    data-current-status="<%= student.feeStatus && student.feeStatus.messFees ? 'paid' : 'unpaid' %>"
+                                  >
+                                    <i class="fas fa-edit"></i> Change
+                                  </button>
+                                </div>
                               </li>
                             </ul>
                           </div>
@@ -1017,6 +1041,104 @@
                   icon: "error",
                 });
               }
+            }
+          });
+        });
+
+        // Fee status update functionality
+        const feeStatusBtns = document.querySelectorAll(".fee-status-btn");
+
+        feeStatusBtns.forEach((btn) => {
+          btn.addEventListener("click", async function () {
+            const studentId = this.dataset.studentId;
+            const feeType = this.dataset.feeType;
+            const currentStatus = this.dataset.currentStatus;
+            const newStatus = currentStatus === "paid" ? "unpaid" : "paid";
+            const feeName = feeType === "hostelFees" ? "Hostel" : "Mess";
+
+            try {
+              const response = await fetch(
+                "/services/users/update-fee-status",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    studentId,
+                    feeType,
+                    status: newStatus,
+                  }),
+                }
+              );
+
+              const result = await response.json();
+
+              if (response.ok) {
+                // Find the status span more reliably
+                const statusContainer = this.closest(
+                  ".flex.items-center.gap-2"
+                );
+                if (!statusContainer) {
+                  console.error("Could not find status container");
+                  return;
+                }
+
+                const statusSpan = statusContainer.querySelector(
+                  "span.bg-green-100, span.bg-red-100"
+                );
+                if (!statusSpan) {
+                  console.error("Could not find status span");
+                  return;
+                }
+
+                // Update the status span
+                if (newStatus === "paid") {
+                  statusSpan.className =
+                    "bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center";
+                  statusSpan.innerHTML =
+                    '<i class="fas fa-check-circle mr-1"></i> Paid';
+                } else {
+                  statusSpan.className =
+                    "bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center";
+                  statusSpan.innerHTML =
+                    '<i class="fas fa-times-circle mr-1"></i> Unpaid';
+                }
+
+                // Update the button's current status
+                this.dataset.currentStatus = newStatus;
+
+                // Show success message
+                Swal.fire({
+                  title: "Success!",
+                  text: `${feeName} fee status updated successfully`,
+                  icon: "success",
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+
+                // Update the student row's data attributes
+                const studentRow = document.querySelector(
+                  `.student-card[data-student-id="${studentId}"]`
+                );
+                if (studentRow) {
+                  studentRow.dataset[feeType] = newStatus;
+                }
+
+                // Update the student count if needed
+                updateStudentList();
+              } else {
+                throw new Error(
+                  result.message || "Failed to update fee status"
+                );
+              }
+            } catch (error) {
+              console.error("Error updating fee status:", error);
+              Swal.fire({
+                title: "Error!",
+                text: error.message || "Failed to update fee status",
+                icon: "error",
+              });
             }
           });
         });
