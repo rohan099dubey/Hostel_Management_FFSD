@@ -1,6 +1,9 @@
 //modules imported
 const express = require("express");
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
 require("dotenv").config();
 const path = require("path");
 const moment = require("moment");
@@ -819,25 +822,32 @@ app.get("/services/chatRoom", authMiddleware, async (req, res) => {
     const isLoggedIn = Boolean(req.cookies.jwt);
     const { role } = req.cookies;
 
-    // Fetch all chat rooms
-    const chatRoomsAll = await ChatRoom.find().sort({ createdAt: -1 });
+        // Build the query based on role and deletion status
+        let query = { deleted: { $ne: true } };
 
-    // Filter rooms based on role and accessLevel
-    const chatRooms = chatRoomsAll.filter((room) => {
-      if (room.accessLevel === "all") return true;
-      if (room.accessLevel === "admins" && role === "admin") return true;
-      if (room.accessLevel === "students" && role === "student") return true;
-      if (room.accessLevel === "wardens" && role === "warden") return true;
-      // If none match, user can't see the room
-      return false;
-    });
+        // Only apply access level filtering for students
+        // Admin and warden can see all undeleted rooms
+        if (role === 'student') {
+            query.$or = [
+                { accessLevel: 'all' },
+                { accessLevel: 'students' },
+                { accessLevel: 'admin_student' },
+                { accessLevel: 'warden_student' }
+            ];
+        }
 
-    // Now only the rooms the user can see will be passed to EJS
-    res.render("chatRoom.ejs", { role, loggedIn: isLoggedIn, chatRooms });
-  } catch (error) {
-    console.error("Error loading chat rooms:", error);
-    res.status(500).send("Error loading chat rooms");
-  }
+        // Fetch chat rooms with the combined query
+        const chatRooms = await ChatRoom.find(query).sort({ createdAt: -1 });
+
+        // Log the query and results for debugging
+        console.log('Chat Room Query:', query);
+        console.log('Found Chat Rooms:', chatRooms.length);
+
+        res.render('chatRoom.ejs', { role, loggedIn: isLoggedIn, chatRooms });
+    } catch (error) {
+        console.error("Error loading chat rooms:", error);
+        res.status(500).send("Error loading chat rooms");
+    }
 });
 
 app.post("/services/chatRoom/create", authMiddleware, async (req, res) => {
@@ -879,17 +889,217 @@ app.delete(
         return res.status(403).send("Unauthorized");
       }
 
-      const { id } = req.params;
-      await ChatRoom.findByIdAndDelete(id);
-      res.status(200).send("Deleted Successfully");
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal server error");
-    }
-  }
-);
+        const { id } = req.params;
+        
+        // First verify the room exists and is not already deleted
+        const room = await ChatRoom.findOne({ _id: id, deleted: { $ne: true } });
+        if (!room) {
+            return res.status(404).send('Chat room not found or already deleted');
+        }
 
-// Route to fetch user by roll number
+        // Mark as deleted
+        const deletedRoom = await ChatRoom.findByIdAndUpdate(
+            id,
+            { 
+                deleted: true, 
+                deletedAt: new Date(),
+                deletedBy: req.cookies.userid // Track who deleted the room
+            },
+            { new: true }
+        );
+
+        // Log the deletion for debugging
+        console.log('Chat Room Deleted:', {
+            roomId: id,
+            roomName: deletedRoom.roomName,
+            deletedBy: req.cookies.userid,
+            deletedAt: deletedRoom.deletedAt
+        });
+
+        // Notify all connected clients about the room deletion
+        io.emit('chatRoomDeleted', { 
+            roomId: id,
+            message: 'Chat room has been deleted by an administrator'
+        });
+        
+        res.status(200).send('Deleted Successfully');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
+    }
+});
+
+
+
+
+// Add a route to verify chat room status (for debugging)
+app.get('/services/chatRoom/status/:id', authMiddleware, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const room = await ChatRoom.findById(id);
+        
+        if (!room) {
+            return res.status(404).json({ message: 'Chat room not found' });
+        }
+
+        res.json({
+            roomId: room._id,
+            roomName: room.roomName,
+            deleted: room.deleted,
+            deletedAt: room.deletedAt,
+            accessLevel: room.accessLevel,
+            createdAt: room.createdAt
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
+    }
+});
+
+// Chat Room View Route
+app.get('/services/chatRoom/:roomId', async (req, res) => {
+    try {
+        const roomId = req.params.roomId;
+        const userId = req.cookies.userid;
+        const role = req.cookies.role;
+
+        if (!userId) {
+            return res.redirect('/login');
+        }
+
+        const room = await ChatRoom.findById(roomId);
+        if (!room) {
+            return res.status(404).render('error', { message: 'Chat room not found' });
+        }
+
+        // Check access level
+        const hasAccess = checkRoomAccess(room.accessLevel, role);
+        if (!hasAccess) {
+            return res.status(403).render('error', { message: 'You do not have access to this chat room' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.redirect('/login');
+        }
+
+        res.render('chatRoomView', {
+            room,
+            userId,
+            userName: user.name,
+            role,
+            loggedIn: true
+        });
+    } catch (error) {
+        console.error('Error accessing chat room:', error);
+        res.status(500).render('error', { message: 'Error accessing chat room' });
+    }
+});
+
+// Socket.IO connection handling
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // Join a chat room
+    socket.on('joinRoom', async ({ roomId, userId, role }) => {
+        try {
+            const chatRoom = await ChatRoom.findById(roomId);
+            if (!chatRoom) {
+                socket.emit('error', { message: 'Chat room not found' });
+                return;
+            }
+
+            // Check access level
+            const hasAccess = checkRoomAccess(chatRoom.accessLevel, role);
+            if (!hasAccess) {
+                socket.emit('error', { message: 'You do not have access to this chat room' });
+                return;
+            }
+
+            // Join the room
+            socket.join(roomId);
+            socket.emit('roomJoined', { roomId, roomName: chatRoom.roomName });
+            
+            // Notify others
+            socket.to(roomId).emit('userJoined', { userId, roomId });
+        } catch (error) {
+            socket.emit('error', { message: 'Error joining room' });
+        }
+    });
+
+    // Handle chat messages
+    socket.on('sendMessage', async ({ roomId, userId, message, imageData, userName }) => {
+        try {
+            const chatRoom = await ChatRoom.findById(roomId);
+            if (!chatRoom) {
+                socket.emit('error', { message: 'Chat room not found' });
+                return;
+            }
+
+            // Save message to database
+            chatRoom.messages.push({
+                userId,
+                userName,
+                message,
+                imageData, // Store the base64 image data
+                timestamp: new Date()
+            });
+            await chatRoom.save();
+
+            // Broadcast message to room
+            io.to(roomId).emit('newMessage', {
+                userId,
+                userName,
+                message,
+                imageData,
+                timestamp: new Date()
+            });
+        } catch (error) {
+            socket.emit('error', { message: 'Error sending message' });
+        }
+    });
+
+    // Handle room deletion notification
+    socket.on('chatRoomDeleted', ({ roomId, message }) => {
+        // Leave the room if user is in it
+        socket.leave(roomId);
+        // Notify the user about the deletion
+        socket.emit('roomDeleted', { roomId, message });
+    });
+
+    // Leave room
+    socket.on('leaveRoom', ({ roomId, userId }) => {
+        socket.leave(roomId);
+        socket.to(roomId).emit('userLeft', { userId, roomId });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+// Helper function to check room access
+function checkRoomAccess(accessLevel, userRole) {
+    switch (accessLevel) {
+        case 'all':
+            return true;
+        case 'students':
+            return userRole === 'student';
+        case 'wardens':
+            return userRole === 'warden';
+        case 'admins':
+            return userRole === 'admin';
+        case 'admin_warden':
+            return userRole === 'admin' || userRole === 'warden';
+        case 'admin_student':
+            return userRole === 'admin' || userRole === 'student';
+        case 'warden_student':
+            return userRole === 'warden' || userRole === 'student';
+        default:
+            return false;
+    }
+}
+
 app.get("/services/users/by-roll/:rollNo", async (req, res) => {
   try {
     const { rollNo } = req.params;
@@ -1016,7 +1226,10 @@ app.get("/services/feedback", authMiddleware, async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is listening on port ${process.env.PORT}`);
-  console.log(`Server running on http://localhost:${process.env.PORT}/`);
+// Update the server listen call to use http instead of app
+const PORT = process.env.PORT || 3000;
+http.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`http://localhost:${PORT}/`);
+    
 });

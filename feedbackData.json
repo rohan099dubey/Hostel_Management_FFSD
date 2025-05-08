@@ -7,6 +7,48 @@
     "createdAt": "2025-05-06T17:31:36.177Z"
   },
   {
+    "rating": "4",
+    "comment": "yummy",
+    "day": "Sunday",
+    "mealType": "Breakfast",
+    "createdAt": "2025-05-07T19:09:24.604Z"
+  },
+  {
+    "rating": "5",
+    "comment": "No comment provided",
+    "day": "Sunday",
+    "mealType": "Lunch",
+    "createdAt": "2025-05-07T19:12:54.888Z"
+  },
+  {
+    "rating": "5",
+    "comment": "thth",
+    "day": "Sunday",
+    "mealType": "Breakfast",
+    "createdAt": "2025-05-07T19:15:56.063Z"
+  },
+  {
+    "rating": "5",
+    "comment": "No comment provided",
+    "day": "Friday",
+    "mealType": "Breakfast",
+    "createdAt": "2025-05-07T19:21:16.093Z"
+  },
+  {
+    "rating": "5",
+    "comment": "gg",
+    "day": "Sunday",
+    "mealType": "Snacks",
+    "createdAt": "2025-05-07T19:42:06.202Z"
+  },
+  {
+    "rating": "5",
+    "comment": "good",
+    "day": "Sunday",
+    "mealType": "Lunch",
+    "createdAt": "2025-05-07T19:43:57.217Z"
+  },
+  {
     "rating": "1",
     "comment": "please improve it",
     "day": "Sunday",
