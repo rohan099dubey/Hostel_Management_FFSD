@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Contact Us - Hostelia</title>
-    <meta name="description" content="Contact Page of Hostelia" />
-    <meta name="keywords" content="Contact Page of Hostelia" />
-    <meta name="author" content="Contact Page of Hostelia" />
+    <title>Hostel Contacts & Support - Hostelia</title>
+    <meta
+      name="description"
+      content="Contact hostel staff and submit help requests"
+    />
+    <meta
+      name="keywords"
+      content="hostel contacts, staff directory, help requests"
+    />
+    <meta name="author" content="Hostelia" />
     <link
       rel="stylesheet"
       href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -25,7 +31,7 @@
       .gradient {
         background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
       }
-      
+
       /* Interactive Card Styles */
       .card {
         width: 280px;
@@ -38,7 +44,7 @@
         transition: all 0.5s ease-in-out;
         margin: 0 auto;
       }
-      
+
       .card .mail {
         position: absolute;
         right: 2rem;
@@ -46,16 +52,16 @@
         background: transparent;
         border: none;
       }
-      
+
       .card .mail svg {
-        stroke: #004aad; /* Changed from #fbb9b6 */
+        stroke: #004aad;
         stroke-width: 3px;
       }
-      
+
       .card .mail svg:hover {
-        stroke: #cb6ce6; /* Changed from #f55d56 */
+        stroke: #cb6ce6;
       }
-      
+
       .card .profile-pic {
         position: absolute;
         width: calc(100% - 6px);
@@ -68,7 +74,7 @@
         overflow: hidden;
         transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
       }
-      
+
       .card .profile-pic img {
         object-fit: cover;
         width: 100%;
@@ -76,13 +82,13 @@
         object-position: 0px 0px;
         transition: all 0.5s ease-in-out 0s;
       }
-      
+
       .card .bottom {
         position: absolute;
         bottom: 3px;
         left: 3px;
         right: 3px;
-        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%); /* Changed from #fbb9b6 */
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
         top: 80%;
         border-radius: 29px;
         z-index: 2;
@@ -90,7 +96,7 @@
         overflow: hidden;
         transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
       }
-      
+
       .card .bottom .content {
         position: absolute;
         bottom: 0;
@@ -98,21 +104,21 @@
         right: 1.5rem;
         height: 160px;
       }
-      
+
       .card .bottom .content .name {
         display: block;
         font-size: 1.2rem;
         color: white;
         font-weight: bold;
       }
-      
+
       .card .bottom .content .about-me {
         display: block;
         font-size: 0.9rem;
         color: white;
         margin-top: 1rem;
       }
-      
+
       .card .bottom .bottom-bottom {
         position: absolute;
         bottom: 1rem;
@@ -122,48 +128,48 @@
         align-items: center;
         justify-content: space-between;
       }
-      
+
       .card .bottom .bottom-bottom .social-links-container {
         display: flex;
         gap: 1rem;
       }
-      
+
       .card .bottom .bottom-bottom .social-links-container svg {
         height: 20px;
         fill: white;
         filter: drop-shadow(0 5px 5px rgba(165, 132, 130, 0.1333333333));
       }
-      
+
       .card .bottom .bottom-bottom .social-links-container svg:hover {
         fill: #f55d56;
         transform: scale(1.2);
       }
-      
+
       .card .bottom .bottom-bottom .button {
         background: white;
-        color: #004aad; /* Changed from #fbb9b6 */
+        color: #004aad;
         border: none;
         border-radius: 20px;
         font-size: 0.6rem;
         padding: 0.4rem 0.6rem;
         box-shadow: rgba(165, 132, 130, 0.1333333333) 0px 5px 5px 0px;
       }
-      
+
       .card .bottom .bottom-bottom .button:hover {
-        background: #cb6ce6; /* Changed from #f55d56 */
+        background: #cb6ce6;
         color: white;
       }
-      
+
       .card:hover {
         border-top-left-radius: 55px;
       }
-      
+
       .card:hover .bottom {
         top: 20%;
         border-radius: 80px 29px 29px 29px;
         transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
       }
-      
+
       .card:hover .profile-pic {
         width: 100px;
         height: 100px;
@@ -172,20 +178,55 @@
         left: 10px;
         border-radius: 50%;
         z-index: 3;
-        border: 7px solid #004aad; /* Changed from #fbb9b6 */
+        border: 7px solid #004aad;
         box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px;
         transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
       }
-      
+
       .card:hover .profile-pic:hover {
         transform: scale(1.3);
         border-radius: 0px;
       }
-      
+
       .card:hover .profile-pic img {
         transform: scale(1.5);
         object-position: 0px 10px;
         transition: all 0.5s ease-in-out 0.5s;
+      }
+
+      /* Form styles */
+      .form-input {
+        transition: border-color 0.2s ease-in-out;
+        background-color: #f3f4f6;
+      }
+
+      .form-input:focus {
+        border-color: #004aad;
+        box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.2);
+      }
+
+      .badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: white;
+        z-index: 10;
+      }
+
+      .badge-warden {
+        background: linear-gradient(45deg, #004aad, #2d82b7);
+      }
+
+      .badge-admin {
+        background: linear-gradient(45deg, #8c1bab, #cb6ce6);
+      }
+
+      .badge-support {
+        background: linear-gradient(45deg, #107869, #25b79f);
       }
     </style>
   </head>
@@ -196,11 +237,28 @@
     <!--Nav-->
     <%- include('partials/navbar.ejs', { loggedIn }) %>
 
-
     <div class="pt-24">
       <div
         class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
-      ></div>
+      >
+        <div
+          class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left"
+        >
+          <h1 class="my-4 text-5xl font-bold leading-tight">
+            Get Support & Contact Staff
+          </h1>
+          <p class="leading-normal text-2xl mb-8">
+            Reach out to our hostel management team or submit a help request
+          </p>
+        </div>
+        <div class="w-full md:w-3/5 py-6 text-center">
+          <img
+            class="w-full md:w-4/5 z-50 mx-auto"
+            src="/images/support.svg"
+            alt="Contact Support"
+          />
+        </div>
+      </div>
     </div>
     <div class="relative -mt-12 lg:-mt-24">
       <svg
@@ -244,229 +302,579 @@
     <section class="bg-white border-b py-12">
       <div class="container max-w-7xl mx-auto m-8">
         <h2
-          class="w-full my-2 text-6xl font-bold leading-tight text-center text-gray-800"
+          class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800"
         >
-          Contacts
+          Hostel Staff Directory
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mx-auto max-w-6xl mt-16 mb-16">
-          <!-- Interactive Card 1 -->
-<div class="card">
-  <!-- <button class="mail">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-    </svg> -->
-  </button>
-  <div class="profile-pic">
-    <img src="/images/profile2.jpg" alt="Profile photo" />
-  </div>
-  <div class="bottom">
-    <div class="content">
-      <span class="name">V. Venkat Ramesh</span>
-      <span class="about-me">Warden at Hostelia, responsible for student welfare and hostel management.</span>
-    </div>
-    <div class="bottom-bottom">
-      <div class="social-links-container">
-        <!-- WhatsApp Icon -->
-        <a href="https://wa.me/PHONE_NUMBER" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-          </svg>
-        </a>
-        
-        <!-- Phone Call Icon -->
-        <a href="tel:PHONE_NUMBER">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#007AFF">
-            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-          </svg>
-        </a>
-      </div>
-      <a href="mailto:warden@hostelia.edu" target="_blank" rel="noopener noreferrer" class="button">Contact Me</a>
-    </div>
-  </div>
-</div>
-          
-          <!-- Interactive Card 1 -->
-<div class="card">
-  <!-- <button class="mail">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-    </svg>
-  </button> -->
-  <div class="profile-pic">
-    <img src="/images/profile1.jpg" alt="Profile photo" />
-  </div>
-  <div class="bottom">
-    <div class="content">
-      <span class="name">V. Venkat Ramesh</span>
-      <span class="about-me">Warden at Hostelia, responsible for student welfare and hostel management.</span>
-    </div>
-    <div class="bottom-bottom">
-      <div class="social-links-container">
-        <!-- WhatsApp Icon -->
-        <a href="https://wa.me/PHONE_NUMBER" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-          </svg>
-        </a>
-        
-        <!-- Phone Call Icon -->
-        <a href="tel:PHONE_NUMBER">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#007AFF">
-            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-          </svg>
-        </a>
-      </div>
-      <a href="mailto:warden@hostelia.edu" target="_blank" rel="noopener noreferrer" class="button">Contact Me</a>
-    </div>
-  </div>
-</div>
-         <!-- Interactive Card 1 -->
-         <div class="card">
-          <!-- <button class="mail">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-            </svg>
-          </button> -->
-          <div class="profile-pic">
-            <img src="/images/profile2.jpg" alt="Profile photo" />
-          </div>
-          <div class="bottom">
-            <div class="content">
-              <span class="name">V. Venkat Ramesh</span>
-              <span class="about-me">Warden at Hostelia, responsible for student welfare and hostel management.</span>
+        <div class="w-full mb-4">
+          <div
+            class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"
+          ></div>
+        </div>
+        <p class="text-center text-gray-600 text-lg mb-12">
+          Connect with our team for any assistance you need
+        </p>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mx-auto max-w-6xl mt-16 mb-16"
+        >
+          <!-- Warden Card -->
+          <div class="card">
+            <span class="badge badge-warden">Chief Warden</span>
+            <div class="profile-pic">
+              <img src="/images/profile1.jpg" alt="Dr. Venkat Ramesh" />
             </div>
-            <div class="bottom-bottom">
-              <div class="social-links-container">
-                <!-- WhatsApp Icon -->
-                <a href="https://wa.me/PHONE_NUMBER" target="_blank" rel="noopener noreferrer">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
-                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                  </svg>
-                </a>
-                
-                <!-- Phone Call Icon -->
-                <a href="tel:PHONE_NUMBER">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#007AFF">
-                    <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-                  </svg>
-                </a>
+            <div class="bottom">
+              <div class="content">
+                <span class="name">Dr. V. Venkat Ramesh</span>
+                <span class="about-me"
+                  >Chief Warden at Hostelia. Responsible for student welfare,
+                  discipline and overall hostel management.</span
+                >
               </div>
-              <a href="mailto:warden@hostelia.edu" target="_blank" rel="noopener noreferrer" class="button">Contact Me</a>
+              <div class="bottom-bottom">
+                <div class="social-links-container">
+                  <!-- WhatsApp Icon -->
+                  <a
+                    href="https://wa.me/9198765432"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#25D366"
+                    >
+                      <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                      />
+                    </svg>
+                  </a>
+
+                  <!-- Phone Call Icon -->
+                  <a href="tel:9198765432">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#007AFF"
+                    >
+                      <path
+                        d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <a
+                  href="mailto:chief.warden@hostelia.edu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button"
+                  >Email Me</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Deputy Warden Card -->
+          <div class="card">
+            <span class="badge badge-warden">Deputy Warden</span>
+            <div class="profile-pic">
+              <img src="/images/profile2.jpg" alt="Dr. Samantha Patel" />
+            </div>
+            <div class="bottom">
+              <div class="content">
+                <span class="name">Dr. Samantha Patel</span>
+                <span class="about-me"
+                  >Deputy Warden overseeing female hostels, student activities
+                  and welfare committees.</span
+                >
+              </div>
+              <div class="bottom-bottom">
+                <div class="social-links-container">
+                  <!-- WhatsApp Icon -->
+                  <a
+                    href="https://wa.me/9187654321"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#25D366"
+                    >
+                      <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                      />
+                    </svg>
+                  </a>
+
+                  <!-- Phone Call Icon -->
+                  <a href="tel:9187654321">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#007AFF"
+                    >
+                      <path
+                        d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <a
+                  href="mailto:deputy.warden@hostelia.edu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button"
+                  >Email Me</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Card -->
+          <div class="card">
+            <span class="badge badge-admin">Admin</span>
+            <div class="profile-pic">
+              <img src="/images/profile1.jpg" alt="Mr. Rajesh Kumar" />
+            </div>
+            <div class="bottom">
+              <div class="content">
+                <span class="name">Mr. Rajesh Kumar</span>
+                <span class="about-me"
+                  >Administrative Officer handling admissions, fee collections,
+                  and general administrative tasks.</span
+                >
+              </div>
+              <div class="bottom-bottom">
+                <div class="social-links-container">
+                  <!-- WhatsApp Icon -->
+                  <a
+                    href="https://wa.me/9176543210"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#25D366"
+                    >
+                      <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                      />
+                    </svg>
+                  </a>
+
+                  <!-- Phone Call Icon -->
+                  <a href="tel:9176543210">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#007AFF"
+                    >
+                      <path
+                        d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <a
+                  href="mailto:admin@hostelia.edu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button"
+                  >Email Me</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Maintenance Card -->
+          <div class="card">
+            <span class="badge badge-support">Maintenance</span>
+            <div class="profile-pic">
+              <img src="/images/profile2.jpg" alt="Mr. Prakash Singh" />
+            </div>
+            <div class="bottom">
+              <div class="content">
+                <span class="name">Mr. Prakash Singh</span>
+                <span class="about-me"
+                  >Maintenance Supervisor responsible for infrastructure
+                  repairs, maintenance tasks and facility upkeep.</span
+                >
+              </div>
+              <div class="bottom-bottom">
+                <div class="social-links-container">
+                  <!-- WhatsApp Icon -->
+                  <a
+                    href="https://wa.me/9165432109"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#25D366"
+                    >
+                      <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                      />
+                    </svg>
+                  </a>
+
+                  <!-- Phone Call Icon -->
+                  <a href="tel:9165432109">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#007AFF"
+                    >
+                      <path
+                        d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <a
+                  href="mailto:maintenance@hostelia.edu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button"
+                  >Email Me</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Mess Staff Card -->
+          <div class="card">
+            <span class="badge badge-support">Mess</span>
+            <div class="profile-pic">
+              <img src="/images/profile1.jpg" alt="Mrs. Lakshmi Devi" />
+            </div>
+            <div class="bottom">
+              <div class="content">
+                <span class="name">Mrs. Lakshmi Devi</span>
+                <span class="about-me"
+                  >Mess Manager handling meal planning, kitchen staff
+                  management, and food quality oversight.</span
+                >
+              </div>
+              <div class="bottom-bottom">
+                <div class="social-links-container">
+                  <!-- WhatsApp Icon -->
+                  <a
+                    href="https://wa.me/9154321098"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#25D366"
+                    >
+                      <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                      />
+                    </svg>
+                  </a>
+
+                  <!-- Phone Call Icon -->
+                  <a href="tel:9154321098">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#007AFF"
+                    >
+                      <path
+                        d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <a
+                  href="mailto:mess@hostelia.edu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button"
+                  >Email Me</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Card -->
+          <div class="card">
+            <span class="badge badge-support">Security</span>
+            <div class="profile-pic">
+              <img src="/images/profile2.jpg" alt="Mr. Suresh Babu" />
+            </div>
+            <div class="bottom">
+              <div class="content">
+                <span class="name">Mr. Suresh Babu</span>
+                <span class="about-me"
+                  >Chief Security Officer managing campus security, entry/exit
+                  protocols, and emergency response.</span
+                >
+              </div>
+              <div class="bottom-bottom">
+                <div class="social-links-container">
+                  <!-- WhatsApp Icon -->
+                  <a
+                    href="https://wa.me/9143210987"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#25D366"
+                    >
+                      <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                      />
+                    </svg>
+                  </a>
+
+                  <!-- Phone Call Icon -->
+                  <a href="tel:9143210987">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="#007AFF"
+                    >
+                      <path
+                        d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <a
+                  href="mailto:security@hostelia.edu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button"
+                  >Email Me</a
+                >
+              </div>
             </div>
           </div>
         </div>
-<div class="card">
-  <!-- <button class="mail">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-    </svg>
-  </button> -->
-  <div class="profile-pic">
-    <img src="/images/profile1.jpg" alt="Profile photo" />
-  </div>
-  <div class="bottom">
-    <div class="content">
-      <span class="name">V. Venkat Ramesh</span>
-      <span class="about-me">Warden at Hostelia, responsible for student welfare and hostel management.</span>
-    </div>
-    <div class="bottom-bottom">
-      <div class="social-links-container">
-        <!-- WhatsApp Icon -->
-        <a href="https://wa.me/PHONE_NUMBER" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-          </svg>
-        </a>
-        
-        <!-- Phone Call Icon -->
-        <a href="tel:PHONE_NUMBER">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#007AFF">
-            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-          </svg>
-        </a>
       </div>
-      <a href="mailto:warden@hostelia.edu" target="_blank" rel="noopener noreferrer" class="button">Contact Me</a>
-    </div>
-  </div>
-</div>
-          
-<div class="card">
-  <!-- <button class="mail">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-    </svg>
-  </button> -->
-  <div class="profile-pic">
-    <img src="/images/profile2.jpg" alt="Profile photo" />
-  </div>
-  <div class="bottom">
-    <div class="content">
-      <span class="name">V. Venkat Ramesh</span>
-      <span class="about-me">Warden at Hostelia, responsible for student welfare and hostel management.</span>
-    </div>
-    <div class="bottom-bottom">
-      <div class="social-links-container">
-        <!-- WhatsApp Icon -->
-        <a href="https://wa.me/PHONE_NUMBER" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-          </svg>
-        </a>
-        
-        <!-- Phone Call Icon -->
-        <a href="tel:PHONE_NUMBER">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#007AFF">
-            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-          </svg>
-        </a>
+    </section>
+
+    <!-- Help Request Form Section -->
+    <section class="bg-gray-100 py-16">
+      <div class="container max-w-7xl mx-auto m-8">
+        <h2
+          class="w-full my-2 text-4xl font-bold leading-tight text-center text-gray-800"
+        >
+          Submit a Help Request
+        </h2>
+        <div class="w-full mb-4">
+          <div
+            class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"
+          ></div>
+        </div>
+        <p class="text-center text-gray-600 text-lg mb-12">
+          Need assistance? Fill out this form and we'll get back to you as soon
+          as possible
+        </p>
+
+        <div
+          class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden"
+        >
+          <div class="p-8">
+            <form action="/submit-help-request" method="POST" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    for="name"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Full Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    placeholder="Enter your full name"
+                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="room"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Room Number</label
+                  >
+                  <input
+                    type="text"
+                    id="room"
+                    name="room"
+                    required
+                    placeholder="e.g. A-101"
+                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Email Address</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="Your email address"
+                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="phone"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    placeholder="Your contact number"
+                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="request_type"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Request Type</label
+                >
+                <select
+                  id="request_type"
+                  name="request_type"
+                  required
+                  class="w-full px-4 py-2 border text-gray-400 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="" disabled selected>
+                    Select request type
+                  </option>
+                  <option value="maintenance">Maintenance Request</option>
+                  <option value="cleaning">Cleaning Request</option>
+                  <option value="facilities">Facilities Issue</option>
+                  <option value="mess">Mess Related</option>
+                  <option value="security">Security Concern</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  for="message"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Describe Your Request</label
+                >
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="5"
+                  required
+                  placeholder="Please provide details about your request or issue..."
+                  class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                ></textarea>
+              </div>
+
+              <div>
+                <label
+                  for="urgency"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Urgency Level</label
+                >
+                <div class="flex items-center space-x-6">
+                  <div class="flex items-center">
+                    <input
+                      type="radio"
+                      id="low"
+                      name="urgency"
+                      value="low"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <label for="low" class="ml-2 text-sm text-gray-700"
+                      >Low</label
+                    >
+                  </div>
+                  <div class="flex items-center">
+                    <input
+                      type="radio"
+                      id="medium"
+                      name="urgency"
+                      value="medium"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                      checked
+                    />
+                    <label for="medium" class="ml-2 text-sm text-gray-700"
+                      >Medium</label
+                    >
+                  </div>
+                  <div class="flex items-center">
+                    <input
+                      type="radio"
+                      id="high"
+                      name="urgency"
+                      value="high"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <label for="high" class="ml-2 text-sm text-gray-700"
+                      >High</label
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-500 text-white font-bold rounded-lg shadow-md hover:from-blue-700 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-      <a href="mailto:warden@hostelia.edu" target="_blank" rel="noopener noreferrer" class="button">Contact Me</a>
-    </div>
-  </div>
-</div>
-          
-<div class="card">
-  <!-- <button class="mail">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-    </svg>
-  </button> -->
-  <div class="profile-pic">
-    <img src="/images/profile1.jpg" alt="Profile photo" />
-  </div>
-  <div class="bottom">
-    <div class="content">
-      <span class="name">V. Venkat Ramesh</span>
-      <span class="about-me">Warden at Hostelia, responsible for student welfare and hostel management.</span>
-    </div>
-    <div class="bottom-bottom">
-      <div class="social-links-container">
-        <!-- WhatsApp Icon -->
-        <a href="https://wa.me/PHONE_NUMBER" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.296-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-          </svg>
-        </a>
-        
-        <!-- Phone Call Icon -->
-        <a href="tel:PHONE_NUMBER">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#007AFF">
-            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-          </svg>
-        </a>
-      </div>
-      <a href="mailto:warden@hostelia.edu" target="_blank" rel="noopener noreferrer" class="button">Contact Me</a>
-    </div>
-  </div>
-</div>
-          
-          
     </section>
 
     <!-- Change the colour #f8fafc to match the previous section colour -->
