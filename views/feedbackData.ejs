@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mess Feedback Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004aad;
+      --primary-dark: #003c91;
+      --secondary: #cb6ce6;
+      --secondary-dark: #b84fd0;
+      --accent: #7B68EE;
+      --dark: #2c3e50;
+      --light: #f9f9f9;
+      --gray: #e0e0e0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .gradient {
+      background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+    }
+
+    .text-gradient {
+      background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card {
+      border-radius: 1rem;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .rating-star {
+      color: #ffc107;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    thead {
+      background-color: rgba(0, 74, 173, 0.05);
+    }
+
+    .table-container {
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .filter-select {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--gray);
+      background-color: white;
+      transition: all 0.3s ease;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.2);
+      border-color: var(--primary);
+    }
+
+    .filter-button {
+      background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .reset-button {
+      border: 1px solid var(--gray);
+      background-color: white;
+      color: var(--dark);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reset-button:hover {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/navbar.ejs', { loggedIn }) %>
+
+  <div class="container mx-auto px-4 py-10 mt-16">
+    <h1 class="text-3xl font-bold mb-6">Mess Feedback Dashboard</h1>
+    
+    <!-- Statistics Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="stat-card p-6 flex flex-col items-center justify-center">
+        <h3 class="text-lg font-medium opacity-70 mb-2">Total Feedback</h3>
+        <p class="text-4xl font-bold"><%= feedbackData.length %></p>
+      </div>
+      
+      <div class="stat-card p-6 flex flex-col items-center justify-center">
+        <h3 class="text-lg font-medium opacity-70 mb-2">Average Rating</h3>
+        <p class="text-4xl font-bold flex items-center">
+          <%= averageRating %> 
+          <span class="ml-2 rating-star">★</span>
+        </p>
+      </div>
+      
+      <div class="stat-card p-6 flex flex-col items-center justify-center">
+        <h3 class="text-lg font-medium opacity-70 mb-2">Highest Rated Meal</h3>
+        <% 
+          let highestRated = { averageRating: 0 };
+          statistics.forEach(stat => {
+            if (parseFloat(stat.averageRating) > parseFloat(highestRated.averageRating)) {
+              highestRated = stat;
+            }
+          });
+        %>
+        <% if (highestRated.day) { %>
+          <p class="text-xl font-semibold"><%= highestRated.day %> <%= highestRated.mealType %></p>
+          <p class="text-lg font-bold flex items-center">
+            <%= highestRated.averageRating %> <span class="ml-1 rating-star">★</span>
+          </p>
+        <% } else { %>
+          <p class="text-xl font-semibold">No data</p>
+        <% } %>
+      </div>
+      
+      <div class="stat-card p-6 flex flex-col items-center justify-center">
+        <h3 class="text-lg font-medium opacity-70 mb-2">Lowest Rated Meal</h3>
+        <% 
+          let lowestRated = { averageRating: 5 };
+          statistics.forEach(stat => {
+            if (parseFloat(stat.averageRating) < parseFloat(lowestRated.averageRating)) {
+              lowestRated = stat;
+            }
+          });
+        %>
+        <% if (lowestRated.day && lowestRated.averageRating < 5) { %>
+          <p class="text-xl font-semibold"><%= lowestRated.day %> <%= lowestRated.mealType %></p>
+          <p class="text-lg font-bold flex items-center">
+            <%= lowestRated.averageRating %> <span class="ml-1 rating-star">★</span>
+          </p>
+        <% } else { %>
+          <p class="text-xl font-semibold">No data</p>
+        <% } %>
+      </div>
+    </div>
+    
+    <!-- Meal Type Average Ratings -->
+    <div class="card bg-white p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-6">Average Ratings by Meal Type</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <% ['Breakfast', 'Lunch', 'Snacks', 'Dinner'].forEach(mealType => { %>
+          <div class="stat-card p-4 flex flex-col items-center justify-center">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-3 
+              <%= mealType === 'Breakfast' ? 'bg-blue-100 text-blue-600' : 
+                 mealType === 'Lunch' ? 'bg-green-100 text-green-600' : 
+                 mealType === 'Snacks' ? 'bg-yellow-100 text-yellow-600' : 
+                 'bg-purple-100 text-purple-600' %>">
+              <% if (mealType === 'Breakfast') { %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              <% } else if (mealType === 'Lunch') { %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              <% } else if (mealType === 'Snacks') { %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              <% } else { %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              <% } %>
+            </div>
+            
+            <h3 class="text-lg font-semibold mb-1"><%= mealType %></h3>
+            
+            <% if (mealTypeStats[mealType].count > 0) { %>
+              <div class="flex items-center">
+                <span class="text-2xl font-bold"><%= mealTypeStats[mealType].averageRating %></span>
+                <span class="ml-1 rating-star text-2xl">★</span>
+              </div>
+              <p class="text-sm text-gray-500 mt-1">(<%= mealTypeStats[mealType].count %> feedbacks)</p>
+            <% } else { %>
+              <p class="text-gray-500">No feedback yet</p>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="card bg-white p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Filter Feedback</h2>
+      
+      <form action="/services/feedback" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Day</label>
+          <select name="day" class="filter-select w-full">
+            <option value="">All Days</option>
+            <% ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].forEach(day => { %>
+              <option value="<%= day %>" <%= filters.day === day ? 'selected' : '' %>><%= day %></option>
+            <% }); %>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-1">Meal Type</label>
+          <select name="mealType" class="filter-select w-full">
+            <option value="">All Meals</option>
+            <% ['Breakfast', 'Lunch', 'Snacks', 'Dinner'].forEach(meal => { %>
+              <option value="<%= meal %>" <%= filters.mealType === meal ? 'selected' : '' %>><%= meal %></option>
+            <% }); %>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-1">Start Date</label>
+          <input 
+            type="date" 
+            name="startDate" 
+            value="<%= filters.startDate %>" 
+            class="filter-select w-full"
+          >
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-1">End Date</label>
+          <input 
+            type="date" 
+            name="endDate" 
+            value="<%= filters.endDate %>" 
+            class="filter-select w-full"
+          >
+        </div>
+        
+        <div class="flex items-end gap-2">
+          <button type="submit" class="filter-button">Apply Filters</button>
+          <a href="/services/feedback" class="reset-button">Reset</a>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Feedback Data by Meal Type -->
+    <div class="card bg-white p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Feedback by Meal & Day</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <% if (statistics.length > 0) { %>
+          <% statistics.forEach(stat => { %>
+            <div class="stat-card p-4">
+              <h3 class="font-medium"><%= stat.day %> - <%= stat.mealType %></h3>
+              <div class="flex justify-between items-center mt-2">
+                <div>
+                  <p class="text-sm opacity-70">Average Rating</p>
+                  <p class="text-xl font-bold flex items-center">
+                    <%= stat.averageRating %> <span class="ml-1 rating-star">★</span>
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm opacity-70">Responses</p>
+                  <p class="text-xl font-bold"><%= stat.count %></p>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="col-span-4 text-center py-4">
+            <p>No feedback data available for the selected filters.</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    
+    <!-- Feedback Table -->
+    <div class="card bg-white overflow-hidden">
+      <h2 class="text-xl font-semibold p-6 border-b">Feedback Responses</h2>
+      
+      <% if (feedbackData.length > 0) { %>
+        <div class="table-container overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr>
+                <th class="text-left">Date</th>
+                <th class="text-left">Day</th>
+                <th class="text-left">Meal</th>
+                <th class="text-left">Rating</th>
+                <th class="text-left">Comment</th>
+                <th class="text-left">User</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% feedbackData.forEach(feedback => { %>
+                <tr>
+                  <td><%= new Date(feedback.createdAt).toLocaleDateString() %></td>
+                  <td><%= feedback.day %></td>
+                  <td><%= feedback.mealType %></td>
+                  <td>
+                    <div class="flex items-center">
+                      <%= feedback.rating %> <span class="ml-1 rating-star">★</span>
+                    </div>
+                  </td>
+                  <td class="max-w-xs truncate"><%= feedback.comment %></td>
+                  <td><%= feedback.user ? feedback.user.name : 'Anonymous' %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="p-8 text-center">
+          <p>No feedback data available for the selected filters.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+  
+  <%- include('partials/footer.ejs') %>
+  
+  <script src="/js/navbar.js"></script>
+</body>
+</html> 

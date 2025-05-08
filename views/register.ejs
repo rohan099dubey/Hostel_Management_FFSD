@@ -72,125 +72,6 @@
 
   <body class="leading-normal tracking-normal">
     <%- include('partials/navbar.ejs', { loggedIn }) %>
-    <div
-      id="transitModal"
-      class="fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden position: absolute; z-index: 1000;"
-    >
-      <div class="bg-white p-6 rounded-lg shadow-lg w-[800px]">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">
-          Create Transit Entry
-        </h2>
-
-        <form action="/services/transit" method="POST">
-          <!-- Row 1 -->
-          <div class="flex space-x-4 mb-3">
-            <div class="w-1/2">
-              <label class="block text-gray-700">Student Name</label>
-              <input
-                type="text"
-                name="studentName"
-                class="w-full p-2 border rounded"
-                required
-              />
-            </div>
-            <div class="w-1/2">
-              <label class="block text-gray-700">Roll Number</label>
-              <input
-                type="number"
-                name="studentRollNumber"
-                class="w-full p-2 border rounded"
-                required
-              />
-            </div>
-          </div>
-
-          <!-- Row 2 -->
-          <div class="flex space-x-4 mb-3">
-            <div class="w-1/2">
-              <label class="block text-gray-700">Hostel</label>
-              <input
-                type="text"
-                name="studentHostel"
-                class="w-full p-2 border rounded"
-                required
-              />
-            </div>
-            <div class="w-1/2">
-              <label class="block text-gray-700">Room Number</label>
-              <input
-                type="number"
-                name="studentRoomNumber"
-                class="w-full p-2 border rounded"
-                required
-              />
-            </div>
-          </div>
-
-          <!-- Row 3 -->
-          <div class="flex space-x-4 mb-3">
-            <div class="w-1/2">
-              <label class="block text-gray-700">Purpose</label>
-              <input
-                type="text"
-                name="purpose"
-                class="w-full p-2 border rounded"
-                required
-              />
-            </div>
-            <div class="w-1/2">
-              <label class="block text-gray-700">Entry/Exit</label>
-              <select
-                name="transitStatus"
-                class="w-full p-2 border rounded"
-                required
-              >
-                <option value="ENTRY">Entry</option>
-                <option value="EXIT">Exit</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Row 4 -->
-          <div class="flex space-x-4 mb-3">
-            <div class="w-1/2">
-              <label class="block text-gray-700">Date</label>
-              <input
-                type="date"
-                name="date"
-                class="w-full p-2 border rounded"
-                required
-              />
-            </div>
-            <div class="w-1/2">
-              <label class="block text-gray-700">Time</label>
-              <input
-                type="time"
-                name="time"
-                class="w-full p-2 border rounded"
-                required
-              />
-            </div>
-          </div>
-
-          <!-- Buttons -->
-          <div class="flex justify-between mt-4">
-            <button
-              type="button"
-              onclick="closeModal()"
-              class="bg-gray-400 text-white px-4 py-2 rounded-lg"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
 
     <!-- Hero Section -->
     <div class="hero-section relative">
@@ -268,29 +149,86 @@
       <!-- Page Title and Action Button -->
       <div class="flex justify-between items-center mb-8">
         <h2 class="text-3xl font-bold text-gray-900">Entry/Exit Register</h2>
-        <button
-          onclick="openModal()"
-          class="bg-gradient-to-r from-blue-600 to-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <input
+              type="text"
+              id="dateFilter"
+              placeholder="YYYY-MM-DD"
+              pattern="\d{4}-\d{2}-\d{2}"
+              title="Please enter date in YYYY-MM-DD format"
+              class="p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
             />
-          </svg>
-          Create New Entry
-        </button>
+            <button
+              id="clearDateFilter"
+              type="button"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10 bg-white rounded-full p-0.5"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+          <button
+            onclick="openModal()"
+            class="bg-gradient-to-r from-blue-600 to-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Create New Entry
+          </button>
+        </div>
+      </div>
+
+      <!-- No entries message - hidden by default -->
+      <div
+        id="noEntriesMessage"
+        class="hidden bg-blue-50 p-6 rounded-lg text-center mb-8"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-12 w-12 mx-auto text-blue-400 mb-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <h3 class="text-lg font-medium text-blue-800 mb-2">No Entries Found</h3>
+        <p class="text-blue-600">
+          There are no entry/exit records for the selected date.
+        </p>
       </div>
 
       <!-- Table Container -->
-      <div class="table-container overflow-hidden">
+      <div
+        class="table-container overflow-hidden max-h-[500px] overflow-y-auto"
+      >
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left">
             <thead class="table-header">
@@ -341,7 +279,7 @@
     <!-- Transit Modal -->
     <div
       id="transitModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-[9999]"
     >
       <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4">
         <div
@@ -368,7 +306,12 @@
           </button>
         </div>
 
-        <form action="/services/transit" method="POST" class="p-6">
+        <form
+          action="/services/transit"
+          method="POST"
+          class="p-6"
+          id="transitForm"
+        >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2"
@@ -377,7 +320,9 @@
               <input
                 type="text"
                 name="studentName"
+                id="studentName"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                disabled
                 required
               />
             </div>
@@ -388,25 +333,26 @@
               <input
                 type="number"
                 name="studentRollNumber"
+                id="studentRollNumber"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                 required
               />
+              <p class="text-xs text-blue-600 mt-1" id="rollPrompt">
+                Enter roll number to autofill details
+              </p>
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2"
                 >Hostel</label
               >
-              <select
+              <input
+                type="text"
                 name="studentHostel"
+                id="studentHostel"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                disabled
                 required
-              >
-                <option value="">Select Hostel</option>
-                <option value="BH-1">BH-1</option>
-                <option value="BH-2">BH-2</option>
-                <option value="BH-3">BH-3</option>
-                <option value="BH-4">BH-4</option>
-              </select>
+              />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2"
@@ -415,7 +361,9 @@
               <input
                 type="number"
                 name="studentRoomNumber"
+                id="studentRoomNumber"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                disabled
                 required
               />
             </div>
@@ -508,6 +456,176 @@
           closeModal();
         }
       };
+
+      // Autofetch student details by roll number
+      document
+        .getElementById("studentRollNumber")
+        .addEventListener("blur", async function () {
+          const roll = this.value.trim();
+          const nameInput = document.getElementById("studentName");
+          const hostelInput = document.getElementById("studentHostel");
+          const roomInput = document.getElementById("studentRoomNumber");
+          const prompt = document.getElementById("rollPrompt");
+
+          // Reset fields
+          nameInput.value = "";
+          hostelInput.value = "";
+          roomInput.value = "";
+          nameInput.disabled = true;
+          hostelInput.disabled = true;
+          roomInput.disabled = true;
+
+          prompt.textContent = "Fetching details...";
+
+          if (!roll) {
+            prompt.textContent = "Enter roll number to autofill details";
+            return;
+          }
+
+          try {
+            const res = await fetch(`/services/users/by-roll/${roll}`);
+
+            if (!res.ok) {
+              prompt.textContent = "No student found for this roll number.";
+              return;
+            }
+
+            const data = await res.json();
+
+            if (data && data.name && data.hostel && data.roomNo) {
+              nameInput.value = data.name;
+              hostelInput.value = data.hostel;
+              roomInput.value = data.roomNo;
+              prompt.textContent = "";
+            } else {
+              prompt.textContent = "No student found for this roll number.";
+            }
+          } catch (e) {
+            console.error("Error fetching student details:", e);
+            prompt.textContent = "No student found for this roll number.";
+          }
+        });
+
+      // Prevent form submission if details not fetched
+      document
+        .getElementById("transitForm")
+        .addEventListener("submit", function (e) {
+          const nameInput = document.getElementById("studentName");
+          const hostelInput = document.getElementById("studentHostel");
+          const roomInput = document.getElementById("studentRoomNumber");
+          if (!nameInput.value || !hostelInput.value || !roomInput.value) {
+            e.preventDefault();
+            document.getElementById("rollPrompt").textContent =
+              "Please enter a valid roll number and wait for details to autofill.";
+          }
+        });
+    </script>
+
+    <!-- Date Filter Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const dateFilter = document.getElementById("dateFilter");
+        const clearDateFilter = document.getElementById("clearDateFilter");
+        const tableRows = document.querySelectorAll(".table-row");
+        const noEntriesMessage = document.getElementById("noEntriesMessage");
+        const tableContainer = document.querySelector(".table-container");
+
+        // Validate date format (YYYY-MM-DD)
+        function isValidDateFormat(dateString) {
+          return /^\d{4}-\d{2}-\d{2}$/.test(dateString);
+        }
+
+        // Function to filter entries by date
+        function filterByDate(date) {
+          // If date is not in correct format, don't filter
+          if (date && !isValidDateFormat(date)) {
+            alert("Please enter date in YYYY-MM-DD format");
+            dateFilter.value = "";
+            return 0;
+          }
+
+          console.log("Filtering by date:", date);
+
+          let visibleCount = 0;
+
+          tableRows.forEach((row) => {
+            const dateCell = row.querySelector("td:nth-child(7)");
+            if (!dateCell) return;
+
+            const rowDate = dateCell.textContent.trim();
+
+            if (!date || rowDate === date) {
+              row.style.display = "";
+              visibleCount++;
+            } else {
+              row.style.display = "none";
+            }
+          });
+
+          // Show/hide no entries message
+          if (visibleCount === 0 && date) {
+            noEntriesMessage.classList.remove("hidden");
+            tableContainer.classList.add("hidden");
+          } else {
+            noEntriesMessage.classList.add("hidden");
+            tableContainer.classList.remove("hidden");
+          }
+
+          return visibleCount;
+        }
+
+        // Apply formatting while typing
+        dateFilter.addEventListener("input", function (e) {
+          let value = this.value;
+
+          // Remove any non-digits or non-hyphens
+          value = value.replace(/[^\d-]/g, "");
+
+          // Auto-insert hyphens
+          if (value.length > 0) {
+            // First, remove any existing hyphens
+            value = value.replace(/-/g, "");
+
+            // Then insert hyphens in the correct positions
+            if (value.length > 4) {
+              value = value.substring(0, 4) + "-" + value.substring(4);
+            }
+            if (value.length > 7) {
+              value = value.substring(0, 7) + "-" + value.substring(7);
+            }
+
+            // Limit to YYYY-MM-DD format (10 characters)
+            value = value.substring(0, 10);
+          }
+
+          this.value = value;
+        });
+
+        // Handle filter when pressing Enter
+        dateFilter.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const selectedDate = this.value;
+            filterByDate(selectedDate);
+          }
+        });
+
+        // Also handle blur event for filtering
+        dateFilter.addEventListener("blur", function () {
+          const selectedDate = this.value;
+          if (selectedDate) {
+            filterByDate(selectedDate);
+          }
+        });
+
+        // Clear filter button
+        clearDateFilter.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          dateFilter.value = "";
+          filterByDate("");
+        });
+      });
     </script>
   </body>
 </html>
