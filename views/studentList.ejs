@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostelia | Student List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .gradient {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f3f4f6;
+      }
+
+      .hero-section {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 0 1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .wave-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        transform: rotate(180deg);
+      }
+
+      .wave-bottom svg {
+        position: relative;
+        display: block;
+        width: calc(128% + 1.3px);
+        height: 60px;
+      }
+
+      .wave-bottom .shape-fill {
+        fill: #f3f4f6;
+      }
+
+      .student-card {
+        transition: all 0.3s ease;
+      }
+
+      .student-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .filter-section {
+        background: white;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-top: -4rem;
+        margin-bottom: 2rem;
+        z-index: 10;
+        position: relative;
+        border: 1px solid rgba(203, 108, 230, 0.1);
+      }
+
+      .container {
+        background: transparent;
+      }
+
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Override the problem container width for better centering */
+      .problem-container {
+        width: calc(
+          350px * 3 + 2rem * 5
+        ); /* 3 cards per row + padding + increased gap */
+        max-width: 100%;
+        margin: 0 auto;
+      }
+
+      /* Ensure all cards are at the same height within the grid */
+      .grid-cols-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        padding: 1rem;
+      }
+
+      /* Base card styles - no transform in initial state */
+      .problem-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transform: none !important;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        margin: 0 !important;
+      }
+
+      /* Apply transform ONLY on hover */
+      .problem-card:hover {
+        transform: translateY(-0.25rem) !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Essential structure for consistent card heights */
+      .problem-card .relative {
+        flex-shrink: 0;
+      }
+
+      .problem-card > div:last-child {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Consistent title heights */
+      .problem-card h3 {
+        height: 3.5rem;
+        margin-bottom: 0.75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!--header starts-->
+    <%- include('partials/navbar.ejs', { loggedIn }) %>
+
+    <!-- Hero Section -->
+    <div class="hero-section pt-28 pb-16 relative">
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center text-white">
+          <h1 class="text-5xl md:text-6xl font-bold mb-4">Student Directory</h1>
+          <p class="text-xl md:text-2xl opacity-90 mb-8 max-w-xl mx-auto">
+            <%= role === 'admin' ? 'Manage All Students' : 'Manage Students in '
+            + userInfo.hostel %>
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <div
+              class="bg-white/20 backdrop-blur-sm px-5 py-2 rounded-full flex items-center gap-2"
+            >
+              <i class="fas fa-users"></i>
+              <span class="font-medium"><%= students.length %> Students</span>
+            </div>
+            <div
+              class="bg-white/20 backdrop-blur-sm px-5 py-2 rounded-full flex items-center gap-2"
+            >
+              <i class="fas fa-building"></i>
+              <span class="font-medium"
+                ><%= role === 'admin' ? 'All Hostels' : userInfo.hostel %></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wave-bottom">
+        <svg
+          data-name="Layer 1"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+            class="shape-fill"
+          ></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="container mx-auto py-8 px-4">
+      <div
+        class="filter-section bg-white rounded-xl shadow-xl border border-gray-100"
+      >
+        <div
+          class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4"
+        >
+          <div class="w-full md:w-auto">
+            <h3 class="text-lg font-semibold mb-2 text-gray-800">
+              <i class="fas fa-filter mr-2 text-blue-600"></i>Fee Status Filters
+            </h3>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="w-full md:w-1/3">
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+              >
+                <i class="fas fa-search text-gray-400"></i>
+              </div>
+              <input
+                type="text"
+                id="studentSearch"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                placeholder="Search by name, room, roll no..."
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row gap-6 w-full md:w-auto">
+            <!-- Mess Fee Filter -->
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Mess Fee</label
+              >
+              <div class="flex items-center space-x-4">
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    name="messFee"
+                    value="all"
+                    id="messAll"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                    checked
+                  />
+                  <label for="messAll" class="ml-2 text-sm text-gray-700"
+                    >All</label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    name="messFee"
+                    value="paid"
+                    id="messPaid"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label for="messPaid" class="ml-2 text-sm text-gray-700"
+                    >Paid</label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    name="messFee"
+                    value="unpaid"
+                    id="messUnpaid"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label for="messUnpaid" class="ml-2 text-sm text-gray-700"
+                    >Unpaid</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Hostel Fee Filter -->
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Hostel Fee</label
+              >
+              <div class="flex items-center space-x-4">
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    name="hostelFee"
+                    value="all"
+                    id="hostelAll"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                    checked
+                  />
+                  <label for="hostelAll" class="ml-2 text-sm text-gray-700"
+                    >All</label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    name="hostelFee"
+                    value="paid"
+                    id="hostelPaid"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label for="hostelPaid" class="ml-2 text-sm text-gray-700"
+                    >Paid</label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    name="hostelFee"
+                    value="unpaid"
+                    id="hostelUnpaid"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label for="hostelUnpaid" class="ml-2 text-sm text-gray-700"
+                    >Unpaid</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email All Button -->
+          <div class="w-full md:w-auto">
+            <button
+              id="emailAllBtn"
+              class="bg-gradient-to-r from-blue-600 to-purple-500 hover:from-blue-700 hover:to-purple-600 text-white px-5 py-2.5 rounded-lg transition-all flex items-center shadow-md"
+            >
+              <i class="fas fa-envelope mr-2"></i> Email All
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Students List -->
+      <div class="my-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+            <i class="fas fa-users mr-2 text-blue-600"></i>
+            Students (<span id="studentCount"><%= students.length %></span>)
+          </h2>
+
+          <div class="flex items-center space-x-3">
+            <span
+              class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 items-center"
+            >
+              <i class="fas fa-check-circle mr-1"></i> Paid
+            </span>
+            <span
+              class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 items-center"
+            >
+              <i class="fas fa-exclamation-circle mr-1"></i> Unpaid
+            </span>
+          </div>
+        </div>
+
+        <% if (students.length === 0) { %>
+        <div class="bg-white rounded-lg shadow-md p-8 text-center">
+          <i class="fas fa-users text-gray-300 text-5xl mb-4"></i>
+          <h3 class="text-xl font-semibold text-gray-700">No students found</h3>
+          <p class="text-gray-500 mt-2">
+            There are no students matching your criteria.
+          </p>
+        </div>
+        <% } else { %>
+        <div
+          class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden"
+        >
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gradient-to-r from-blue-50 to-purple-50">
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                  >
+                    Name
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                  >
+                    Roll No
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                  >
+                    Fee Status
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-4 text-right text-xs font-medium text-gray-600 uppercase tracking-wider"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="bg-white divide-y divide-gray-200"
+                id="studentsContainer"
+              >
+                <% students.forEach((student, index) => { %>
+                <tr
+                  class="hover:bg-gray-50 transition-colors duration-200 student-card"
+                  data-hostel-fee="<%= student.feeStatus && student.feeStatus.hostelFees ? 'paid' : 'unpaid' %>"
+                  data-mess-fee="<%= student.feeStatus && student.feeStatus.messFees ? 'paid' : 'unpaid' %>"
+                >
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div
+                        class="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-blue-600 to-purple-500 rounded-full flex items-center justify-center"
+                      >
+                        <span class="text-white font-semibold"
+                          ><%= student.name.charAt(0).toUpperCase() %></span
+                        >
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">
+                          <%= student.name %>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                          <%= student.hostel %> - Room <%= student.roomNo %>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">
+                      <%= student.rollNo %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex space-x-2">
+                      <% if (student.feeStatus && student.feeStatus.hostelFees)
+                      { %>
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                      >
+                        Hostel Paid
+                      </span>
+                      <% } else { %>
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+                      >
+                        Hostel Unpaid
+                      </span>
+                      <% } %> <% if (student.feeStatus &&
+                      student.feeStatus.messFees) { %>
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                      >
+                        Mess Paid
+                      </span>
+                      <% } else { %>
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+                      >
+                        Mess Unpaid
+                      </span>
+                      <% } %>
+                    </div>
+                  </td>
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                  >
+                    <button
+                      type="button"
+                      class="text-blue-600 hover:text-blue-900 mr-3 transition-colors"
+                      data-modal-target="studentModal-<%= index %>"
+                      data-modal-toggle="studentModal-<%= index %>"
+                    >
+                      <i class="fas fa-eye mr-1"></i> View
+                    </button>
+                    <% if (!(student.feeStatus && student.feeStatus.hostelFees
+                    && student.feeStatus.messFees)) { %>
+                    <button
+                      class="email-reminder-btn text-blue-600 hover:text-blue-900 transition-colors"
+                      data-student-id="<%= student._id %>"
+                      data-student-email="<%= student.email %>"
+                      data-student-name="<%= student.name %>"
+                    >
+                      <i class="fas fa-envelope mr-1"></i> Email
+                    </button>
+                    <% } %>
+                  </td>
+                </tr>
+
+                <!-- Student Modal (Keep the existing modal) -->
+                <div
+                  id="studentModal-<%= index %>"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                >
+                  <div class="relative w-full max-w-2xl max-h-full">
+                    <!-- Modal content -->
+                    <div
+                      class="relative bg-white rounded-xl shadow-2xl border border-purple-100"
+                    >
+                      <!-- Modal header -->
+                      <div
+                        class="flex items-start justify-between p-5 border-b rounded-t-xl bg-gradient-to-r from-blue-600 to-purple-500 text-white"
+                      >
+                        <h3 class="text-xl font-semibold flex items-center">
+                          <i class="fas fa-user-graduate mr-2"></i> Student
+                          Details
+                        </h3>
+                        <button
+                          type="button"
+                          class="text-white bg-transparent hover:bg-white/20 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+                          data-modal-hide="studentModal-<%= index %>"
+                        >
+                          <svg
+                            class="w-3 h-3"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 14"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                            />
+                          </svg>
+                          <span class="sr-only">Close modal</span>
+                        </button>
+                      </div>
+                      <!-- Modal body -->
+                      <div class="p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div
+                            class="bg-blue-50 p-5 rounded-lg border border-blue-100 shadow-sm"
+                          >
+                            <h4
+                              class="text-lg font-medium text-blue-600 mb-4 flex items-center"
+                            >
+                              <i class="fas fa-info-circle mr-2"></i> Personal
+                              Information
+                            </h4>
+                            <ul class="space-y-3">
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-24"
+                                  >Name:</span
+                                >
+                                <span class="text-gray-600"
+                                  ><%= student.name %></span
+                                >
+                              </li>
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-24"
+                                  >Roll No:</span
+                                >
+                                <span class="text-gray-600"
+                                  ><%= student.rollNo %></span
+                                >
+                              </li>
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-24"
+                                  >Email:</span
+                                >
+                                <span class="text-gray-600"
+                                  ><%= student.email %></span
+                                >
+                              </li>
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-24"
+                                  >Year:</span
+                                >
+                                <span class="text-gray-600"
+                                  ><%= student.year %></span
+                                >
+                              </li>
+                            </ul>
+                          </div>
+
+                          <div
+                            class="bg-purple-50 p-5 rounded-lg border border-purple-100 shadow-sm"
+                          >
+                            <h4
+                              class="text-lg font-medium text-purple-600 mb-4 flex items-center"
+                            >
+                              <i class="fas fa-building mr-2"></i> Hostel
+                              Information
+                            </h4>
+                            <ul class="space-y-3">
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-28"
+                                  >Hostel:</span
+                                >
+                                <span class="text-gray-600"
+                                  ><%= student.hostel %></span
+                                >
+                              </li>
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-28"
+                                  >Room No:</span
+                                >
+                                <span class="text-gray-600"
+                                  ><%= student.roomNo %></span
+                                >
+                              </li>
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-28"
+                                  >Hostel Fee:</span
+                                >
+                                <% if (student.feeStatus &&
+                                student.feeStatus.hostelFees) { %>
+                                <span
+                                  class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  ><i class="fas fa-check-circle mr-1"></i>
+                                  Paid</span
+                                >
+                                <% } else { %>
+                                <span
+                                  class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  ><i class="fas fa-times-circle mr-1"></i>
+                                  Unpaid</span
+                                >
+                                <% } %>
+                              </li>
+                              <li class="flex items-center">
+                                <span class="font-medium text-gray-700 w-28"
+                                  >Mess Fee:</span
+                                >
+                                <% if (student.feeStatus &&
+                                student.feeStatus.messFees) { %>
+                                <span
+                                  class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  ><i class="fas fa-check-circle mr-1"></i>
+                                  Paid</span
+                                >
+                                <% } else { %>
+                                <span
+                                  class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center"
+                                  ><i class="fas fa-times-circle mr-1"></i>
+                                  Unpaid</span
+                                >
+                                <% } %>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Modal footer -->
+                      <div
+                        class="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b-xl bg-gray-50"
+                      >
+                        <button
+                          data-modal-hide="studentModal-<%= index %>"
+                          type="button"
+                          class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-300 text-sm font-medium px-5 py-2.5 hover:text-gray-900 transition-colors shadow-sm"
+                        >
+                          <i class="fas fa-times mr-1"></i> Close
+                        </button>
+                        <% if (!(student.feeStatus &&
+                        student.feeStatus.hostelFees &&
+                        student.feeStatus.messFees)) { %>
+                        <button
+                          type="button"
+                          class="email-modal-btn text-white bg-gradient-to-r from-blue-600 to-purple-500 hover:from-blue-700 hover:to-purple-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center transition-all shadow-md"
+                          data-student-id="<%= student._id %>"
+                          data-student-email="<%= student.email %>"
+                          data-student-name="<%= student.name %>"
+                        >
+                          <i class="fas fa-envelope mr-2"></i> Send Reminder
+                        </button>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <%- include('partials/footer.ejs') %>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Filtering logic
+        const studentsContainer = document.getElementById("studentsContainer");
+        const studentRows = document.querySelectorAll(".student-card");
+        const studentCountElement = document.getElementById("studentCount");
+        const studentSearch = document.getElementById("studentSearch");
+
+        // Fee filters
+        const messRadios = document.querySelectorAll('input[name="messFee"]');
+        const hostelRadios = document.querySelectorAll(
+          'input[name="hostelFee"]'
+        );
+
+        function updateStudentList() {
+          const selectedMessFilter = document.querySelector(
+            'input[name="messFee"]:checked'
+          ).value;
+          const selectedHostelFilter = document.querySelector(
+            'input[name="hostelFee"]:checked'
+          ).value;
+          const searchTerm = studentSearch.value.toLowerCase();
+
+          let visibleCount = 0;
+
+          studentRows.forEach((row) => {
+            const messStatus = row.dataset.messFee;
+            const hostelStatus = row.dataset.hostelFee;
+
+            // Get text content for search
+            const studentName = row
+              .querySelector(".text-sm.font-medium")
+              .textContent.toLowerCase();
+            const roomInfo = row
+              .querySelector(".text-sm.text-gray-500")
+              .textContent.toLowerCase();
+            const rollNo = row
+              .querySelector(".text-sm.text-gray-900")
+              .textContent.toLowerCase();
+
+            const messMatch =
+              selectedMessFilter === "all" || messStatus === selectedMessFilter;
+            const hostelMatch =
+              selectedHostelFilter === "all" ||
+              hostelStatus === selectedHostelFilter;
+            const searchMatch =
+              searchTerm === "" ||
+              studentName.includes(searchTerm) ||
+              roomInfo.includes(searchTerm) ||
+              rollNo.includes(searchTerm);
+
+            if (messMatch && hostelMatch && searchMatch) {
+              row.classList.remove("hidden");
+              visibleCount++;
+            } else {
+              row.classList.add("hidden");
+            }
+          });
+
+          studentCountElement.textContent = visibleCount;
+        }
+
+        // Add event listeners to radio buttons
+        messRadios.forEach((radio) => {
+          radio.addEventListener("change", updateStudentList);
+        });
+
+        hostelRadios.forEach((radio) => {
+          radio.addEventListener("change", updateStudentList);
+        });
+
+        // Add event listener for search input
+        studentSearch.addEventListener("input", updateStudentList);
+
+        // Email functionality
+        const emailAllBtn = document.getElementById("emailAllBtn");
+        const emailReminderBtns = document.querySelectorAll(
+          ".email-reminder-btn, .email-modal-btn"
+        );
+
+        // Function to send email to a single student
+        async function sendReminderEmail(
+          studentId,
+          emailType = "both",
+          notes = ""
+        ) {
+          try {
+            const response = await fetch("/send-fee-reminder", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                studentId,
+                emailType,
+                notes,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              return { success: true, message: data.message };
+            } else {
+              return {
+                success: false,
+                message: data.message || "Failed to send email",
+              };
+            }
+          } catch (error) {
+            console.error("Error sending reminder:", error);
+            return {
+              success: false,
+              message: "Error occurred while sending email",
+            };
+          }
+        }
+
+        // Function to send emails to multiple students
+        async function sendBulkReminders(
+          studentIds,
+          emailType = "both",
+          notes = ""
+        ) {
+          try {
+            const response = await fetch("/send-bulk-fee-reminders", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                studentIds,
+                emailType,
+                notes,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              return {
+                success: true,
+                message: data.message,
+                results: data.results,
+              };
+            } else {
+              return {
+                success: false,
+                message: data.message || "Failed to send emails",
+              };
+            }
+          } catch (error) {
+            console.error("Error sending bulk reminders:", error);
+            return {
+              success: false,
+              message: "Error occurred while sending emails",
+            };
+          }
+        }
+
+        emailAllBtn.addEventListener("click", async function () {
+          // Get all visible students
+          const visibleStudents = Array.from(
+            document.querySelectorAll(".student-card:not(.hidden)")
+          );
+
+          if (visibleStudents.length === 0) {
+            Swal.fire({
+              title: "No Students",
+              text: "There are no students matching your current filters.",
+              icon: "info",
+            });
+            return;
+          }
+
+          // Determine which type of fees to remind about
+          const selectedMessFilter = document.querySelector(
+            'input[name="messFee"]:checked'
+          ).value;
+          const selectedHostelFilter = document.querySelector(
+            'input[name="hostelFee"]:checked'
+          ).value;
+          let emailType = "both";
+
+          if (
+            selectedMessFilter === "unpaid" &&
+            selectedHostelFilter !== "unpaid"
+          ) {
+            emailType = "messFee";
+          } else if (
+            selectedHostelFilter === "unpaid" &&
+            selectedMessFilter !== "unpaid"
+          ) {
+            emailType = "hostelFee";
+          }
+
+          // Show prompt with notes field
+          const { value: formValues } = await Swal.fire({
+            title: "Send Fee Reminder",
+            html: `
+              <p class="mb-4">Send fee reminder emails to ${visibleStudents.length} students?</p>
+              <textarea id="notes" class="w-full p-2 border rounded" placeholder="Additional notes (optional)"></textarea>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, send emails!",
+            preConfirm: () => {
+              return {
+                notes: document.getElementById("notes").value,
+              };
+            },
+          });
+
+          if (formValues) {
+            Swal.fire({
+              title: "Sending Emails",
+              text: "Please wait while we send the emails...",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+
+            // Get all student IDs from visible rows
+            const studentIds = visibleStudents
+              .map((row) => {
+                // Extract the student ID from the email button in the row
+                const reminderBtn = row.querySelector(".email-reminder-btn");
+                return reminderBtn ? reminderBtn.dataset.studentId : null;
+              })
+              .filter((id) => id !== null);
+
+            // Send emails with notes
+            const result = await sendBulkReminders(
+              studentIds,
+              emailType,
+              formValues.notes
+            );
+
+            if (result.success) {
+              Swal.fire({
+                title: "Emails Sent!",
+                text: result.message,
+                icon: "success",
+              });
+            } else {
+              Swal.fire({
+                title: "Error",
+                text: result.message,
+                icon: "error",
+              });
+            }
+          }
+        });
+
+        emailReminderBtns.forEach((btn) => {
+          btn.addEventListener("click", async function (e) {
+            e.preventDefault();
+            const studentId = this.dataset.studentId;
+            const studentName = this.dataset.studentName;
+
+            // Show prompt with notes field
+            const { value: formValues } = await Swal.fire({
+              title: "Send Fee Reminder",
+              html: `
+                <p class="mb-4">Send fee reminder email to ${studentName}?</p>
+                <textarea id="notes" class="w-full p-2 border rounded" placeholder="Additional notes (optional)"></textarea>
+              `,
+              focusConfirm: false,
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, send email!",
+              preConfirm: () => {
+                return {
+                  notes: document.getElementById("notes").value,
+                };
+              },
+            });
+
+            if (formValues) {
+              Swal.fire({
+                title: "Sending Email",
+                text: "Please wait...",
+                allowOutsideClick: false,
+                didOpen: () => {
+                  Swal.showLoading();
+                },
+              });
+
+              // Find the student row to determine fee status
+              const studentRow = Array.from(
+                document.querySelectorAll(".student-card")
+              ).find(
+                (row) =>
+                  row.querySelector(".email-reminder-btn")?.dataset
+                    .studentId === studentId
+              );
+
+              let emailType = "both";
+              if (studentRow) {
+                const messStatus = studentRow.dataset.messFee;
+                const hostelStatus = studentRow.dataset.hostelFee;
+
+                if (messStatus === "unpaid" && hostelStatus !== "unpaid") {
+                  emailType = "messFee";
+                } else if (
+                  hostelStatus === "unpaid" &&
+                  messStatus !== "unpaid"
+                ) {
+                  emailType = "hostelFee";
+                }
+              }
+
+              // Send the email with notes
+              const result = await sendReminderEmail(
+                studentId,
+                emailType,
+                formValues.notes
+              );
+
+              if (result.success) {
+                Swal.fire({
+                  title: "Email Sent!",
+                  text: result.message,
+                  icon: "success",
+                });
+              } else {
+                Swal.fire({
+                  title: "Error",
+                  text: result.message,
+                  icon: "error",
+                });
+              }
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
