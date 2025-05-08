@@ -228,6 +228,82 @@
       .badge-support {
         background: linear-gradient(45deg, #107869, #25b79f);
       }
+
+      /* Enhanced form styles */
+      .contact-form-container {
+        border-top: 5px solid #004aad;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .contact-form-container:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .form-input-field {
+        border: 1px solid #d1d5db;
+        color: #374151;
+        background-color: #fff;
+        transition: all 0.3s ease;
+      }
+
+      .form-input-field:focus {
+        border-color: #004aad;
+        box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.1);
+      }
+
+      .form-input-field::placeholder {
+        color: #9ca3af;
+      }
+
+      .form-label {
+        color: #374151;
+        font-weight: 500;
+      }
+
+      .form-select {
+        color: #374151;
+        background-color: #fff;
+        border: 1px solid #d1d5db;
+      }
+
+      .form-select option {
+        color: #374151;
+      }
+
+      .form-radio {
+        cursor: pointer;
+      }
+
+      .form-radio-label {
+        cursor: pointer;
+      }
+
+      .submit-button {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .submit-button:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        transition: all 0.6s ease;
+      }
+
+      .submit-button:hover:after {
+        left: 100%;
+      }
     </style>
   </head>
   <body
@@ -706,15 +782,20 @@
         </p>
 
         <div
-          class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden"
+          class="max-w-3xl mx-auto bg-white rounded-lg contact-form-container overflow-hidden"
         >
           <div class="p-8">
-            <form action="/submit-help-request" method="POST" class="space-y-6">
+            <form
+              id="helpRequestForm"
+              action="/submit-help-request"
+              method="POST"
+              class="space-y-6"
+            >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label
                     for="name"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                    class="block text-sm font-medium form-label mb-1"
                     >Full Name</label
                   >
                   <input
@@ -722,14 +803,18 @@
                     id="name"
                     name="name"
                     required
+                    minlength="3"
+                    maxlength="50"
+                    pattern="[A-Za-z\s]+"
+                    title="Please enter a valid name (letters and spaces only)"
                     placeholder="Enter your full name"
-                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
                 <div>
                   <label
                     for="room"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                    class="block text-sm font-medium form-label mb-1"
                     >Room Number</label
                   >
                   <input
@@ -737,8 +822,10 @@
                     id="room"
                     name="room"
                     required
+                    pattern="[A-Za-z0-9-]+"
+                    title="Please enter a valid room number (e.g. A-101)"
                     placeholder="e.g. A-101"
-                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
@@ -747,7 +834,7 @@
                 <div>
                   <label
                     for="email"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                    class="block text-sm font-medium form-label mb-1"
                     >Email Address</label
                   >
                   <input
@@ -755,14 +842,16 @@
                     id="email"
                     name="email"
                     required
+                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    title="Please enter a valid email address"
                     placeholder="Your email address"
-                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
                 <div>
                   <label
                     for="phone"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                    class="block text-sm font-medium form-label mb-1"
                     >Phone Number</label
                   >
                   <input
@@ -770,8 +859,10 @@
                     id="phone"
                     name="phone"
                     required
+                    pattern="[0-9]{10}"
+                    title="Please enter a valid 10-digit phone number"
                     placeholder="Your contact number"
-                    class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
@@ -779,14 +870,14 @@
               <div>
                 <label
                   for="request_type"
-                  class="block text-sm font-medium text-gray-700 mb-1"
+                  class="block text-sm font-medium form-label mb-1"
                   >Request Type</label
                 >
                 <select
                   id="request_type"
                   name="request_type"
                   required
-                  class="w-full px-4 py-2 border text-gray-400 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  class="w-full px-4 py-2 border rounded-lg form-select focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="" disabled selected>
                     Select request type
@@ -803,7 +894,7 @@
               <div>
                 <label
                   for="message"
-                  class="block text-sm font-medium text-gray-700 mb-1"
+                  class="block text-sm font-medium form-label mb-1"
                   >Describe Your Request</label
                 >
                 <textarea
@@ -811,15 +902,20 @@
                   name="message"
                   rows="5"
                   required
+                  minlength="10"
+                  maxlength="500"
                   placeholder="Please provide details about your request or issue..."
-                  class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 ></textarea>
+                <p class="text-sm text-gray-500 mt-1">
+                  <span id="messageLength">0</span>/500 characters
+                </p>
               </div>
 
               <div>
                 <label
                   for="urgency"
-                  class="block text-sm font-medium text-gray-700 mb-1"
+                  class="block text-sm font-medium form-label mb-1"
                   >Urgency Level</label
                 >
                 <div class="flex items-center space-x-6">
@@ -829,9 +925,11 @@
                       id="low"
                       name="urgency"
                       value="low"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 form-radio"
                     />
-                    <label for="low" class="ml-2 text-sm text-gray-700"
+                    <label
+                      for="low"
+                      class="ml-2 text-sm form-radio-label text-gray-700"
                       >Low</label
                     >
                   </div>
@@ -841,10 +939,12 @@
                       id="medium"
                       name="urgency"
                       value="medium"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 form-radio"
                       checked
                     />
-                    <label for="medium" class="ml-2 text-sm text-gray-700"
+                    <label
+                      for="medium"
+                      class="ml-2 text-sm form-radio-label text-gray-700"
                       >Medium</label
                     >
                   </div>
@@ -854,19 +954,26 @@
                       id="high"
                       name="urgency"
                       value="high"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 form-radio"
                     />
-                    <label for="high" class="ml-2 text-sm text-gray-700"
+                    <label
+                      for="high"
+                      class="ml-2 text-sm form-radio-label text-gray-700"
                       >High</label
                     >
                   </div>
                 </div>
               </div>
 
+              <div id="formStatus" class="hidden">
+                <!-- Status messages will be shown here -->
+              </div>
+
               <div>
                 <button
                   type="submit"
-                  class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-500 text-white font-bold rounded-lg shadow-md hover:from-blue-700 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
+                  id="submitBtn"
+                  class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-500 text-white font-bold rounded-lg shadow-md hover:from-blue-700 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 submit-button"
                 >
                   Submit Request
                 </button>
@@ -918,5 +1025,143 @@
     <%- include('partials/footer.ejs') %>
 
     <script src="/js/navbar.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("helpRequestForm");
+        const messageTextarea = document.getElementById("message");
+        const messageLength = document.getElementById("messageLength");
+        const formStatus = document.getElementById("formStatus");
+        const submitBtn = document.getElementById("submitBtn");
+        const requestTypeSelect = document.getElementById("request_type");
+
+        // Set initial char count
+        if (messageTextarea.value.length > 0) {
+          messageLength.textContent = messageTextarea.value.length;
+        }
+
+        // Remove the "text-gray-400" class when an option is selected
+        requestTypeSelect.addEventListener("change", function () {
+          if (this.value !== "") {
+            this.classList.remove("text-gray-400");
+            this.classList.add("text-gray-700");
+          }
+        });
+
+        // Update character count for message
+        messageTextarea.addEventListener("input", function () {
+          const length = this.value.length;
+          messageLength.textContent = length;
+          if (length > 500) {
+            this.value = this.value.substring(0, 500);
+            messageLength.textContent = 500;
+          }
+        });
+
+        // Form submission handler
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          // Validate form
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          // Show the form status element
+          formStatus.classList.remove("hidden");
+          formStatus.className =
+            "p-4 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg";
+          formStatus.innerHTML = `
+            <div class="flex items-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing your request...
+            </div>
+          `;
+
+          // Disable submit button and show loading state
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Submitting...
+          `;
+
+          try {
+            const formData = new FormData(form);
+
+            // Convert FormData to a plain object
+            const formDataObj = {};
+            formData.forEach((value, key) => {
+              formDataObj[key] = value;
+            });
+
+            // Log the form data before sending
+            console.log("Sending form data:", formDataObj);
+
+            const response = await fetch("/submit-help-request", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formDataObj),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              // Show success message
+              formStatus.className =
+                "p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg";
+              formStatus.innerHTML = `
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  ${result.message}
+                </div>
+              `;
+              form.reset();
+              messageLength.textContent = "0";
+
+              // Reset the select color
+              requestTypeSelect.classList.add("text-gray-400");
+              requestTypeSelect.classList.remove("text-gray-700");
+
+              // Scroll to the status message
+              formStatus.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            } else {
+              throw new Error(result.message || "Failed to submit request");
+            }
+          } catch (error) {
+            // Show error message
+            formStatus.className =
+              "p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg";
+            formStatus.innerHTML = `
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                ${error.message}
+              </div>
+            `;
+
+            // Scroll to the status message
+            formStatus.scrollIntoView({ behavior: "smooth", block: "center" });
+          } finally {
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Request";
+          }
+        });
+      });
+    </script>
   </body>
 </html>

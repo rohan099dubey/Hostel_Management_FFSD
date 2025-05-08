@@ -26,6 +26,7 @@ const Announcement = require("./models/announcement.js");
 const { MenuItems } = require("./models/menu.js");
 const ChatRoom = require("./models/chatroom");
 const Transit = require("./models/transit");
+const OTP = require("./models/otp.js");
 
 // Import the dedicated Feedback model from models/feedback.js
 const Feedback = require("./models/feedback");
@@ -125,6 +126,178 @@ app.get("/signup", (req, res) => {
   res.render("signup.ejs");
 });
 
+// OTP generation endpoint
+app.post("/auth/generate-otp", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    // Validate email format (@iiits.in)
+    if (!email.endsWith("@iiits.in")) {
+      return res.status(400).json({ message: "Email must be a valid @iiits.in address." });
+    }
+
+    // Check if email is already registered
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists with this email" });
+    }
+
+    // Generate a 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save OTP to database (replace existing if any)
+    await OTP.findOneAndDelete({ email });
+    await OTP.create({ email, otp });
+
+    // Set up email transporter
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+
+    // Email content
+    const mailOptions = {
+      from: `"Hostelia - IIIT Sri City" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Email Verification OTP for Hostelia",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e4e4e4; border-radius: 5px;">
+          <h2 style="color: #4f46e5;">Hostelia - Email Verification</h2>
+          <p>Hello,</p>
+          <p>Your One-Time Password (OTP) for email verification is:</p>
+          <div style="background-color: #f3f4f6; padding: 10px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 20px 0;">
+            ${otp}
+          </div>
+          <p>This OTP is valid for 10 minutes.</p>
+          <p>If you did not request this OTP, please ignore this email.</p>
+          <p>Best regards,<br>Hostelia Team</p>
+        </div>
+      `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent to your email address"
+    });
+
+  } catch (error) {
+    console.error("Error generating OTP:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error generating OTP",
+      error: error.message
+    });
+  }
+});
+
+// OTP verification endpoint
+app.post("/auth/verify-otp", async (req, res) => {
+  try {
+    const { email, otp, userData } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required" });
+    }
+
+    // Find the OTP record
+    const otpRecord = await OTP.findOne({ email });
+
+    if (!otpRecord) {
+      return res.status(400).json({ message: "OTP expired or not found. Please request a new one." });
+    }
+
+    // Check if OTP matches
+    if (otpRecord.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP. Please try again." });
+    }
+
+    // OTP is valid - delete it after verification
+    await OTP.findOneAndDelete({ email });
+
+    // If userData is provided, create the user account
+    if (userData) {
+      const { name, rollNo, hostel, roomNo, year, password } = userData;
+
+      // Validate required fields
+      if (!name || !rollNo || !hostel || !roomNo || !year || !password) {
+        return res.status(400).json({ message: "All fields are required." });
+      }
+
+      // Validate roll number format (3 digits)
+      if (!/^[0-9]{3}$/.test(rollNo)) {
+        return res.status(400).json({ message: "Roll number must be exactly 3 digits." });
+      }
+
+      // Check for existing user
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "User already exists with this email" });
+      }
+
+      // Create new user
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const newUser = await User.create({
+        name,
+        rollNo,
+        email,
+        hostel,
+        roomNo,
+        year,
+        password: hashedPassword,
+        role: "student",
+      });
+
+      // Generate token and set cookies
+      generateToken(newUser._id, res);
+      res.cookie("userid", newUser._id);
+      res.cookie("role", newUser.role);
+
+      return res.status(200).json({
+        success: true,
+        message: "Email verified and account created successfully",
+        verified: true,
+        user: {
+          userId: newUser._id,
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role,
+        }
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      verified: true
+    });
+
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error verifying OTP",
+      error: error.message
+    });
+  }
+});
+
 //routes for login and signup
 //signup
 const signup = async (req, res) => {
@@ -134,25 +307,31 @@ const signup = async (req, res) => {
     const { name, rollNo, email, hostel, roomNo, year, password } = req.body;
 
     // Validate required fields
-    if (
-      !name ||
-      !rollNo ||
-      !email ||
-      !hostel ||
-      !roomNo ||
-      !year ||
-      !password
-    ) {
+    if (!name || !rollNo || !email || !hostel || !roomNo || !year || !password) {
       return res.status(400).json({ message: "All fields are required." });
+    }
+
+    // Validate roll number format (3 digits)
+    if (!/^[0-9]{3}$/.test(rollNo)) {
+      return res.status(400).json({ message: "Roll number must be exactly 3 digits." });
+    }
+
+    // Validate email format (@iiits.in)
+    if (!email.endsWith("@iiits.in")) {
+      return res.status(400).json({ message: "Email must be a valid @iiits.in address." });
+    }
+
+    // Check if email is verified
+    const otpRecord = await OTP.findOne({ email });
+    if (otpRecord) {
+      return res.status(400).json({ message: "Please verify your email before signing up." });
     }
 
     // Check for existing user
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "User already exists with this email" });
+      return res.status(400).json({ message: "User already exists with this email" });
     }
 
     // Create new user
@@ -1510,242 +1689,194 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
   }
 });
 
-// Email API endpoints
-app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
+// Update fee status route
+app.post("/services/users/update-fee-status", authMiddleware, async (req, res) => {
   try {
-    const { role, userid } = req.cookies;
+    const { role } = req.cookies;
+    const { studentId, feeType, status } = req.body;
 
-    // Only admin and warden can send email reminders
+    // Only admin and warden can update fee status
     if (role !== 'admin' && role !== 'warden') {
-      return res.status(403).json({ success: false, message: 'Unauthorized' });
+      return res.status(403).json({ message: "Unauthorized" });
     }
 
-    const { studentId, emailType, notes } = req.body;
+    // Validate input
+    if (!studentId || !feeType || !status) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
-    // Find the student
+    if (!['hostelFees', 'messFees'].includes(feeType)) {
+      return res.status(400).json({ message: "Invalid fee type" });
+    }
+
+    if (!['paid', 'unpaid'].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    // Find and update the student
     const student = await User.findById(studentId);
-
     if (!student) {
-      return res.status(404).json({ success: false, message: 'Student not found' });
+      return res.status(404).json({ message: "Student not found" });
     }
 
-    // Get sender info
-    const sender = await User.findById(userid);
-
-    // Prepare email content based on email type
-    let emailSubject, emailContent;
-
-    if (emailType === 'hostelFee' || emailType === 'both') {
-      emailSubject = 'Reminder: Hostel Fee Payment Due';
-      emailContent = `<p>Dear ${student.name},</p>
-      <p>This is a friendly reminder that your hostel fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-      ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
-      <p>If you have already made the payment, please ignore this email.</p>
-      <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
-    }
-
-    if (emailType === 'messFee' || emailType === 'both') {
-      // If already set for hostelFee, add to the content
-      if (emailSubject) {
-        emailSubject = 'Reminder: Hostel and Mess Fee Payments Due';
-        emailContent = `<p>Dear ${student.name},</p>
-        <p>This is a friendly reminder that your hostel and mess fee payments are due. Please make the payments as soon as possible to avoid any inconvenience.</p>
-        ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
-        <p>If you have already made the payments, please ignore this email.</p>
-        <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
-      } else {
-        emailSubject = 'Reminder: Mess Fee Payment Due';
-        emailContent = `<p>Dear ${student.name},</p>
-        <p>This is a friendly reminder that your mess fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-        ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
-        <p>If you have already made the payment, please ignore this email.</p>
-        <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
-      }
-    }
-
-    // Set up nodemailer transporter with proper configuration
-    try {
-      // Create a transporter with SMTP configuration
-      const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com', // Fallback to Gmail if env var not loaded
-        port: parseInt(process.env.EMAIL_PORT || '587'), // Convert to number and provide fallback
-        secure: process.env.EMAIL_SECURE === 'true', // Convert string to boolean
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-        tls: {
-          rejectUnauthorized: false // Helps in development environments
-        },
-        debug: true // Enable debug output
-      });
-
-      // Verify connection configuration
-      transporter.verify(function (error, success) {
-        if (error) {
-          console.log('SMTP connection error:', error);
-        } else {
-          console.log('SMTP server is ready to take our messages');
-        }
-      });
-
-      // Email options
-      const mailOptions = {
-        from: `"Hostelia - ${sender.name}" <${process.env.EMAIL_USER}>`,
-        to: student.email,
-        subject: emailSubject,
-        html: emailContent,
+    // Initialize feeStatus if it doesn't exist
+    if (!student.feeStatus) {
+      student.feeStatus = {
+        hostelFees: false,
+        messFees: false
       };
-
-      // Send email
-      const info = await transporter.sendMail(mailOptions);
-
-      console.log('Email sent successfully:', info.messageId);
-
-      res.status(200).json({
-        success: true,
-        message: `Fee reminder sent to ${student.name}`,
-        emailId: info.messageId
-      });
-    } catch (emailError) {
-      console.error('Error sending email:', emailError);
-      res.status(500).json({
-        success: false,
-        message: 'Error sending email: ' + emailError.message,
-      });
     }
+
+    // Update the fee status
+    student.feeStatus[feeType] = status === 'paid';
+    await student.save();
+
+    res.status(200).json({
+      success: true,
+      message: `${feeType === 'hostelFees' ? 'Hostel' : 'Mess'} fee status updated successfully`,
+      student: {
+        id: student._id,
+        name: student.name,
+        feeStatus: student.feeStatus
+      }
+    });
 
   } catch (error) {
-    console.error('Error in fee reminder process:', error);
+    console.error("Error updating fee status:", error);
     res.status(500).json({
       success: false,
-      message: 'Error processing fee reminder',
-      error: error.message,
+      message: "Error updating fee status",
+      error: error.message
     });
   }
 });
 
-// Send reminders to multiple students
-app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
+// Help request form submission route
+app.post("/submit-help-request", async (req, res) => {
   try {
-    const { role, userid } = req.cookies;
+    console.log("Received form data:", req.body);
 
-    // Only admin and warden can send email reminders
-    if (role !== 'admin' && role !== 'warden') {
-      return res.status(403).json({ success: false, message: 'Unauthorized' });
+    // Extract data from request body
+    const { name, room, email, phone, request_type, message, urgency } = req.body;
+
+    console.log("Extracted values:", { name, room, email, phone, request_type, message, urgency });
+
+    // Validate required fields
+    if (!name || !room || !email || !phone || !request_type || !message || !urgency) {
+      console.log("Missing fields:", {
+        name: !name ? "missing" : "present",
+        room: !room ? "missing" : "present",
+        email: !email ? "missing" : "present",
+        phone: !phone ? "missing" : "present",
+        request_type: !request_type ? "missing" : "present",
+        message: !message ? "missing" : "present",
+        urgency: !urgency ? "missing" : "present"
+      });
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    const { studentIds, emailType, notes } = req.body;
-
-    if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
-      return res.status(400).json({ success: false, message: 'No students specified' });
+    // Validate email format
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
     }
 
-    // Get sender info
-    const sender = await User.findById(userid);
+    // Validate phone number format (10 digits)
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({ message: "Invalid phone number format" });
+    }
 
-    // Find all specified students
-    const students = await User.find({ _id: { $in: studentIds } });
+    // Find all admin users
+    const adminUsers = await User.find({ role: "admin" });
 
-    if (students.length === 0) {
-      return res.status(404).json({ success: false, message: 'No students found' });
+    if (adminUsers.length === 0) {
+      console.warn("No admin users found in the system");
+      return res.status(500).json({
+        success: false,
+        message: "Unable to process request. No admin users found in the system."
+      });
     }
 
     // Set up nodemailer transporter
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com', // Fallback to Gmail if env var not loaded
-      port: parseInt(process.env.EMAIL_PORT || '587'), // Convert to number and provide fallback
-      secure: process.env.EMAIL_SECURE === 'true', // Convert string to boolean
+      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: process.env.EMAIL_SECURE === 'true',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false // Helps in development environments
-      },
-      debug: true // Enable debug output
+        rejectUnauthorized: false
+      }
     });
 
-    // Track successes and failures
-    const results = {
-      success: [],
-      failed: [],
+    // Send email to all admin users
+    const adminEmails = adminUsers.map(admin => admin.email);
+
+    // Prepare email content for admins
+    const adminMailOptions = {
+      from: `"Hostelia Help Request" <${process.env.EMAIL_USER}>`,
+      to: adminEmails.join(", "), // Send to all admin emails
+      subject: `New Help Request: ${request_type} (${urgency} Priority)`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e4e4e4; border-radius: 5px;">
+          <h2 style="color: #4f46e5;">New Help Request</h2>
+          <p><strong>Request Type:</strong> ${request_type}</p>
+          <p><strong>Priority:</strong> ${urgency}</p>
+          <hr style="border: 1px solid #e4e4e4; margin: 20px 0;">
+          <h3 style="color: #4f46e5;">Requester Details</h3>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Room:</strong> ${room}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <hr style="border: 1px solid #e4e4e4; margin: 20px 0;">
+          <h3 style="color: #4f46e5;">Message</h3>
+          <p style="background-color: #f9fafb; padding: 15px; border-radius: 5px;">${message}</p>
+          <hr style="border: 1px solid #e4e4e4; margin: 20px 0;">
+          <p style="color: #6b7280; font-size: 0.875rem;">This is an automated message from the Hostelia Help Request system.</p>
+        </div>
+      `
     };
 
-    // Send emails to each student
-    for (const student of students) {
-      try {
-        // Prepare email content based on email type
-        let emailSubject, emailContent;
+    // Send email to all admins
+    await transporter.sendMail(adminMailOptions);
 
-        if (emailType === 'hostelFee' || emailType === 'both') {
-          emailSubject = 'Reminder: Hostel Fee Payment Due';
-          emailContent = `<p>Dear ${student.name},</p>
-          <p>This is a friendly reminder that your hostel fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-          ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
-          <p>If you have already made the payment, please ignore this email.</p>
-          <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
-        }
+    // Send confirmation email to requester
+    const confirmationMailOptions = {
+      from: `"Hostelia Help Request" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your Help Request Has Been Received",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e4e4e4; border-radius: 5px;">
+          <h2 style="color: #4f46e5;">Help Request Received</h2>
+          <p>Dear ${name},</p>
+          <p>Thank you for submitting your help request. We have received your request and will process it as soon as possible.</p>
+          <hr style="border: 1px solid #e4e4e4; margin: 20px 0;">
+          <h3 style="color: #4f46e5;">Request Details</h3>
+          <p><strong>Request Type:</strong> ${request_type}</p>
+          <p><strong>Priority:</strong> ${urgency}</p>
+          <p><strong>Room:</strong> ${room}</p>
+          <hr style="border: 1px solid #e4e4e4; margin: 20px 0;">
+          <p>We will contact you at ${email} or ${phone} if we need any additional information.</p>
+          <p>Best regards,<br>Hostelia Support Team</p>
+        </div>
+      `
+    };
 
-        if (emailType === 'messFee' || emailType === 'both') {
-          // If already set for hostelFee, add to the content
-          if (emailSubject) {
-            emailSubject = 'Reminder: Hostel and Mess Fee Payments Due';
-            emailContent = `<p>Dear ${student.name},</p>
-            <p>This is a friendly reminder that your hostel and mess fee payments are due. Please make the payments as soon as possible to avoid any inconvenience.</p>
-            ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
-            <p>If you have already made the payments, please ignore this email.</p>
-            <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
-          } else {
-            emailSubject = 'Reminder: Mess Fee Payment Due';
-            emailContent = `<p>Dear ${student.name},</p>
-            <p>This is a friendly reminder that your mess fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-            ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
-            <p>If you have already made the payment, please ignore this email.</p>
-            <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
-          }
-        }
-
-        // Email options
-        const mailOptions = {
-          from: `"Hostelia - ${sender.name}" <${process.env.EMAIL_USER}>`,
-          to: student.email,
-          subject: emailSubject,
-          html: emailContent,
-        };
-
-        // Send email
-        const info = await transporter.sendMail(mailOptions);
-
-        console.log(`Email sent to ${student.email}: ${info.messageId}`);
-        results.success.push({
-          id: student._id,
-          name: student.name,
-          email: student.email,
-          messageId: info.messageId
-        });
-      } catch (error) {
-        console.error(`Error sending email to ${student.email}:`, error);
-        results.failed.push({
-          id: student._id,
-          name: student.name,
-          email: student.email,
-          error: error.message,
-        });
-      }
-    }
+    await transporter.sendMail(confirmationMailOptions);
 
     res.status(200).json({
       success: true,
-      message: `Sent ${results.success.length} emails, failed to send ${results.failed.length} emails`,
-      results,
+      message: "Your help request has been submitted successfully. A confirmation email has been sent to your email address."
     });
+
   } catch (error) {
-    console.error('Error sending bulk fee reminders:', error);
+    console.error("Error processing help request:", error);
     res.status(500).json({
       success: false,
-      message: 'Error sending bulk fee reminders',
-      error: error.message,
+      message: "An error occurred while processing your request. Please try again later."
     });
   }
 });
