@@ -504,9 +504,9 @@
                           Details
                         </h3>
                         <button
-                          type="button"
-                          class="text-white bg-transparent hover:bg-white/20 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                           data-modal-hide="studentModal-<%= index %>"
+                          type="button"
+                          class="text-white bg-transparent hover:bg-white/20 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center close-button"
                         >
                           <svg
                             class="w-3 h-3"
@@ -673,7 +673,7 @@
                         <button
                           data-modal-hide="studentModal-<%= index %>"
                           type="button"
-                          class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-300 text-sm font-medium px-5 py-2.5 hover:text-gray-900 transition-colors shadow-sm"
+                          class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-300 text-sm font-medium px-5 py-2.5 hover:text-gray-900 transition-colors shadow-sm close-button"
                         >
                           <i class="fas fa-times mr-1"></i> Close
                         </button>
@@ -707,6 +707,9 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // Add a variable to track if fee status has been changed
+        let feeStatusChanged = false;
+
         // Filtering logic
         const studentsContainer = document.getElementById("studentsContainer");
         const studentRows = document.querySelectorAll(".student-card");
@@ -1056,6 +1059,10 @@
             const newStatus = currentStatus === "paid" ? "unpaid" : "paid";
             const feeName = feeType === "hostelFees" ? "Hostel" : "Mess";
 
+            // Get the modal index from the button's closest modal
+            const modal = this.closest('[id^="studentModal-"]');
+            const modalId = modal ? modal.id : null;
+
             try {
               const response = await fetch(
                 "/services/users/update-fee-status",
@@ -1108,6 +1115,9 @@
                 // Update the button's current status
                 this.dataset.currentStatus = newStatus;
 
+                // Set flag indicating fee status has been changed
+                feeStatusChanged = true;
+
                 // Show success message
                 Swal.fire({
                   title: "Success!",
@@ -1139,6 +1149,18 @@
                 text: error.message || "Failed to update fee status",
                 icon: "error",
               });
+            }
+          });
+        });
+
+        // Refresh the page when fee status has changed and the modal is closed
+        const closeButtons = document.querySelectorAll("[data-modal-hide]");
+        closeButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            if (feeStatusChanged) {
+              setTimeout(() => {
+                location.reload();
+              }, 300); // Small delay to allow modal closing animation
             }
           });
         });
