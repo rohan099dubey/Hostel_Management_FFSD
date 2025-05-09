@@ -1123,20 +1123,17 @@
             const modalId = modal ? modal.id : null;
 
             try {
-              const response = await fetch(
-                "/services/users/update-fee-status",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    studentId,
-                    feeType,
-                    status: newStatus,
-                  }),
-                }
-              );
+              const response = await fetch("/services/fee-status", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  studentId,
+                  feeType,
+                  status: newStatus,
+                }),
+              });
 
               const result = await response.json();
 

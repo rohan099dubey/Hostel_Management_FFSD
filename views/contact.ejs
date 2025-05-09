@@ -378,30 +378,35 @@
     </style>
   </head>
   <body
-    class="leading-normal tracking-normal text-white gradient"
+    class="leading-normal tracking-normal text-white gradient overflow-x-hidden"
     style="font-family: 'Source Sans Pro', sans-serif"
   >
     <%- include('partials/navbar.ejs', { loggedIn, user }) %>
 
-    <div class="pt-16">
+    <!-- Hero Section -->
+    <div class="pt-16 w-full overflow-x-hidden">
       <div
-        class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
+        class="container max-w-screen-lg mx-auto px-4 flex flex-col md:flex-row items-center"
       >
         <div
-          class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left"
+          class="flex flex-col w-full md:w-2/5 justify-center items-center md:items-start text-center md:text-left"
         >
           <h1
-            class="my-4 text-5xl font-bold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600"
+            class="my-4 text-2xl sm:text-3xl md:text-5xl font-bold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 w-full break-words"
           >
             Get Support & Contact Staff
           </h1>
-          <p class="leading-normal text-2xl mb-8">
+          <p
+            class="leading-normal text-base sm:text-lg md:text-2xl mb-8 w-full break-words"
+          >
             Reach out to our hostel management team or submit a help request
           </p>
         </div>
-        <div class="w-full md:w-3/5 py-6 text-center">
+        <div
+          class="w-full md:w-3/5 py-6 text-center flex justify-center items-center"
+        >
           <svg
-            class="w-3/4 md:w-1/2 z-50 mx-auto mb-6 md:mb-0"
+            class="w-40 h-40 md:w-64 md:h-64 z-50 mx-auto mb-6 md:mb-0 max-w-full h-auto"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -415,12 +420,13 @@
         </div>
       </div>
     </div>
-    <div class="relative -mt-16 md:-mt-20 lg:-mt-32">
+    <div class="relative -mt-16 md:-mt-20 lg:-mt-32 w-full overflow-x-hidden">
       <svg
         viewBox="0 0 1428 174"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
+        class="w-full h-auto"
       >
         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
           <g
@@ -454,10 +460,10 @@
         </g>
       </svg>
     </div>
-    <section class="bg-white border-b py-12">
-      <div class="container max-w-7xl mx-auto m-8">
+    <section class="bg-white border-b py-12 w-full overflow-x-hidden">
+      <div class="container max-w-screen-lg mx-auto px-4">
         <h2
-          class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800"
+          class="w-full my-2 text-4xl md:text-5xl font-bold leading-tight text-center text-gray-800"
         >
           Hostel Staff Directory
         </h2>
@@ -469,9 +475,8 @@
         <p class="text-center text-gray-600 text-lg mb-12">
           Connect with our team for any assistance you need
         </p>
-
         <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mx-auto max-w-6xl mt-16 mb-16"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 mx-auto mt-12 mb-12"
         >
           <div class="card">
             <span class="badge badge-warden">Chief Warden</span>
@@ -874,17 +879,36 @@
                     class="block text-sm font-medium form-label mb-1"
                     >Room Number</label
                   >
-                  <input type="text" id="room" name="room"
-                  pattern="[A-Za-z0-9-]+" title="Please enter a valid room
-                  number (e.g. A-101)" placeholder="<%= user && user.role ===
-                  'warden' ? 'Not applicable for Wardens' : 'e.g. A-101' %>"
-                  class="w-full px-4 py-2 border rounded-lg form-input-field
-                  focus:outline-none focus:ring-2 focus:ring-indigo-500 <%= user
-                  && user.role === 'student' && user.roomNumber ? 'bg-gray-200'
-                  : '' %>" value="<%= user && user.role === 'student' &&
-                  user.roomNumber ? user.roomNumber : '' %>" <%= user &&
-                  user.role === 'student' ? 'readonly' : '' %> <%= user &&
-                  user.role === 'warden' ? 'disabled' : '' %> />
+                  <% if (user && user.role === 'admin') { %>
+                  <input
+                    type="text"
+                    name="room"
+                    id="room"
+                    value=""
+                    class="w-full px-4 py-2 border rounded-lg form-input-field bg-gray-100 text-gray-400"
+                    placeholder="Not applicable for admins"
+                    disabled
+                  />
+                  <% } else if (user && user.role === 'warden') { %>
+                  <input
+                    type="text"
+                    name="room"
+                    id="room"
+                    value=""
+                    class="w-full px-4 py-2 border rounded-lg form-input-field bg-gray-100 text-gray-400"
+                    placeholder="Not applicable for wardens"
+                    disabled
+                  />
+                  <% } else { %>
+                  <input
+                    type="text"
+                    name="room"
+                    id="room"
+                    value="<%= user ? user.roomNumber : '' %>"
+                    class="w-full px-4 py-2 border rounded-lg form-input-field"
+                    placeholder="e.g. A-101"
+                  />
+                  <% } %>
                 </div>
               </div>
 
@@ -926,21 +950,39 @@
 
               <div>
                 <label
-                  for="hostel_number"
+                  for="hostel"
                   class="block text-sm font-medium form-label mb-1"
                   >Hostel Number</label
                 >
-                <input type="text" id="hostel_number" name="hostel_number"
-                pattern="[A-Za-z0-9-]+" title="Please enter a valid hostel
-                number" placeholder="e.g. H-5 or Block-C" class="w-full px-4
-                py-2 border rounded-lg form-input-field focus:outline-none
-                focus:ring-2 focus:ring-indigo-500 <%= (user && user.role &&
-                (user.role === 'student' || user.role === 'warden') &&
-                user.hostelNumber) ? 'bg-gray-200' : '' %>" value="<%= (user &&
-                user.role && (user.role === 'student' || user.role === 'warden')
-                && user.hostelNumber) ? user.hostelNumber : '' %>" <%= (user &&
-                user.role && (user.role === 'student' || user.role === 'warden')
-                && user.hostelNumber) ? 'readonly' : '' %> />
+                <% if (user && user.role === 'admin') { %>
+                <input
+                  type="text"
+                  name="hostel"
+                  id="hostel"
+                  value=""
+                  class="w-full px-4 py-2 border rounded-lg form-input-field bg-gray-100 text-gray-400"
+                  placeholder="Not applicable for admins"
+                  disabled
+                />
+                <% } else if (user && user.role === 'warden') { %>
+                <input
+                  type="text"
+                  name="hostel"
+                  id="hostel"
+                  value="<%= user.hostelNumber %>"
+                  class="w-full px-4 py-2 border rounded-lg form-input-field bg-gray-100"
+                  readonly
+                />
+                <% } else { %>
+                <input
+                  type="text"
+                  name="hostel"
+                  id="hostel"
+                  value="<%= user ? user.hostelNumber : '' %>"
+                  class="w-full px-4 py-2 border rounded-lg form-input-field"
+                  placeholder="e.g. H-5 or Block-C"
+                />
+                <% } %>
               </div>
 
               <div>
@@ -1121,7 +1163,7 @@
         const roomInput = document.getElementById("room");
         const emailInput = document.getElementById("email");
         const phoneInput = document.getElementById("phone");
-        const hostelNumberInput = document.getElementById("hostel_number");
+        const hostelNumberInput = document.getElementById("hostel");
 
         // Only make inputs readonly if user is logged in
         if (isLoggedIn) {
