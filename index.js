@@ -14,6 +14,7 @@ const fs = require("fs").promises;
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
+const { problemUpload, cloudinary } = require("./config/cloudinary");
 
 //Databse connection
 const { dataProblems, dataEntryExit, userData } = require("./config/data.js");
@@ -31,35 +32,6 @@ const OTP = require("./models/otp.js");
 
 // Import the dedicated Feedback model from models/feedback.js
 const Feedback = require("./models/feedback");
-
-// Multer configuration remains the same
-const storage = multer.diskStorage({
-  destination: "./public/uploads/",
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png/;
-    const extName = fileTypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
-    const mimeType = fileTypes.test(file.mimetype);
-
-    if (mimeType && extName) {
-      return cb(null, true);
-    } else {
-      cb(new Error("Images only!"));
-    }
-  },
-});
 
 // Express configuration remains the same
 app.set("view engine", "ejs");
@@ -591,7 +563,7 @@ app.get("/services/problems", authMiddleware, async (req, res) => {
 
 app.post(
   "/services/problems/add",
-  upload.single("problemImage"),
+  problemUpload.single("problemImage"),
   async (req, res) => {
     try {
       const {
@@ -602,11 +574,13 @@ app.post(
         studentId,
         hostel,
       } = req.body;
+
       if (!req.file) {
         return res.status(400).json({ message: "Image upload is required" });
       }
 
-      const problemImage = `/uploads/${req.file.filename}`; // Store image path relative to public folder
+      // Get Cloudinary image URL instead of local path
+      const problemImage = req.file.path;
 
       console.log("Received data:", req.body);
       console.log("Uploaded file:", req.file);
@@ -1379,23 +1353,22 @@ io.on("connection", (socket) => {
           userName,
           message,
           imageData, // Store the base64 image data
-          timestamp: new Date(),
+          timestamp: new Date()
         });
         await chatRoom.save();
 
         // Broadcast message to room
-        io.to(roomId).emit("newMessage", {
+        io.to(roomId).emit('newMessage', {
           userId,
           userName,
           message,
           imageData,
-          timestamp: new Date(),
+          timestamp: new Date()
         });
       } catch (error) {
-        socket.emit("error", { message: "Error sending message" });
+        socket.emit('error', { message: 'Error sending message' });
       }
-    }
-  );
+    });
 
   // Handle room deletion notification
   socket.on("chatRoomDeleted", ({ roomId, message }) => {
@@ -1627,9 +1600,8 @@ app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
       <p>This is a friendly reminder that your hostel fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
       ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
       <p>If you have already made the payment, please ignore this email.</p>
-      <p>Best regards,<br>${sender.name}<br>${
-        sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
-      }</p>`;
+      <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+        }</p>`;
     }
 
     if (emailType === "messFee" || emailType === "both") {
@@ -1640,18 +1612,16 @@ app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
         <p>This is a friendly reminder that your hostel and mess fee payments are due. Please make the payments as soon as possible to avoid any inconvenience.</p>
         ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
         <p>If you have already made the payments, please ignore this email.</p>
-        <p>Best regards,<br>${sender.name}<br>${
-          sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
-        }</p>`;
+        <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+          }</p>`;
       } else {
         emailSubject = "Reminder: Mess Fee Payment Due";
         emailContent = `<p>Dear ${student.name},</p>
         <p>This is a friendly reminder that your mess fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
         ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
         <p>If you have already made the payment, please ignore this email.</p>
-        <p>Best regards,<br>${sender.name}<br>${
-          sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
-        }</p>`;
+        <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+          }</p>`;
       }
     }
 
@@ -1779,9 +1749,8 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
           <p>This is a friendly reminder that your hostel fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
           ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
           <p>If you have already made the payment, please ignore this email.</p>
-          <p>Best regards,<br>${sender.name}<br>${
-            sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
-          }</p>`;
+          <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+            }</p>`;
         }
 
         if (emailType === "messFee" || emailType === "both") {
@@ -1792,18 +1761,16 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
             <p>This is a friendly reminder that your hostel and mess fee payments are due. Please make the payments as soon as possible to avoid any inconvenience.</p>
             ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
             <p>If you have already made the payments, please ignore this email.</p>
-            <p>Best regards,<br>${sender.name}<br>${
-              sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
-            }</p>`;
+            <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+              }</p>`;
           } else {
             emailSubject = "Reminder: Mess Fee Payment Due";
             emailContent = `<p>Dear ${student.name},</p>
             <p>This is a friendly reminder that your mess fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
             ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
             <p>If you have already made the payment, please ignore this email.</p>
-            <p>Best regards,<br>${sender.name}<br>${
-              sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
-            }</p>`;
+            <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+              }</p>`;
           }
         }
 
@@ -1898,9 +1865,8 @@ app.post(
 
       res.status(200).json({
         success: true,
-        message: `${
-          feeType === "hostelFees" ? "Hostel" : "Mess"
-        } fee status updated successfully`,
+        message: `${feeType === "hostelFees" ? "Hostel" : "Mess"
+          } fee status updated successfully`,
         student: {
           id: student._id,
           name: student.name,
