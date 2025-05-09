@@ -32,59 +32,6 @@
         scrollbar-width: none;
       }
 
-      /* Set up a container that shows 6 problems at once (2 rows x 3 columns) */
-      .overflow-x-auto {
-        overflow-x: auto;
-        max-width: calc(350px * 3 + 1.5rem * 2);
-        margin: 0 auto;
-      }
-
-      /* For two rows */
-      .grid-cols-3 > div:nth-child(n + 7) {
-        margin-top: 1.5rem;
-      }
-
-      .problem-container {
-        width: calc(
-          350px * 3 + 2rem * 5
-        ); /* 3 cards per row + padding + increased gap */
-        max-width: 100%;
-        margin: 0 auto;
-        overflow-y: auto;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        background-color: #f9fafb;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-          0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      }
-
-      /* Custom scrollbar styling */
-      .problem-container::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      .problem-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-      }
-
-      .problem-container::-webkit-scrollbar-thumb {
-        background: #d1d5db;
-        border-radius: 4px;
-      }
-
-      .problem-container::-webkit-scrollbar-thumb:hover {
-        background: #9ca3af;
-      }
-
-      /* Ensure all cards are at the same height */
-      .grid-cols-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        padding: 1rem;
-      }
-
       /* Base card styles - no transform in initial state */
       .problem-card {
         height: 100%;
@@ -461,12 +408,12 @@
 
       <div id="problem-container" class="relative mb-8">
         <div class="problem-container">
-          <div class="grid grid-cols-3 gap-8 p-4 justify-center">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-2">
             <% problems.forEach(problem => { %>
             <div
               data-modal-target="problem-modal<%= problem._id %>"
               data-modal-toggle="problem-modal<%= problem._id %>"
-              class="problem-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 w-[350px]"
+              class="problem-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 w-full"
               data-id="<%= problem._id %>"
               data-status="<%= problem.status %>"
             >
@@ -599,11 +546,28 @@
                         To Be Confirmed
                       </span>
                       <% } else if (problem.status === "Rejected") { %>
-                      <span
-                        class="px-3 py-1.5 rounded-full text-sm font-medium bg-red-100 text-red-800"
-                      >
-                        Rejected
-                      </span>
+                      <div class="p-3 bg-red-50 rounded-lg mt-2">
+                        <p class="text-red-800 font-medium flex items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 inline-block mr-1"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                          This problem was rejected by the administrator.
+                        </p>
+                        <p class="text-sm text-red-600 mt-1">
+                          Problem was rejected on <%= new
+                          Date(problem.updatedAt).toLocaleDateString() %> at <%=
+                          new Date(problem.updatedAt).toLocaleTimeString() %>
+                        </p>
+                      </div>
                       <% } %>
                       <span
                         class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-sm font-medium"

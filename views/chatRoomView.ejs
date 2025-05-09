@@ -1,348 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= room.roomName %> - Hostelia Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
     <script src="/socket.io/socket.io.js"></script>
     <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: #f8fafc;
-        }
-        .gradient {
-            background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: #f8fafc;
+      }
+      .gradient {
+        background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+      }
+      .message-container {
+        height: 16rem;
+      }
+      @media (min-width: 768px) {
         .message-container {
-            height: calc(100vh - 250px);
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #cbd5e1 #f1f5f9;
+          height: calc(100vh - 250px);
         }
-        .message-container::-webkit-scrollbar {
-            width: 6px;
+      }
+      .message-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      .message-container::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      .message-container::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 3px;
+      }
+      .message {
+        max-width: 70%;
+        margin-bottom: 1.5rem;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
-        .message-container::-webkit-scrollbar-track {
-            background: #f1f5f9;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        .message-container::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 3px;
-        }
-        .message {
-            max-width: 70%;
-            margin-bottom: 1.5rem;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .message.sent {
-            margin-left: auto;
-        }
-        .message.received {
-            margin-right: auto;
-        }
-        .main-content {
-            flex: 1;
-            padding-top: 4rem;
-        }
-        .chat-bubble {
-            position: relative;
-            border-radius: 1rem;
-            padding: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .chat-bubble::before {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-style: solid;
-        }
-        .message.sent .chat-bubble::before {
-            right: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 8px 0 8px 8px;
-            border-color: transparent transparent transparent #2563eb;
-        }
-        .message.received .chat-bubble::before {
-            left: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 8px 8px 8px 0;
-            border-color: transparent #f1f5f9 transparent transparent;
-        }
-        .input-container {
-            background: white;
-            border-top: 1px solid #e2e8f0;
-            padding: 1rem;
-            position: relative;
-        }
-        .input-container::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: 0;
-            right: 0;
-            height: 10px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-        }
+      }
+      .message.sent {
+        margin-left: auto;
+      }
+      .message.received {
+        margin-right: auto;
+      }
+      .main-content {
+        flex: 1;
+        padding-top: 4rem;
+      }
+      .chat-bubble {
+        position: relative;
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .chat-bubble::before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+      }
+      .message.sent .chat-bubble::before {
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-width: 8px 0 8px 8px;
+        border-color: transparent transparent transparent #2563eb;
+      }
+      .message.received .chat-bubble::before {
+        left: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-width: 8px 8px 8px 0;
+        border-color: transparent #f1f5f9 transparent transparent;
+      }
+      .input-container {
+        background: white;
+        border-top: 1px solid #e2e8f0;
+        padding: 1rem;
+        position: relative;
+      }
+      .input-container::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 1)
+        );
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <%- include('partials/navbar.ejs', { loggedIn }) %>
 
     <div class="main-content">
-        <div class="container mx-auto px-4 py-8">
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                <!-- Chat Room Header -->
-                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
-                                <i class="<%= room.roomIcon %> text-blue-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h1 class="text-2xl font-bold mb-1"><%= room.roomName %></h1>
-                                <p class="text-sm opacity-90"><%= room.description %></p>
-                            </div>
-                        </div>
-                        <button onclick="window.location.href='/services/chatRoom'" 
-                                class="px-5 py-2.5 bg-white bg-opacity-20 rounded-xl hover:bg-opacity-30 transition-all duration-300 flex items-center space-x-2 hover:shadow-lg">
-                            <i class="fas fa-arrow-left"></i>
-                            <span>Back to Rooms</span>
-                        </button>
-                    </div>
+      <div class="container mx-auto px-4 py-8">
+        <div
+          class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-lg md:max-w-2xl lg:max-w-4xl w-full mx-auto p-2 md:p-0"
+        >
+          <!-- Chat Room Header -->
+          <div
+            class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <div
+                  class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform"
+                >
+                  <i class="<%= room.roomIcon %> text-blue-600 text-xl"></i>
                 </div>
-
-                <!-- Messages Container -->
-                <div class="message-container p-6 bg-gray-50" id="messages">
-                    <% room.messages.forEach(message => { %>
-                        <div class="message <%= message.userId.toString() === userId ? 'sent' : 'received' %>">
-                            <div class="chat-bubble <%= message.userId.toString() === userId ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800' %>">
-                                <div class="flex items-center mb-2">
-                                    <span class="font-semibold text-sm"><%= message.userName %></span>
-                                    <span class="text-xs opacity-75 ml-2"><%= new Date(message.timestamp).toLocaleTimeString() %></span>
-                                </div>
-                                <% if (message.imageData) { %>
-                                    <div class="mb-2">
-                                        <img src="<%= message.imageData %>" class="max-w-full rounded-lg cursor-pointer" onclick="window.open(this.src, '_blank')">
-                                    </div>
-                                <% } %>
-                                <% if (message.message) { %>
-                                    <p class="text-sm leading-relaxed"><%= message.message %></p>
-                                <% } %>
-                            </div>
-                        </div>
-                    <% }); %>
+                <div>
+                  <h1 class="text-2xl font-bold mb-1"><%= room.roomName %></h1>
+                  <p class="text-sm opacity-90"><%= room.description %></p>
                 </div>
-
-                <!-- Message Input -->
-                <div class="input-container">
-                    <div class="flex items-center space-x-2">
-                        <button id="imageUploadBtn" class="p-2 text-gray-500 hover:text-blue-600 transition-colors">
-                            <i class="fas fa-image text-xl"></i>
-                        </button>
-                        <input type="file" id="imageInput" accept="image/*" class="hidden">
-                        <input type="text" 
-                               id="messageInput" 
-                               class="flex-1 p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                               placeholder="Type your message...">
-                        <button id="sendMessage" 
-                                class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center space-x-2">
-                            <i class="fas fa-paper-plane"></i>
-                            <span>Send</span>
-                        </button>
-                    </div>
-                    <div id="imagePreview" class="hidden mt-2">
-                        <div class="relative inline-block">
-                            <img id="previewImg" class="max-h-32 rounded-lg">
-                            <button id="removeImage" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+              </div>
+              <button
+                onclick="window.location.href='/services/chatRoom'"
+                class="px-5 py-2.5 bg-white bg-opacity-20 rounded-xl hover:bg-opacity-30 transition-all duration-300 flex items-center space-x-2 hover:shadow-lg"
+              >
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Rooms</span>
+              </button>
             </div>
+          </div>
+
+          <!-- Messages Container -->
+          <div class="message-container p-6 bg-gray-50" id="messages">
+            <% room.messages.forEach(message => { %>
+            <div
+              class="message <%= message.userId.toString() === userId ? 'sent' : 'received' %>"
+            >
+              <div
+                class="chat-bubble <%= message.userId.toString() === userId ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800' %>"
+              >
+                <div class="flex items-center mb-2">
+                  <span class="font-semibold text-sm"
+                    ><%= message.userName %></span
+                  >
+                  <span class="text-xs opacity-75 ml-2"
+                    ><%= new Date(message.timestamp).toLocaleTimeString()
+                    %></span
+                  >
+                </div>
+                <% if (message.imageData) { %>
+                <div class="mb-2">
+                  <img
+                    src="<%= message.imageData %>"
+                    class="max-w-full rounded-lg cursor-pointer"
+                    onclick="window.open(this.src, '_blank')"
+                  />
+                </div>
+                <% } %> <% if (message.message) { %>
+                <p class="text-sm leading-relaxed"><%= message.message %></p>
+                <% } %>
+              </div>
+            </div>
+            <% }); %>
+          </div>
+
+          <!-- Message Input -->
+          <div class="input-container">
+            <div
+              class="flex flex-col md:flex-row items-stretch gap-2 md:gap-2 w-full"
+            >
+              <button
+                id="imageUploadBtn"
+                class="p-2 text-gray-500 hover:text-blue-600 transition-colors flex-shrink-0"
+              >
+                <i class="fas fa-image text-xl"></i>
+              </button>
+              <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+                class="hidden"
+              />
+              <input
+                type="text"
+                id="messageInput"
+                class="flex-1 p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all w-full"
+                placeholder="Type your message..."
+              />
+              <button
+                id="sendMessage"
+                class="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center space-x-2 mt-2 md:mt-0"
+              >
+                <i class="fas fa-paper-plane"></i>
+                <span>Send</span>
+              </button>
+            </div>
+            <div id="imagePreview" class="hidden mt-2">
+              <div class="relative inline-block">
+                <img id="previewImg" class="max-h-32 rounded-lg" />
+                <button
+                  id="removeImage"
+                  class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <%- include('partials/footer.ejs') %>
     <script src="/js/navbar.js"></script>
 
     <script>
-        const socket = io();
-        const roomId = '<%= room._id %>';
-        const userId = '<%= userId %>';
-        const userName = '<%= userName %>';
-        const userRole = '<%= role %>';
-        let selectedImage = null;
+      const socket = io();
+      const roomId = "<%= room._id %>";
+      const userId = "<%= userId %>";
+      const userName = "<%= userName %>";
+      const userRole = "<%= role %>";
+      let selectedImage = null;
 
-        // Join room when page loads
-        socket.emit('joinRoom', { roomId, userId, role: userRole });
+      // Join room when page loads
+      socket.emit("joinRoom", { roomId, userId, role: userRole });
 
-        // Image upload handling
-        const imageUploadBtn = document.getElementById('imageUploadBtn');
-        const imageInput = document.getElementById('imageInput');
-        const imagePreview = document.getElementById('imagePreview');
-        const previewImg = document.getElementById('previewImg');
-        const removeImage = document.getElementById('removeImage');
-        const messageInput = document.getElementById('messageInput');
-        const sendMessage = document.getElementById('sendMessage');
+      // Image upload handling
+      const imageUploadBtn = document.getElementById("imageUploadBtn");
+      const imageInput = document.getElementById("imageInput");
+      const imagePreview = document.getElementById("imagePreview");
+      const previewImg = document.getElementById("previewImg");
+      const removeImage = document.getElementById("removeImage");
+      const messageInput = document.getElementById("messageInput");
+      const sendMessage = document.getElementById("sendMessage");
 
-        imageUploadBtn.addEventListener('click', () => {
-            imageInput.click();
-        });
+      imageUploadBtn.addEventListener("click", () => {
+        imageInput.click();
+      });
 
-        imageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) { // 2MB limit
-                    Swal.fire('Error', 'Image size should be less than 2MB', 'error');
-                    return;
-                }
-                selectedImage = file;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    previewImg.src = e.target.result;
-                    imagePreview.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+      imageInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (file.size > 2 * 1024 * 1024) {
+            // 2MB limit
+            Swal.fire("Error", "Image size should be less than 2MB", "error");
+            return;
+          }
+          selectedImage = file;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            imagePreview.classList.remove("hidden");
+          };
+          reader.readAsDataURL(file);
+        }
+      });
 
-        removeImage.addEventListener('click', () => {
-            selectedImage = null;
-            imageInput.value = '';
-            imagePreview.classList.add('hidden');
-            previewImg.src = '';
-        });
+      removeImage.addEventListener("click", () => {
+        selectedImage = null;
+        imageInput.value = "";
+        imagePreview.classList.add("hidden");
+        previewImg.src = "";
+      });
 
-        // Handle message sending
-        sendMessage.addEventListener('click', () => {
-            const message = messageInput.value.trim();
-            if (!message && !selectedImage) return;
+      // Handle message sending
+      sendMessage.addEventListener("click", () => {
+        const message = messageInput.value.trim();
+        if (!message && !selectedImage) return;
 
-            if (selectedImage) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    socket.emit('sendMessage', {
-                        roomId,
-                        userId,
-                        userName,
-                        message,
-                        imageData: e.target.result
-                    });
-                };
-                reader.readAsDataURL(selectedImage);
-            } else {
-                socket.emit('sendMessage', {
-                    roomId,
-                    userId,
-                    userName,
-                    message
-                });
-            }
+        if (selectedImage) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            socket.emit("sendMessage", {
+              roomId,
+              userId,
+              userName,
+              message,
+              imageData: e.target.result,
+            });
+          };
+          reader.readAsDataURL(selectedImage);
+        } else {
+          socket.emit("sendMessage", {
+            roomId,
+            userId,
+            userName,
+            message,
+          });
+        }
 
-            messageInput.value = '';
-            if (selectedImage) {
-                selectedImage = null;
-                imageInput.value = '';
-                imagePreview.classList.add('hidden');
-                previewImg.src = '';
-            }
-        });
+        messageInput.value = "";
+        if (selectedImage) {
+          selectedImage = null;
+          imageInput.value = "";
+          imagePreview.classList.add("hidden");
+          previewImg.src = "";
+        }
+      });
 
-        // Handle new messages
-        socket.on('newMessage', ({ userId: senderId, userName: senderName, message, imageData, timestamp }) => {
-            const messagesDiv = document.getElementById('messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${senderId === userId ? 'sent' : 'received'}`;
-            
-            let messageContent = `
-                <div class="chat-bubble ${senderId === userId ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}">
+      // Handle new messages
+      socket.on(
+        "newMessage",
+        ({
+          userId: senderId,
+          userName: senderName,
+          message,
+          imageData,
+          timestamp,
+        }) => {
+          const messagesDiv = document.getElementById("messages");
+          const messageDiv = document.createElement("div");
+          messageDiv.className = `message ${
+            senderId === userId ? "sent" : "received"
+          }`;
+
+          let messageContent = `
+                <div class="chat-bubble ${
+                  senderId === userId
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-800"
+                }">
                     <div class="flex items-center mb-2">
                         <span class="font-semibold text-sm">${senderName}</span>
-                        <span class="text-xs opacity-75 ml-2">${new Date(timestamp).toLocaleTimeString()}</span>
+                        <span class="text-xs opacity-75 ml-2">${new Date(
+                          timestamp
+                        ).toLocaleTimeString()}</span>
                     </div>`;
 
-            if (imageData) {
-                messageContent += `
+          if (imageData) {
+            messageContent += `
                     <div class="mb-2">
                         <img src="${imageData}" class="max-w-full rounded-lg cursor-pointer" onclick="window.open(this.src, '_blank')">
                     </div>`;
-            }
+          }
 
-            if (message) {
-                messageContent += `<p class="text-sm leading-relaxed">${message}</p>`;
-            }
+          if (message) {
+            messageContent += `<p class="text-sm leading-relaxed">${message}</p>`;
+          }
 
-            messageContent += `</div>`;
-            messageDiv.innerHTML = messageContent;
-            messagesDiv.appendChild(messageDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+          messageContent += `</div>`;
+          messageDiv.innerHTML = messageContent;
+          messagesDiv.appendChild(messageDiv);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      );
+
+      // Handle room join confirmation
+      socket.on("roomJoined", ({ roomId, roomName }) => {
+        console.log(`Joined room: ${roomName}`);
+      });
+
+      // Handle errors
+      socket.on("error", ({ message }) => {
+        Swal.fire({
+          title: "Error",
+          text: message,
+          icon: "error",
+          confirmButtonText: "OK",
+        }).then(() => {
+          window.location.href = "/services/chatRoom";
         });
+      });
 
-        // Handle room join confirmation
-        socket.on('roomJoined', ({ roomId, roomName }) => {
-            console.log(`Joined room: ${roomName}`);
-        });
+      // Handle room deletion
+      socket.on("roomDeleted", ({ roomId: deletedRoomId, message }) => {
+        if (deletedRoomId === roomId) {
+          Swal.fire({
+            title: "Chat Room Deleted",
+            text: message,
+            icon: "info",
+            confirmButtonText: "OK",
+          }).then(() => {
+            window.location.href = "/services/chatRoom";
+          });
+        }
+      });
 
-        // Handle errors
-        socket.on('error', ({ message }) => {
-            Swal.fire({
-                title: 'Error',
-                text: message,
-                icon: 'error',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.href = '/services/chatRoom';
-            });
-        });
+      // Handle user joined notification
+      socket.on("userJoined", ({ userId, roomId }) => {
+        console.log(`User ${userId} joined the room`);
+      });
 
-        // Handle room deletion
-        socket.on('roomDeleted', ({ roomId: deletedRoomId, message }) => {
-            if (deletedRoomId === roomId) {
-                Swal.fire({
-                    title: 'Chat Room Deleted',
-                    text: message,
-                    icon: 'info',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    window.location.href = '/services/chatRoom';
-                });
-            }
-        });
+      // Handle user left notification
+      socket.on("userLeft", ({ userId, roomId }) => {
+        console.log(`User ${userId} left the room`);
+      });
 
-        // Handle user joined notification
-        socket.on('userJoined', ({ userId, roomId }) => {
-            console.log(`User ${userId} joined the room`);
-        });
+      // Leave room when page is unloaded
+      window.addEventListener("beforeunload", () => {
+        socket.emit("leaveRoom", { roomId, userId });
+      });
 
-        // Handle user left notification
-        socket.on('userLeft', ({ userId, roomId }) => {
-            console.log(`User ${userId} left the room`);
-        });
-
-        // Leave room when page is unloaded
-        window.addEventListener('beforeunload', () => {
-            socket.emit('leaveRoom', { roomId, userId });
-        });
-
-        // Auto-scroll to bottom on load
-        window.addEventListener('load', () => {
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        });
+      // Auto-scroll to bottom on load
+      window.addEventListener("load", () => {
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      });
     </script>
-</body>
-</html> 
+  </body>
+</html>

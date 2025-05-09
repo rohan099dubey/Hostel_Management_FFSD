@@ -1,8 +1,8 @@
 //modules imported
 const express = require("express");
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 
 require("dotenv").config();
 const path = require("path");
@@ -13,6 +13,7 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs").promises;
 const multer = require("multer");
 const nodemailer = require("nodemailer");
+const mongoose = require("mongoose");
 
 //Databse connection
 const { dataProblems, dataEntryExit, userData } = require("./config/data.js");
@@ -112,9 +113,36 @@ app.get("/about", (req, res) => {
   res.render("about.ejs", { loggedIn: isLoggedIn });
 });
 
-app.get("/contact", (req, res) => {
+app.get("/contact", async (req, res) => {
   const isLoggedIn = Boolean(req.cookies.jwt);
-  res.render("contact.ejs", { loggedIn: isLoggedIn });
+  let userForTemplate = null;
+
+  if (isLoggedIn && req.cookies.userid) {
+    try {
+      const userId = req.cookies.userid;
+      const currentUser = await User.findById(userId)
+        .select("-password")
+        .lean();
+
+      if (currentUser) {
+        userForTemplate = {
+          name: currentUser.name,
+          email: currentUser.email,
+          role: currentUser.role,
+          roomNumber: currentUser.roomNo,
+          hostelNumber: currentUser.hostel,
+          phoneNumber: currentUser.phoneNumber || "",
+        };
+      }
+    } catch (error) {
+      console.error("Error fetching user for contact page:", error);
+    }
+  }
+
+  res.render("contact.ejs", {
+    loggedIn: isLoggedIn,
+    user: userForTemplate,
+  });
 });
 
 app.get("/login", (req, res) => {
@@ -137,13 +165,17 @@ app.post("/auth/generate-otp", async (req, res) => {
 
     // Validate email format (@iiits.in)
     if (!email.endsWith("@iiits.in")) {
-      return res.status(400).json({ message: "Email must be a valid @iiits.in address." });
+      return res
+        .status(400)
+        .json({ message: "Email must be a valid @iiits.in address." });
     }
 
     // Check if email is already registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists with this email" });
+      return res
+        .status(400)
+        .json({ message: "User already exists with this email" });
     }
 
     // Generate a 6-digit OTP
@@ -155,16 +187,16 @@ app.post("/auth/generate-otp", async (req, res) => {
 
     // Set up email transporter
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: process.env.EMAIL_SECURE === 'true',
+      host: process.env.EMAIL_HOST || "smtp.gmail.com",
+      port: parseInt(process.env.EMAIL_PORT || "587"),
+      secure: process.env.EMAIL_SECURE === "true",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
 
     // Email content
@@ -184,7 +216,7 @@ app.post("/auth/generate-otp", async (req, res) => {
           <p>If you did not request this OTP, please ignore this email.</p>
           <p>Best regards,<br>Hostelia Team</p>
         </div>
-      `
+      `,
     };
 
     // Send email
@@ -192,15 +224,14 @@ app.post("/auth/generate-otp", async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "OTP sent to your email address"
+      message: "OTP sent to your email address",
     });
-
   } catch (error) {
     console.error("Error generating OTP:", error);
     return res.status(500).json({
       success: false,
       message: "Error generating OTP",
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -218,12 +249,16 @@ app.post("/auth/verify-otp", async (req, res) => {
     const otpRecord = await OTP.findOne({ email });
 
     if (!otpRecord) {
-      return res.status(400).json({ message: "OTP expired or not found. Please request a new one." });
+      return res.status(400).json({
+        message: "OTP expired or not found. Please request a new one.",
+      });
     }
 
     // Check if OTP matches
     if (otpRecord.otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP. Please try again." });
+      return res
+        .status(400)
+        .json({ message: "Invalid OTP. Please try again." });
     }
 
     // OTP is valid - delete it after verification
@@ -240,13 +275,17 @@ app.post("/auth/verify-otp", async (req, res) => {
 
       // Validate roll number format (3 digits)
       if (!/^[0-9]{3}$/.test(rollNo)) {
-        return res.status(400).json({ message: "Roll number must be exactly 3 digits." });
+        return res
+          .status(400)
+          .json({ message: "Roll number must be exactly 3 digits." });
       }
 
       // Check for existing user
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(400).json({ message: "User already exists with this email" });
+        return res
+          .status(400)
+          .json({ message: "User already exists with this email" });
       }
 
       // Create new user
@@ -278,22 +317,21 @@ app.post("/auth/verify-otp", async (req, res) => {
           name: newUser.name,
           email: newUser.email,
           role: newUser.role,
-        }
+        },
       });
     }
 
     return res.status(200).json({
       success: true,
       message: "Email verified successfully",
-      verified: true
+      verified: true,
     });
-
   } catch (error) {
     console.error("Error verifying OTP:", error);
     return res.status(500).json({
       success: false,
       message: "Error verifying OTP",
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -307,31 +345,47 @@ const signup = async (req, res) => {
     const { name, rollNo, email, hostel, roomNo, year, password } = req.body;
 
     // Validate required fields
-    if (!name || !rollNo || !email || !hostel || !roomNo || !year || !password) {
+    if (
+      !name ||
+      !rollNo ||
+      !email ||
+      !hostel ||
+      !roomNo ||
+      !year ||
+      !password
+    ) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
     // Validate roll number format (3 digits)
     if (!/^[0-9]{3}$/.test(rollNo)) {
-      return res.status(400).json({ message: "Roll number must be exactly 3 digits." });
+      return res
+        .status(400)
+        .json({ message: "Roll number must be exactly 3 digits." });
     }
 
     // Validate email format (@iiits.in)
     if (!email.endsWith("@iiits.in")) {
-      return res.status(400).json({ message: "Email must be a valid @iiits.in address." });
+      return res
+        .status(400)
+        .json({ message: "Email must be a valid @iiits.in address." });
     }
 
     // Check if email is verified
     const otpRecord = await OTP.findOne({ email });
     if (otpRecord) {
-      return res.status(400).json({ message: "Please verify your email before signing up." });
+      return res
+        .status(400)
+        .json({ message: "Please verify your email before signing up." });
     }
 
     // Check for existing user
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists with this email" });
+      return res
+        .status(400)
+        .json({ message: "User already exists with this email" });
     }
 
     // Create new user
@@ -694,29 +748,32 @@ app.get("/services/register", authMiddleware, async (req, res) => {
 
 app.post("/services/transit", async (req, res) => {
   try {
-    const {
-      studentRollNumber,
-      purpose,
-      transitStatus,
-      studentName,
-      studentHostel,
-      studentRoomNumber,
-    } = req.body;
+    const { studentRollNumber, purpose, transitStatus } = req.body;
 
     if (!studentRollNumber || !purpose || !transitStatus) {
       return res.status(400).send("All fields are required.");
+    }
+
+    // Fetch student details from MongoDB
+    const student = await User.findOne({ rollNo: studentRollNumber });
+    if (!student) {
+      return res
+        .status(400)
+        .send(
+          "No student found for this roll number. Please enter a valid roll number and wait for details to autofill."
+        );
     }
 
     await Transit.create({
       studentRollNumber,
       purpose,
       transitStatus,
-      studentName,
-      studentHostel,
-      studentRoomNumber,
+      studentName: student.name,
+      studentHostel: student.hostel,
+      studentRoomNumber: student.roomNo,
     });
 
-    res.redirect("/services/register"); // Redirect back to the transit page
+    res.redirect("/services/register");
   } catch (error) {
     console.error("Error adding transit entry:", error);
     res.status(500).send("Internal Server Error");
@@ -801,8 +858,8 @@ app.get("/student-list", authMiddleware, async (req, res) => {
     const userId = req.cookies.userid;
 
     // Only admin and warden roles can access this page
-    if (role !== 'admin' && role !== 'warden') {
-      return res.redirect('/dashboard');
+    if (role !== "admin" && role !== "warden") {
+      return res.redirect("/dashboard");
     }
 
     const userInfo = await User.findById(userId).select("-password");
@@ -813,14 +870,14 @@ app.get("/student-list", authMiddleware, async (req, res) => {
 
     // Get students based on role
     let students;
-    if (role === 'admin') {
+    if (role === "admin") {
       // Admin can see all students
-      students = await User.find({ role: 'student' }).lean();
+      students = await User.find({ role: "student" }).lean();
     } else {
       // Warden can only see students from their hostel
       students = await User.find({
-        role: 'student',
-        hostel: userInfo.hostel
+        role: "student",
+        hostel: userInfo.hostel,
       }).lean();
     }
 
@@ -828,7 +885,7 @@ app.get("/student-list", authMiddleware, async (req, res) => {
       userInfo,
       students,
       role,
-      loggedIn: isLoggedIn
+      loggedIn: isLoggedIn,
     });
   } catch (error) {
     console.error("Error in student list route:", error);
@@ -1043,30 +1100,24 @@ app.post("/feedback", authMiddleware, async (req, res) => {
 app.get("/services/chatRoom", authMiddleware, async (req, res) => {
   try {
     const isLoggedIn = Boolean(req.cookies.jwt);
-    const { role } = req.cookies;
+    const { role, userid } = req.cookies;
 
-    // Build the query based on role and deletion status
-    let query = { deleted: { $ne: true } };
-
-    // Only apply access level filtering for students
-    // Admin and warden can see all undeleted rooms
-    if (role === 'student') {
-      query.$or = [
-        { accessLevel: 'all' },
-        { accessLevel: 'students' },
-        { accessLevel: 'admin_student' },
-        { accessLevel: 'warden_student' }
-      ];
+    // Get user info for hostel check
+    const user = await User.findById(userid);
+    if (!user) {
+      return res.redirect("/login");
     }
 
-    // Fetch chat rooms with the combined query
-    const chatRooms = await ChatRoom.find(query).sort({ createdAt: -1 });
+    // Fetch all chat rooms
+    const chatRoomsAll = await ChatRoom.find().sort({ createdAt: -1 });
 
-    // Log the query and results for debugging
-    console.log('Chat Room Query:', query);
-    console.log('Found Chat Rooms:', chatRooms.length);
-
-    res.render('chatRoom.ejs', { role, loggedIn: isLoggedIn, chatRooms });
+    // Pass all rooms to the frontend (access control handled in EJS)
+    res.render("chatRoom.ejs", {
+      role,
+      loggedIn: isLoggedIn,
+      chatRooms: chatRoomsAll,
+      userHostel: user.hostel,
+    });
   } catch (error) {
     console.error("Error loading chat rooms:", error);
     res.status(500).send("Error loading chat rooms");
@@ -1081,9 +1132,42 @@ app.post("/services/chatRoom/create", authMiddleware, async (req, res) => {
       return res.status(403).send("Unauthorized");
     }
 
-    const { roomName, roomType, description, accessLevel, roomIcon } = req.body;
+    const {
+      roomName,
+      roomType,
+      description,
+      accessLevel,
+      restrictedToHostel,
+      roomIcon,
+    } = req.body;
     if (!roomName || !roomType || !accessLevel) {
       return res.status(400).send("Missing required fields");
+    }
+
+    // Validate that hostel is selected if access level includes students
+    const includesStudents = [
+      "students",
+      "admin_student",
+      "warden_student",
+    ].includes(accessLevel);
+    if (includesStudents && !restrictedToHostel) {
+      return res
+        .status(400)
+        .send("Hostel is required for student-access chat rooms");
+    }
+
+    // Duplicate check: same accessLevel, roomType, and restrictedToHostel (if relevant)
+    const duplicateQuery = {
+      accessLevel,
+      roomType,
+      restrictedToHostel: includesStudents ? restrictedToHostel : null,
+    };
+    const existingRoom = await ChatRoom.findOne(duplicateQuery);
+    if (existingRoom) {
+      return res.status(409).json({
+        error:
+          "A chat room with the same access level, room type, and hostel (if applicable) already exists.",
+      });
     }
 
     const newRoom = await ChatRoom.create({
@@ -1091,6 +1175,7 @@ app.post("/services/chatRoom/create", authMiddleware, async (req, res) => {
       roomType,
       description,
       accessLevel,
+      restrictedToHostel: includesStudents ? restrictedToHostel : null,
       roomIcon: roomIcon || "fas fa-comments", // default icon if not provided
       createdBy: userid,
     });
@@ -1107,62 +1192,66 @@ app.delete(
   authMiddleware,
   async (req, res) => {
     try {
-      const { role } = req.cookies;
+      const { role, userid } = req.cookies;
       if (role !== "admin" && role !== "warden") {
-        return res.status(403).send("Unauthorized");
+        console.log("Unauthorized delete attempt:", {
+          userId: userid,
+          role,
+          roomId: req.params.id,
+        });
+        return res.status(403).json({ error: "Unauthorized" });
       }
 
       const { id } = req.params;
-
-      // First verify the room exists and is not already deleted
-      const room = await ChatRoom.findOne({ _id: id, deleted: { $ne: true } });
-      if (!room) {
-        return res.status(404).send('Chat room not found or already deleted');
+      if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        console.log("Invalid room ID format:", id);
+        return res.status(400).json({ error: "Invalid room ID format" });
       }
 
-      // Mark as deleted
-      const deletedRoom = await ChatRoom.findByIdAndUpdate(
-        id,
-        {
-          deleted: true,
-          deletedAt: new Date(),
-          deletedBy: req.cookies.userid // Track who deleted the room
-        },
-        { new: true }
-      );
+      // Hard delete the chat room
+      const deletedRoom = await ChatRoom.findByIdAndDelete(id);
+      if (!deletedRoom) {
+        console.log("Chat room not found for deletion:", id);
+        return res
+          .status(404)
+          .json({ error: "Chat room not found or already deleted" });
+      }
 
       // Log the deletion for debugging
-      console.log('Chat Room Deleted:', {
+      console.log("Chat Room Deleted:", {
         roomId: id,
         roomName: deletedRoom.roomName,
         deletedBy: req.cookies.userid,
-        deletedAt: deletedRoom.deletedAt
+        deletedByRole: role,
+        deletedAt: new Date(),
       });
 
       // Notify all connected clients about the room deletion
-      io.emit('chatRoomDeleted', {
+      io.emit("chatRoomDeleted", {
         roomId: id,
-        message: 'Chat room has been deleted by an administrator'
+        message: "Chat room has been deleted by an administrator",
       });
 
-      res.status(200).send('Deleted Successfully');
+      return res
+        .status(200)
+        .json({ success: true, message: "Deleted Successfully" });
     } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal server error');
+      console.error("Error deleting chat room:", err);
+      return res
+        .status(500)
+        .json({ error: "Internal server error", details: err.message });
     }
-  });
-
-
-
+  }
+);
 
 // Add a route to verify chat room status (for debugging)
-app.get('/services/chatRoom/status/:id', authMiddleware, async (req, res) => {
+app.get("/services/chatRoom/status/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const room = await ChatRoom.findById(id);
 
     if (!room) {
-      return res.status(404).json({ message: 'Chat room not found' });
+      return res.status(404).json({ message: "Chat room not found" });
     }
 
     res.json({
@@ -1171,156 +1260,212 @@ app.get('/services/chatRoom/status/:id', authMiddleware, async (req, res) => {
       deleted: room.deleted,
       deletedAt: room.deletedAt,
       accessLevel: room.accessLevel,
-      createdAt: room.createdAt
+      createdAt: room.createdAt,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal server error');
+    res.status(500).send("Internal server error");
   }
 });
 
 // Chat Room View Route
-app.get('/services/chatRoom/:roomId', async (req, res) => {
+app.get("/services/chatRoom/:roomId", async (req, res) => {
   try {
     const roomId = req.params.roomId;
     const userId = req.cookies.userid;
     const role = req.cookies.role;
 
     if (!userId) {
-      return res.redirect('/login');
+      return res.redirect("/login");
     }
 
     const room = await ChatRoom.findById(roomId);
     if (!room) {
-      return res.status(404).render('error', { message: 'Chat room not found' });
-    }
-
-    // Check access level
-    const hasAccess = checkRoomAccess(room.accessLevel, role);
-    if (!hasAccess) {
-      return res.status(403).render('error', { message: 'You do not have access to this chat room' });
+      return res
+        .status(404)
+        .render("error", { message: "Chat room not found" });
     }
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.redirect('/login');
+      return res.redirect("/login");
     }
 
-    res.render('chatRoomView', {
+    // Check access level including hostel restriction
+    const hasAccess = checkRoomAccess(
+      room.accessLevel,
+      role,
+      user.hostel,
+      room.restrictedToHostel
+    );
+    if (!hasAccess) {
+      return res.status(403).render("error", {
+        message: "You do not have access to this chat room",
+      });
+    }
+
+    res.render("chatRoomView", {
       room,
       userId,
       userName: user.name,
       role,
-      loggedIn: true
+      loggedIn: true,
     });
   } catch (error) {
-    console.error('Error accessing chat room:', error);
-    res.status(500).render('error', { message: 'Error accessing chat room' });
+    console.error("Error accessing chat room:", error);
+    res.status(500).render("error", { message: "Error accessing chat room" });
   }
 });
 
 // Socket.IO connection handling
-io.on('connection', (socket) => {
-  console.log('A user connected');
+io.on("connection", (socket) => {
+  console.log("A user connected");
 
   // Join a chat room
-  socket.on('joinRoom', async ({ roomId, userId, role }) => {
+  socket.on("joinRoom", async ({ roomId, userId, role }) => {
     try {
       const chatRoom = await ChatRoom.findById(roomId);
       if (!chatRoom) {
-        socket.emit('error', { message: 'Chat room not found' });
+        socket.emit("error", { message: "Chat room not found" });
         return;
       }
 
-      // Check access level
-      const hasAccess = checkRoomAccess(chatRoom.accessLevel, role);
+      // Get user info for hostel check
+      const user = await User.findById(userId);
+      if (!user) {
+        socket.emit("error", { message: "User not found" });
+        return;
+      }
+
+      // Check access level including hostel restriction
+      const hasAccess = checkRoomAccess(
+        chatRoom.accessLevel,
+        role,
+        user.hostel,
+        chatRoom.restrictedToHostel
+      );
       if (!hasAccess) {
-        socket.emit('error', { message: 'You do not have access to this chat room' });
+        socket.emit("error", {
+          message: "You do not have access to this chat room",
+        });
         return;
       }
 
       // Join the room
       socket.join(roomId);
-      socket.emit('roomJoined', { roomId, roomName: chatRoom.roomName });
+      socket.emit("roomJoined", { roomId, roomName: chatRoom.roomName });
 
       // Notify others
-      socket.to(roomId).emit('userJoined', { userId, roomId });
+      socket.to(roomId).emit("userJoined", { userId, roomId });
     } catch (error) {
-      socket.emit('error', { message: 'Error joining room' });
+      socket.emit("error", { message: "Error joining room" });
     }
   });
 
   // Handle chat messages
-  socket.on('sendMessage', async ({ roomId, userId, message, imageData, userName }) => {
-    try {
-      const chatRoom = await ChatRoom.findById(roomId);
-      if (!chatRoom) {
-        socket.emit('error', { message: 'Chat room not found' });
-        return;
+  socket.on(
+    "sendMessage",
+    async ({ roomId, userId, message, imageData, userName }) => {
+      try {
+        const chatRoom = await ChatRoom.findById(roomId);
+        if (!chatRoom) {
+          socket.emit("error", { message: "Chat room not found" });
+          return;
+        }
+
+        // Save message to database
+        chatRoom.messages.push({
+          userId,
+          userName,
+          message,
+          imageData, // Store the base64 image data
+          timestamp: new Date(),
+        });
+        await chatRoom.save();
+
+        // Broadcast message to room
+        io.to(roomId).emit("newMessage", {
+          userId,
+          userName,
+          message,
+          imageData,
+          timestamp: new Date(),
+        });
+      } catch (error) {
+        socket.emit("error", { message: "Error sending message" });
       }
-
-      // Save message to database
-      chatRoom.messages.push({
-        userId,
-        userName,
-        message,
-        imageData, // Store the base64 image data
-        timestamp: new Date()
-      });
-      await chatRoom.save();
-
-      // Broadcast message to room
-      io.to(roomId).emit('newMessage', {
-        userId,
-        userName,
-        message,
-        imageData,
-        timestamp: new Date()
-      });
-    } catch (error) {
-      socket.emit('error', { message: 'Error sending message' });
     }
-  });
+  );
 
   // Handle room deletion notification
-  socket.on('chatRoomDeleted', ({ roomId, message }) => {
+  socket.on("chatRoomDeleted", ({ roomId, message }) => {
     // Leave the room if user is in it
     socket.leave(roomId);
     // Notify the user about the deletion
-    socket.emit('roomDeleted', { roomId, message });
+    socket.emit("roomDeleted", { roomId, message });
   });
 
   // Leave room
-  socket.on('leaveRoom', ({ roomId, userId }) => {
+  socket.on("leaveRoom", ({ roomId, userId }) => {
     socket.leave(roomId);
-    socket.to(roomId).emit('userLeft', { userId, roomId });
+    socket.to(roomId).emit("userLeft", { userId, roomId });
   });
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
 
 // Helper function to check room access
-function checkRoomAccess(accessLevel, userRole) {
-  switch (accessLevel) {
-    case 'all':
-      return true;
-    case 'students':
-      return userRole === 'student';
-    case 'wardens':
-      return userRole === 'warden';
-    case 'admins':
-      return userRole === 'admin';
-    case 'admin_warden':
-      return userRole === 'admin' || userRole === 'warden';
-    case 'admin_student':
-      return userRole === 'admin' || userRole === 'student';
-    case 'warden_student':
-      return userRole === 'warden' || userRole === 'student';
-    default:
-      return false;
+function checkRoomAccess(accessLevel, userRole, userHostel, restrictedHostel) {
+  // Admins always have access
+  if (userRole === "admin") {
+    return true;
   }
+
+  // Wardens: Only access student/warden chat rooms for their own hostel
+  if (userRole === "warden") {
+    const allowsWardens = [
+      "wardens",
+      "admin_warden",
+      "warden_student",
+      "admin_student",
+    ].includes(accessLevel);
+    // If access level includes students, enforce hostel restriction
+    const includesStudents = [
+      "students",
+      "admin_student",
+      "warden_student",
+    ].includes(accessLevel);
+    if (includesStudents) {
+      if (restrictedHostel && restrictedHostel !== userHostel) {
+        return false;
+      }
+      return true;
+    }
+    // Otherwise, wardens can access warden/admin_warden rooms
+    return allowsWardens;
+  }
+
+  // For students, check both access level and hostel restriction
+  if (userRole === "student") {
+    const allowsStudents = [
+      "students",
+      "admin_student",
+      "warden_student",
+      "all",
+    ].includes(accessLevel);
+    if (!allowsStudents) {
+      return false;
+    }
+    if (restrictedHostel && restrictedHostel !== userHostel) {
+      return false;
+    }
+    return true;
+  }
+
+  // Default deny for unknown roles
+  return false;
 }
 
 app.get("/services/users/by-roll/:rollNo", async (req, res) => {
@@ -1455,8 +1600,8 @@ app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
     const { role, userid } = req.cookies;
 
     // Only admin and warden can send email reminders
-    if (role !== 'admin' && role !== 'warden') {
-      return res.status(403).json({ success: false, message: 'Unauthorized' });
+    if (role !== "admin" && role !== "warden") {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
     }
 
     const { studentId, emailType, notes } = req.body;
@@ -1465,7 +1610,9 @@ app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
     const student = await User.findById(studentId);
 
     if (!student) {
-      return res.status(404).json({ success: false, message: 'Student not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
 
     // Get sender info
@@ -1474,31 +1621,37 @@ app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
     // Prepare email content based on email type
     let emailSubject, emailContent;
 
-    if (emailType === 'hostelFee' || emailType === 'both') {
-      emailSubject = 'Reminder: Hostel Fee Payment Due';
+    if (emailType === "hostelFee" || emailType === "both") {
+      emailSubject = "Reminder: Hostel Fee Payment Due";
       emailContent = `<p>Dear ${student.name},</p>
       <p>This is a friendly reminder that your hostel fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-      ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
+      ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
       <p>If you have already made the payment, please ignore this email.</p>
-      <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
+      <p>Best regards,<br>${sender.name}<br>${
+        sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+      }</p>`;
     }
 
-    if (emailType === 'messFee' || emailType === 'both') {
+    if (emailType === "messFee" || emailType === "both") {
       // If already set for hostelFee, add to the content
       if (emailSubject) {
-        emailSubject = 'Reminder: Hostel and Mess Fee Payments Due';
+        emailSubject = "Reminder: Hostel and Mess Fee Payments Due";
         emailContent = `<p>Dear ${student.name},</p>
         <p>This is a friendly reminder that your hostel and mess fee payments are due. Please make the payments as soon as possible to avoid any inconvenience.</p>
-        ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
+        ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
         <p>If you have already made the payments, please ignore this email.</p>
-        <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
+        <p>Best regards,<br>${sender.name}<br>${
+          sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+        }</p>`;
       } else {
-        emailSubject = 'Reminder: Mess Fee Payment Due';
+        emailSubject = "Reminder: Mess Fee Payment Due";
         emailContent = `<p>Dear ${student.name},</p>
         <p>This is a friendly reminder that your mess fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-        ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
+        ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
         <p>If you have already made the payment, please ignore this email.</p>
-        <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
+        <p>Best regards,<br>${sender.name}<br>${
+          sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+        }</p>`;
       }
     }
 
@@ -1506,25 +1659,25 @@ app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
     try {
       // Create a transporter with SMTP configuration
       const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com', // Fallback to Gmail if env var not loaded
-        port: parseInt(process.env.EMAIL_PORT || '587'), // Convert to number and provide fallback
-        secure: process.env.EMAIL_SECURE === 'true', // Convert string to boolean
+        host: process.env.EMAIL_HOST || "smtp.gmail.com", // Fallback to Gmail if env var not loaded
+        port: parseInt(process.env.EMAIL_PORT || "587"), // Convert to number and provide fallback
+        secure: process.env.EMAIL_SECURE === "true", // Convert string to boolean
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
         tls: {
-          rejectUnauthorized: false // Helps in development environments
+          rejectUnauthorized: false, // Helps in development environments
         },
-        debug: true // Enable debug output
+        debug: true, // Enable debug output
       });
 
       // Verify connection configuration
       transporter.verify(function (error, success) {
         if (error) {
-          console.log('SMTP connection error:', error);
+          console.log("SMTP connection error:", error);
         } else {
-          console.log('SMTP server is ready to take our messages');
+          console.log("SMTP server is ready to take our messages");
         }
       });
 
@@ -1539,26 +1692,25 @@ app.post("/send-fee-reminder", authMiddleware, async (req, res) => {
       // Send email
       const info = await transporter.sendMail(mailOptions);
 
-      console.log('Email sent successfully:', info.messageId);
+      console.log("Email sent successfully:", info.messageId);
 
       res.status(200).json({
         success: true,
         message: `Fee reminder sent to ${student.name}`,
-        emailId: info.messageId
+        emailId: info.messageId,
       });
     } catch (emailError) {
-      console.error('Error sending email:', emailError);
+      console.error("Error sending email:", emailError);
       res.status(500).json({
         success: false,
-        message: 'Error sending email: ' + emailError.message,
+        message: "Error sending email: " + emailError.message,
       });
     }
-
   } catch (error) {
-    console.error('Error in fee reminder process:', error);
+    console.error("Error in fee reminder process:", error);
     res.status(500).json({
       success: false,
-      message: 'Error processing fee reminder',
+      message: "Error processing fee reminder",
       error: error.message,
     });
   }
@@ -1570,14 +1722,16 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
     const { role, userid } = req.cookies;
 
     // Only admin and warden can send email reminders
-    if (role !== 'admin' && role !== 'warden') {
-      return res.status(403).json({ success: false, message: 'Unauthorized' });
+    if (role !== "admin" && role !== "warden") {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
     }
 
     const { studentIds, emailType, notes } = req.body;
 
     if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
-      return res.status(400).json({ success: false, message: 'No students specified' });
+      return res
+        .status(400)
+        .json({ success: false, message: "No students specified" });
     }
 
     // Get sender info
@@ -1587,22 +1741,24 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
     const students = await User.find({ _id: { $in: studentIds } });
 
     if (students.length === 0) {
-      return res.status(404).json({ success: false, message: 'No students found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "No students found" });
     }
 
     // Set up nodemailer transporter
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com', // Fallback to Gmail if env var not loaded
-      port: parseInt(process.env.EMAIL_PORT || '587'), // Convert to number and provide fallback
-      secure: process.env.EMAIL_SECURE === 'true', // Convert string to boolean
+      host: process.env.EMAIL_HOST || "smtp.gmail.com", // Fallback to Gmail if env var not loaded
+      port: parseInt(process.env.EMAIL_PORT || "587"), // Convert to number and provide fallback
+      secure: process.env.EMAIL_SECURE === "true", // Convert string to boolean
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false // Helps in development environments
+        rejectUnauthorized: false, // Helps in development environments
       },
-      debug: true // Enable debug output
+      debug: true, // Enable debug output
     });
 
     // Track successes and failures
@@ -1617,31 +1773,37 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
         // Prepare email content based on email type
         let emailSubject, emailContent;
 
-        if (emailType === 'hostelFee' || emailType === 'both') {
-          emailSubject = 'Reminder: Hostel Fee Payment Due';
+        if (emailType === "hostelFee" || emailType === "both") {
+          emailSubject = "Reminder: Hostel Fee Payment Due";
           emailContent = `<p>Dear ${student.name},</p>
           <p>This is a friendly reminder that your hostel fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-          ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
+          ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
           <p>If you have already made the payment, please ignore this email.</p>
-          <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
+          <p>Best regards,<br>${sender.name}<br>${
+            sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+          }</p>`;
         }
 
-        if (emailType === 'messFee' || emailType === 'both') {
+        if (emailType === "messFee" || emailType === "both") {
           // If already set for hostelFee, add to the content
           if (emailSubject) {
-            emailSubject = 'Reminder: Hostel and Mess Fee Payments Due';
+            emailSubject = "Reminder: Hostel and Mess Fee Payments Due";
             emailContent = `<p>Dear ${student.name},</p>
             <p>This is a friendly reminder that your hostel and mess fee payments are due. Please make the payments as soon as possible to avoid any inconvenience.</p>
-            ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
+            ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
             <p>If you have already made the payments, please ignore this email.</p>
-            <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
+            <p>Best regards,<br>${sender.name}<br>${
+              sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+            }</p>`;
           } else {
-            emailSubject = 'Reminder: Mess Fee Payment Due';
+            emailSubject = "Reminder: Mess Fee Payment Due";
             emailContent = `<p>Dear ${student.name},</p>
             <p>This is a friendly reminder that your mess fee payment is due. Please make the payment as soon as possible to avoid any inconvenience.</p>
-            ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ''}
+            ${notes ? `<p><strong>Additional Notes:</strong> ${notes}</p>` : ""}
             <p>If you have already made the payment, please ignore this email.</p>
-            <p>Best regards,<br>${sender.name}<br>${sender.role.charAt(0).toUpperCase() + sender.role.slice(1)}</p>`;
+            <p>Best regards,<br>${sender.name}<br>${
+              sender.role.charAt(0).toUpperCase() + sender.role.slice(1)
+            }</p>`;
           }
         }
 
@@ -1661,7 +1823,7 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
           id: student._id,
           name: student.name,
           email: student.email,
-          messageId: info.messageId
+          messageId: info.messageId,
         });
       } catch (error) {
         console.error(`Error sending email to ${student.email}:`, error);
@@ -1680,76 +1842,81 @@ app.post("/send-bulk-fee-reminders", authMiddleware, async (req, res) => {
       results,
     });
   } catch (error) {
-    console.error('Error sending bulk fee reminders:', error);
+    console.error("Error sending bulk fee reminders:", error);
     res.status(500).json({
       success: false,
-      message: 'Error sending bulk fee reminders',
+      message: "Error sending bulk fee reminders",
       error: error.message,
     });
   }
 });
 
 // Update fee status route
-app.post("/services/users/update-fee-status", authMiddleware, async (req, res) => {
-  try {
-    const { role } = req.cookies;
-    const { studentId, feeType, status } = req.body;
+app.post(
+  "/services/users/update-fee-status",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { role } = req.cookies;
+      const { studentId, feeType, status } = req.body;
 
-    // Only admin and warden can update fee status
-    if (role !== 'admin' && role !== 'warden') {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
-
-    // Validate input
-    if (!studentId || !feeType || !status) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
-
-    if (!['hostelFees', 'messFees'].includes(feeType)) {
-      return res.status(400).json({ message: "Invalid fee type" });
-    }
-
-    if (!['paid', 'unpaid'].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
-    }
-
-    // Find and update the student
-    const student = await User.findById(studentId);
-    if (!student) {
-      return res.status(404).json({ message: "Student not found" });
-    }
-
-    // Initialize feeStatus if it doesn't exist
-    if (!student.feeStatus) {
-      student.feeStatus = {
-        hostelFees: false,
-        messFees: false
-      };
-    }
-
-    // Update the fee status
-    student.feeStatus[feeType] = status === 'paid';
-    await student.save();
-
-    res.status(200).json({
-      success: true,
-      message: `${feeType === 'hostelFees' ? 'Hostel' : 'Mess'} fee status updated successfully`,
-      student: {
-        id: student._id,
-        name: student.name,
-        feeStatus: student.feeStatus
+      // Only admin and warden can update fee status
+      if (role !== "admin" && role !== "warden") {
+        return res.status(403).json({ message: "Unauthorized" });
       }
-    });
 
-  } catch (error) {
-    console.error("Error updating fee status:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error updating fee status",
-      error: error.message
-    });
+      // Validate input
+      if (!studentId || !feeType || !status) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      if (!["hostelFees", "messFees"].includes(feeType)) {
+        return res.status(400).json({ message: "Invalid fee type" });
+      }
+
+      if (!["paid", "unpaid"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+
+      // Find and update the student
+      const student = await User.findById(studentId);
+      if (!student) {
+        return res.status(404).json({ message: "Student not found" });
+      }
+
+      // Initialize feeStatus if it doesn't exist
+      if (!student.feeStatus) {
+        student.feeStatus = {
+          hostelFees: false,
+          messFees: false,
+        };
+      }
+
+      // Update the fee status
+      student.feeStatus[feeType] = status === "paid";
+      await student.save();
+
+      res.status(200).json({
+        success: true,
+        message: `${
+          feeType === "hostelFees" ? "Hostel" : "Mess"
+        } fee status updated successfully`,
+        student: {
+          id: student._id,
+          name: student.name,
+          feeStatus: student.feeStatus,
+        },
+      });
+    } catch (error) {
+      console.error("Error updating fee status:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error updating fee status",
+        error: error.message,
+      });
+    }
   }
-});
+);
 
 // Help request form submission route
 app.post("/submit-help-request", async (req, res) => {
@@ -1757,12 +1924,29 @@ app.post("/submit-help-request", async (req, res) => {
     console.log("Received form data:", req.body);
 
     // Extract data from request body
-    const { name, room, email, phone, request_type, message, urgency } = req.body;
+    const { name, room, email, phone, request_type, message, urgency } =
+      req.body;
 
-    console.log("Extracted values:", { name, room, email, phone, request_type, message, urgency });
+    console.log("Extracted values:", {
+      name,
+      room,
+      email,
+      phone,
+      request_type,
+      message,
+      urgency,
+    });
 
     // Validate required fields
-    if (!name || !room || !email || !phone || !request_type || !message || !urgency) {
+    if (
+      !name ||
+      !room ||
+      !email ||
+      !phone ||
+      !request_type ||
+      !message ||
+      !urgency
+    ) {
       console.log("Missing fields:", {
         name: !name ? "missing" : "present",
         room: !room ? "missing" : "present",
@@ -1770,7 +1954,7 @@ app.post("/submit-help-request", async (req, res) => {
         phone: !phone ? "missing" : "present",
         request_type: !request_type ? "missing" : "present",
         message: !message ? "missing" : "present",
-        urgency: !urgency ? "missing" : "present"
+        urgency: !urgency ? "missing" : "present",
       });
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -1794,26 +1978,27 @@ app.post("/submit-help-request", async (req, res) => {
       console.warn("No admin users found in the system");
       return res.status(500).json({
         success: false,
-        message: "Unable to process request. No admin users found in the system."
+        message:
+          "Unable to process request. No admin users found in the system.",
       });
     }
 
     // Set up nodemailer transporter
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: process.env.EMAIL_SECURE === 'true',
+      host: process.env.EMAIL_HOST || "smtp.gmail.com",
+      port: parseInt(process.env.EMAIL_PORT || "587"),
+      secure: process.env.EMAIL_SECURE === "true",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
 
     // Send email to all admin users
-    const adminEmails = adminUsers.map(admin => admin.email);
+    const adminEmails = adminUsers.map((admin) => admin.email);
 
     // Prepare email content for admins
     const adminMailOptions = {
@@ -1837,7 +2022,7 @@ app.post("/submit-help-request", async (req, res) => {
           <hr style="border: 1px solid #e4e4e4; margin: 20px 0;">
           <p style="color: #6b7280; font-size: 0.875rem;">This is an automated message from the Hostelia Help Request system.</p>
         </div>
-      `
+      `,
     };
 
     // Send email to all admins
@@ -1862,29 +2047,75 @@ app.post("/submit-help-request", async (req, res) => {
           <p>We will contact you at ${email} or ${phone} if we need any additional information.</p>
           <p>Best regards,<br>Hostelia Support Team</p>
         </div>
-      `
+      `,
     };
 
     await transporter.sendMail(confirmationMailOptions);
 
     res.status(200).json({
       success: true,
-      message: "Your help request has been submitted successfully. A confirmation email has been sent to your email address."
+      message:
+        "Your help request has been submitted successfully. A confirmation email has been sent to your email address.",
     });
-
   } catch (error) {
     console.error("Error processing help request:", error);
     res.status(500).json({
       success: false,
-      message: "An error occurred while processing your request. Please try again later."
+      message:
+        "An error occurred while processing your request. Please try again later.",
     });
   }
 });
+
+// --- MIGRATION: Assign random hostel to old chat rooms with student access and no hostel restriction ---
+const assignRandomHostelToOldChatRooms = async () => {
+  const hostels = ["BH-1", "BH-2", "BH-3", "BH-4"];
+  const studentAccessLevels = ["students", "admin_student", "warden_student"];
+  const rooms = await ChatRoom.find({
+    accessLevel: { $in: studentAccessLevels },
+    $or: [
+      { restrictedToHostel: { $exists: false } },
+      { restrictedToHostel: null },
+      { restrictedToHostel: "" },
+    ],
+  });
+  for (const room of rooms) {
+    const randomHostel = hostels[Math.floor(Math.random() * hostels.length)];
+    room.restrictedToHostel = randomHostel;
+    await room.save();
+    console.log(`Assigned ${randomHostel} to chat room ${room.roomName}`);
+  }
+};
+// Uncomment the following line and run the server once to perform the migration:
+// assignRandomHostelToOldChatRooms();
+
+// --- ADMIN UTILITY: Delete all chat rooms from the database ---
+const deleteAllChatRooms = async () => {
+  const result = await ChatRoom.deleteMany({});
+  console.log(`Deleted ${result.deletedCount} chat rooms from the database.`);
+};
+// Uncomment the following line and run the server once to delete all chat rooms:
+// deleteAllChatRooms();
+
+// --- ADMIN UTILITY: Delete all transit entries with 'Unknown' fields ---
+async function deleteUnknownTransitEntries() {
+  const result = await Transit.deleteMany({
+    $or: [
+      { studentName: "Unknown" },
+      { studentHostel: "Unknown" },
+      { studentRoomNumber: "Unknown" },
+    ],
+  });
+  console.log(
+    `Deleted ${result.deletedCount} transit entries with 'Unknown' fields.`
+  );
+}
+
+deleteUnknownTransitEntries();
 
 // Update the server listen call to use http instead of app
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`http://localhost:${PORT}/`);
-
 });
