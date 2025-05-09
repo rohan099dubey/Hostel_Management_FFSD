@@ -338,10 +338,9 @@
     </div>
 
     <div class="container mx-auto px-4 sm:px-8 md:px-20 py-4 sm:py-8 mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
         Problem Tracker
       </h1>
-
       <!-- Search and Filter Section -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-8">
         <div class="flex flex-col md:flex-row gap-4 items-center">
@@ -371,37 +370,25 @@
             </select>
             <select
               id="statusFilter"
-              class="py-3 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
             >
-              <option value="">All Statuses</option>
+              <option value="">All Status</option>
               <option value="Pending">Pending</option>
-              <option value="Resolved">Resolved</option>
               <option value="ToBeConfirmed">To Be Confirmed</option>
+              <option value="Resolved">Resolved</option>
               <option value="Rejected">Rejected</option>
             </select>
           </div>
         </div>
       </div>
-
-      <style>
-        /* Override the problem container width for better centering */
-        .problem-container {
-          width: calc(
-            350px * 3 + 2rem * 5
-          ); /* 3 cards per row + padding + increased gap */
-          max-width: 100%;
-          margin: 0 auto;
-        }
-      </style>
-
       <div id="problem-container" class="relative mb-8">
         <div class="problem-container">
-          <div class="grid grid-cols-3 gap-8 p-4 justify-center">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-2">
             <% problems.forEach(problem => { %>
             <div
               data-modal-target="problem-modal<%= problem._id %>"
               data-modal-toggle="problem-modal<%= problem._id %>"
-              class="problem-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 w-[350px]"
+              class="problem-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 w-full"
               data-id="<%= problem._id %>"
               data-status="<%= problem.status %>"
             >
