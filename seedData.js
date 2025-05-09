@@ -47,7 +47,7 @@ async function seedProblemData() {
     }
 }
 
-const gmail = "rohan.d23@iiits.in";
+const gmail = "rohandubey2023@gmail.com";
 const User = require('./models/user'); // Add User model import
 const { request } = require('express');
 
@@ -116,5 +116,5 @@ async function addAdminUser() {
     }
 }
 
-deleteUserByGmail();
+addAdminUser();
 
