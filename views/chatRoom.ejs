@@ -309,8 +309,9 @@
             <% const accessibleRooms = chatRooms.filter(room => { let hasAccess
             = false; if (role === 'admin') { hasAccess = true; } else if (role
             === 'warden') { const allowsWardens = ['wardens', 'admin_warden',
-            'warden_student', 'admin_student'].includes(room.accessLevel); const
-            includesStudents = ['students', 'admin_student',
+            'warden_student', 'admin_student',
+            'all'].includes(room.accessLevel); const includesStudents =
+            ['students', 'admin_student',
             'warden_student'].includes(room.accessLevel); if (includesStudents)
             { if (room.restrictedToHostel && room.restrictedToHostel !==
             userHostel) { hasAccess = false; } else { hasAccess = true; } } else
@@ -515,6 +516,7 @@
                   "admin_warden",
                   "warden_student",
                   "admin_student",
+                  "all",
                 ].includes(data.accessLevel);
                 const includesStudents = [
                   "students",
