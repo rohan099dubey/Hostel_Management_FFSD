@@ -147,17 +147,21 @@
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Page Title and Action Button -->
-      <div class="flex justify-between items-center mb-8">
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"
+      >
         <h2 class="text-3xl font-bold text-gray-900">Entry/Exit Register</h2>
-        <div class="flex items-center gap-3">
-          <div class="relative">
+        <div
+          class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto"
+        >
+          <div class="relative w-full sm:w-auto">
             <input
               type="text"
               id="dateFilter"
               placeholder="YYYY-MM-DD"
               pattern="\d{4}-\d{2}-\d{2}"
               title="Please enter date in YYYY-MM-DD format"
-              class="p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+              class="p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full sm:w-auto"
             />
             <button
               id="clearDateFilter"
@@ -180,7 +184,7 @@
           </div>
           <button
             onclick="openModal()"
-            class="bg-gradient-to-r from-blue-600 to-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
+            class="bg-gradient-to-r from-blue-600 to-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex items-center gap-2 w-full sm:w-auto"
           >
             <svg
               class="w-5 h-5"
@@ -226,53 +230,49 @@
       </div>
 
       <!-- Table Container -->
-      <div
-        class="table-container overflow-hidden max-h-[500px] overflow-y-auto"
-      >
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left">
-            <thead class="table-header">
-              <tr>
-                <th scope="col" class="px-6 py-4 font-medium">Student Name</th>
-                <th scope="col" class="px-6 py-4 font-medium">Roll Number</th>
-                <th scope="col" class="px-6 py-4 font-medium">Hostel</th>
-                <th scope="col" class="px-6 py-4 font-medium">Room Number</th>
-                <th scope="col" class="px-6 py-4 font-medium">Purpose</th>
-                <th scope="col" class="px-6 py-4 font-medium">Entry/Exit</th>
-                <th scope="col" class="px-6 py-4 font-medium">Date</th>
-                <th scope="col" class="px-6 py-4 font-medium">Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% entryExit.forEach(student => { %>
-              <tr class="table-row border-b border-gray-200">
-                <td class="px-6 py-4 font-medium text-gray-900">
-                  <%= student.studentName %>
-                </td>
-                <td class="px-6 py-4 text-gray-600">
-                  <%= student.studentRollNumber %>
-                </td>
-                <td class="px-6 py-4 text-gray-600">
-                  <%= student.studentHostel %>
-                </td>
-                <td class="px-6 py-4 text-gray-600">
-                  <%= student.studentRoomNumber %>
-                </td>
-                <td class="px-6 py-4 text-gray-600"><%= student.purpose %></td>
-                <td class="px-6 py-4">
-                  <span
-                    class="px-3 py-1 rounded-full text-sm font-medium <%= student.transitStatus === 'ENTRY' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>"
-                  >
-                    <%= student.transitStatus %>
-                  </span>
-                </td>
-                <td class="px-6 py-4 text-gray-600"><%= student.date %></td>
-                <td class="px-6 py-4 text-gray-600"><%= student.time %></td>
-              </tr>
-              <% }); %>
-            </tbody>
-          </table>
-        </div>
+      <div class="overflow-x-auto bg-white rounded-xl shadow-md">
+        <table class="min-w-full text-sm text-left">
+          <thead class="table-header">
+            <tr>
+              <th scope="col" class="px-6 py-4 font-medium">Student Name</th>
+              <th scope="col" class="px-6 py-4 font-medium">Roll Number</th>
+              <th scope="col" class="px-6 py-4 font-medium">Hostel</th>
+              <th scope="col" class="px-6 py-4 font-medium">Room Number</th>
+              <th scope="col" class="px-6 py-4 font-medium">Purpose</th>
+              <th scope="col" class="px-6 py-4 font-medium">Entry/Exit</th>
+              <th scope="col" class="px-6 py-4 font-medium">Date</th>
+              <th scope="col" class="px-6 py-4 font-medium">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% entryExit.forEach(student => { %>
+            <tr class="table-row border-b border-gray-200">
+              <td class="px-6 py-4 font-medium text-gray-900">
+                <%= student.studentName %>
+              </td>
+              <td class="px-6 py-4 text-gray-600">
+                <%= student.studentRollNumber %>
+              </td>
+              <td class="px-6 py-4 text-gray-600">
+                <%= student.studentHostel %>
+              </td>
+              <td class="px-6 py-4 text-gray-600">
+                <%= student.studentRoomNumber %>
+              </td>
+              <td class="px-6 py-4 text-gray-600"><%= student.purpose %></td>
+              <td class="px-6 py-4">
+                <span
+                  class="px-3 py-1 rounded-full text-sm font-medium <%= student.transitStatus === 'ENTRY' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>"
+                >
+                  <%= student.transitStatus %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-gray-600"><%= student.date %></td>
+              <td class="px-6 py-4 text-gray-600"><%= student.time %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
       </div>
     </div>
 

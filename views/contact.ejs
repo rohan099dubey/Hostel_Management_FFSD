@@ -99,10 +99,38 @@
 
       .card .bottom .content {
         position: absolute;
-        bottom: 0;
+        top: 4.2rem; /* Increased to push content below hovered profile pic */
+        bottom: 4.5rem;
         left: 1.5rem;
         right: 1.5rem;
-        height: 160px;
+        overflow-y: auto;
+        padding-right: 0.2rem; /* Reduced padding slightly */
+        /* Scrollbar styling for Webkit browsers */
+        &::-webkit-scrollbar {
+          width: 5px; /* Make scrollbar thinner */
+        }
+        &::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.05); /* Very light track */
+          border-radius: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: linear-gradient(
+            90deg,
+            rgba(0, 74, 173, 0.5) 0%,
+            rgba(203, 108, 230, 0.5) 100%
+          ); /* Semi-transparent gradient */
+          border-radius: 10px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(
+            90deg,
+            #004aad 0%,
+            #cb6ce6 100%
+          ); /* Full color on hover */
+        }
+        /* Scrollbar styling for Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: rgba(112, 89, 222, 0.5) rgba(0, 0, 0, 0.05); /* thumb and track color */
       }
 
       .card .bottom .content .name {
@@ -304,6 +332,49 @@
       .submit-button:hover:after {
         left: 100%;
       }
+
+      /* Responsive Styles */
+      @media (max-width: 1024px) {
+        .cards-container {
+          grid-template-columns: 1fr 1fr !important;
+        }
+      }
+      @media (max-width: 768px) {
+        .cards-container {
+          grid-template-columns: 1fr !important;
+          gap: 1rem !important;
+        }
+        .card {
+          margin-bottom: 1.5rem;
+        }
+        .help-form-section {
+          padding: 1rem 0.5rem !important;
+        }
+        /* Move the info icon up on mobile */
+        .contact-icon-up {
+          margin-bottom: 1.5rem !important;
+        }
+        .contact-wave-up {
+          margin-top: -3.5rem !important;
+        }
+      }
+      @media (max-width: 480px) {
+        .cards-container {
+          gap: 0.5rem !important;
+        }
+        .card {
+          padding: 0.5rem !important;
+        }
+        .help-form-section {
+          padding: 0.5rem 0.2rem !important;
+        }
+        .form-input {
+          font-size: 0.95rem;
+        }
+        .form-label {
+          font-size: 0.95rem;
+        }
+      }
     </style>
   </head>
   <body
@@ -311,16 +382,19 @@
     style="font-family: 'Source Sans Pro', sans-serif"
   >
     <!--Nav-->
-    <%- include('partials/navbar.ejs', { loggedIn }) %>
+    <%- include('partials/navbar.ejs', { loggedIn, user }) %>
 
-    <div class="pt-24">
+    <div class="pt-16">
+      <!-- Reduced top padding from pt-24 -->
       <div
         class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center"
       >
         <div
           class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left"
         >
-          <h1 class="my-4 text-5xl font-bold leading-tight">
+          <h1
+            class="my-4 text-5xl font-bold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600"
+          >
             Get Support & Contact Staff
           </h1>
           <p class="leading-normal text-2xl mb-8">
@@ -328,15 +402,24 @@
           </p>
         </div>
         <div class="w-full md:w-3/5 py-6 text-center">
-          <img
-            class="w-full md:w-4/5 z-50 mx-auto"
-            src="/images/support.svg"
-            alt="Contact Support"
-          />
+          <!-- Reduced icon size by changing width classes -->
+          <svg
+            class="w-3/4 md:w-1/2 z-50 mx-auto mb-6 md:mb-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
         </div>
       </div>
     </div>
-    <div class="relative -mt-12 lg:-mt-24">
+    <div class="relative -mt-16 md:-mt-20 lg:-mt-32">
+      <!-- Adjusted negative margin for mobile so the icon doesn't touch the wave -->
       <svg
         viewBox="0 0 1428 174"
         version="1.1"
@@ -764,6 +847,8 @@
     </section>
 
     <!-- Help Request Form Section -->
+    <% if (typeof user !== 'undefined' && (user.role === 'student' || user.role
+    === 'warden')) { %>
     <section class="bg-gray-100 py-16">
       <div class="container max-w-7xl mx-auto m-8">
         <h2
@@ -802,13 +887,14 @@
                     type="text"
                     id="name"
                     name="name"
-                    required
                     minlength="3"
                     maxlength="50"
                     pattern="[A-Za-z\s]+"
                     title="Please enter a valid name (letters and spaces only)"
                     placeholder="Enter your full name"
-                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200"
+                    value="<%= user.name || '' %>"
+                    readonly
                   />
                 </div>
                 <div>
@@ -817,16 +903,17 @@
                     class="block text-sm font-medium form-label mb-1"
                     >Room Number</label
                   >
-                  <input
-                    type="text"
-                    id="room"
-                    name="room"
-                    required
-                    pattern="[A-Za-z0-9-]+"
-                    title="Please enter a valid room number (e.g. A-101)"
-                    placeholder="e.g. A-101"
-                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
+                  <input type="text" id="room" name="room"
+                  pattern="[A-Za-z0-9-]+" title="Please enter a valid room
+                  number (e.g. A-101)" placeholder="<%= user.role === 'warden' ?
+                  'Not applicable for Wardens' : 'e.g. A-101' %>" class="w-full
+                  px-4 py-2 border rounded-lg form-input-field
+                  focus:outline-none focus:ring-2 focus:ring-indigo-500 <%=
+                  (user.role === 'student' || user.role === 'warden') ?
+                  'bg-gray-200' : '' %>" value="<%= user.role === 'student' &&
+                  user.roomNumber ? user.roomNumber : '' %>" <%= user.role ===
+                  'student' ? 'readonly' : '' %> <%= user.role === 'warden' ?
+                  'disabled' : '' %> />
                 </div>
               </div>
 
@@ -841,11 +928,12 @@
                     type="email"
                     id="email"
                     name="email"
-                    required
                     pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                     title="Please enter a valid email address"
                     placeholder="Your email address"
-                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200"
+                    value="<%= user.email || '' %>"
+                    readonly
                   />
                 </div>
                 <div>
@@ -863,8 +951,27 @@
                     title="Please enter a valid 10-digit phone number"
                     placeholder="Your contact number"
                     class="w-full px-4 py-2 border rounded-lg form-input-field focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value=""
                   />
                 </div>
+              </div>
+
+              <div>
+                <label
+                  for="hostel_number"
+                  class="block text-sm font-medium form-label mb-1"
+                  >Hostel Number</label
+                >
+                <input type="text" id="hostel_number" name="hostel_number"
+                pattern="[A-Za-z0-9-]+" title="Please enter a valid hostel
+                number" placeholder="e.g. H-5 or Block-C" class="w-full px-4
+                py-2 border rounded-lg form-input-field focus:outline-none
+                focus:ring-2 focus:ring-indigo-500 <%= (user.role === 'student'
+                || user.role === 'warden') && user.hostelNumber ? 'bg-gray-200'
+                : '' %>" value="<%= (user.role === 'student' || user.role ===
+                'warden') && user.hostelNumber ? user.hostelNumber : '' %>" <%=
+                (user.role === 'student' || user.role === 'warden') &&
+                user.hostelNumber ? 'readonly' : '' %> />
               </div>
 
               <div>
@@ -983,6 +1090,7 @@
         </div>
       </div>
     </section>
+    <% } %>
 
     <!-- Change the colour #f8fafc to match the previous section colour -->
     <svg
@@ -1026,6 +1134,7 @@
 
     <script src="/js/navbar.js"></script>
     <script>
+      var currentUserRole = "<%= user && user.role ? user.role : '' %>";
       document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("helpRequestForm");
         const messageTextarea = document.getElementById("message");
@@ -1033,6 +1142,26 @@
         const formStatus = document.getElementById("formStatus");
         const submitBtn = document.getElementById("submitBtn");
         const requestTypeSelect = document.getElementById("request_type");
+
+        // Autofilled fields - make them readonly in JS too if needed, though EJS should handle it
+        const nameInput = document.getElementById("name");
+        const roomInput = document.getElementById("room");
+        const emailInput = document.getElementById("email");
+        const phoneInput = document.getElementById("phone");
+        const hostelNumberInput = document.getElementById("hostel_number");
+
+        if (nameInput) nameInput.readOnly = true; // Name is always readonly and prefilled
+        if (emailInput) emailInput.readOnly = true; // Email is always readonly and prefilled
+
+        if (currentUserRole === "student") {
+          if (roomInput) roomInput.readOnly = true;
+          if (hostelNumberInput) hostelNumberInput.readOnly = true;
+        } else if (currentUserRole === "warden") {
+          if (roomInput) roomInput.disabled = true;
+          if (hostelNumberInput) hostelNumberInput.readOnly = true;
+        }
+        // Phone input is always editable
+        if (phoneInput) phoneInput.readOnly = false;
 
         // Set initial char count
         if (messageTextarea.value.length > 0) {
@@ -1070,15 +1199,13 @@
           // Show the form status element
           formStatus.classList.remove("hidden");
           formStatus.className =
-            "p-4 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg";
+            "p-4 mb-4 text-base flex items-center rounded-lg bg-blue-100 text-blue-800";
           formStatus.innerHTML = `
-            <div class="flex items-center">
-              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Processing your request...
-            </div>
+            <svg class="animate-spin mr-3 h-5 w-5 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Processing your request...</span>
           `;
 
           // Disable submit button and show loading state
@@ -1097,7 +1224,15 @@
             // Convert FormData to a plain object
             const formDataObj = {};
             formData.forEach((value, key) => {
-              formDataObj[key] = value;
+              // For readonly fields, ensure their values are included from the input's value attribute
+              if (
+                document.getElementById(key) &&
+                document.getElementById(key).readOnly
+              ) {
+                formDataObj[key] = document.getElementById(key).value;
+              } else {
+                formDataObj[key] = value;
+              }
             });
 
             // Log the form data before sending
@@ -1116,14 +1251,12 @@
             if (response.ok) {
               // Show success message
               formStatus.className =
-                "p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg";
+                "p-4 mb-4 text-base flex items-center rounded-lg bg-green-100 text-green-800";
               formStatus.innerHTML = `
-                <div class="flex items-center">
-                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                  </svg>
-                  ${result.message}
-                </div>
+                <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>${result.message}</span>
               `;
               form.reset();
               messageLength.textContent = "0";
@@ -1131,6 +1264,53 @@
               // Reset the select color
               requestTypeSelect.classList.add("text-gray-400");
               requestTypeSelect.classList.remove("text-gray-700");
+
+              // Re-apply autofilled values after reset and ensure they are readonly/disabled as appropriate
+              if (nameInput && typeof user !== "undefined" && user.name) {
+                nameInput.value = user.name;
+                nameInput.readOnly = true;
+              }
+              if (emailInput && typeof user !== "undefined" && user.email) {
+                emailInput.value = user.email;
+                emailInput.readOnly = true;
+              }
+
+              if (typeof user !== "undefined") {
+                if (user.role === "student") {
+                  if (roomInput && user.roomNumber) {
+                    roomInput.value = user.roomNumber;
+                    roomInput.readOnly = true;
+                  } else if (roomInput) {
+                    roomInput.value = "";
+                    roomInput.readOnly = true;
+                  }
+                  if (hostelNumberInput && user.hostelNumber) {
+                    hostelNumberInput.value = user.hostelNumber;
+                    hostelNumberInput.readOnly = true;
+                  } else if (hostelNumberInput) {
+                    hostelNumberInput.value = "";
+                    hostelNumberInput.readOnly = true;
+                  }
+                } else if (user.role === "warden") {
+                  if (roomInput) {
+                    roomInput.value = "";
+                    roomInput.disabled = true;
+                    roomInput.placeholder = "Not applicable for Wardens";
+                  }
+                  if (hostelNumberInput && user.hostelNumber) {
+                    hostelNumberInput.value = user.hostelNumber;
+                    hostelNumberInput.readOnly = true;
+                  } else if (hostelNumberInput) {
+                    hostelNumberInput.value = "";
+                    hostelNumberInput.readOnly = true;
+                  }
+                }
+              }
+
+              if (phoneInput) {
+                phoneInput.value = "";
+                phoneInput.readOnly = false;
+              } // Clear phone input and ensure it's editable
 
               // Scroll to the status message
               formStatus.scrollIntoView({
@@ -1143,14 +1323,12 @@
           } catch (error) {
             // Show error message
             formStatus.className =
-              "p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg";
+              "p-4 mb-4 text-base flex items-center rounded-lg bg-red-100 text-red-800";
             formStatus.innerHTML = `
-              <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
-                ${error.message}
-              </div>
+              <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+              <span>${error.message}</span>
             `;
 
             // Scroll to the status message
@@ -1158,7 +1336,7 @@
           } finally {
             // Re-enable submit button
             submitBtn.disabled = false;
-            submitBtn.textContent = "Submit Request";
+            submitBtn.innerHTML = "Submit Request";
           }
         });
       });

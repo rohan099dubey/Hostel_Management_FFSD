@@ -25,6 +25,70 @@
       .announcement-card:hover {
         transform: translateY(-2px);
       }
+
+      .announcements-window {
+        max-height: 900px;
+        min-height: 350px;
+        overflow-y: auto;
+        border-radius: 1rem;
+        background: #f7f8fa;
+        box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.04);
+        padding: 1rem 0.5rem;
+      }
+      .announcements-window::-webkit-scrollbar {
+        width: 8px;
+      }
+      .announcements-window::-webkit-scrollbar-thumb {
+        background: #e0e7ef;
+        border-radius: 6px;
+      }
+      .announcement-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3a4e;
+        margin-bottom: 0.2rem;
+        word-break: break-word;
+      }
+      .announcement-message {
+        font-size: 1rem;
+        color: #4b5563;
+        margin-bottom: 0.1rem;
+        word-break: break-word;
+      }
+      @media (max-width: 1024px) {
+        .announcements-window {
+          padding: 0.5rem 0.2rem;
+        }
+      }
+      @media (max-width: 768px) {
+        .announcements-window {
+          padding: 0.2rem 0.1rem;
+          min-height: 200px;
+        }
+        .announcement-card {
+          padding: 1rem 0.5rem;
+        }
+        .bg-gradient-to-r {
+          padding: 1rem 0.5rem !important;
+          font-size: 1.1rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .announcements-window {
+          padding: 0.1rem 0.05rem;
+        }
+        .announcement-card {
+          padding: 0.5rem 0.2rem;
+          font-size: 0.95rem;
+        }
+        .bg-gradient-to-r {
+          font-size: 1rem !important;
+        }
+        #announcementModal > div {
+          max-width: 98vw;
+          padding: 0.5rem 0.2rem;
+        }
+      }
     </style>
   </head>
 
@@ -73,61 +137,87 @@
       </div>
 
       <!-- Announcement List -->
-      <div class="mt-4 sm:mt-8 space-y-3 sm:space-y-6">
-        <% if (announcements.length > 0) { %> <%
-        announcements.forEach(announcement => { %>
-        <div
-          class="announcement-card bg-white shadow-md p-3 sm:p-6 rounded-xl hover:shadow-lg"
-        >
-          <div class="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-            <!-- Profile Icon -->
-            <div class="flex-shrink-0">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-blue-100"
-                alt="Profile"
-              />
-            </div>
-            <div class="flex-1 min-w-0">
-              <!-- Title and Date -->
-              <div
-                class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
-              >
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h3 class="font-semibold text-gray-900 text-sm sm:text-base">
-                    IIITS Academic Office
-                  </h3>
-                  <span
-                    class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full"
-                    >Official</span
-                  >
-                </div>
-                <span
-                  class="text-xs sm:text-sm text-gray-500 bg-gray-50 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap"
-                >
-                  <%= new
-                  Date(announcement.createdAt).toLocaleDateString('en-US', {
-                  year: 'numeric', month: 'short', day: 'numeric', hour:
-                  '2-digit', minute: '2-digit' }) %>
-                </span>
+      <div class="mt-4 sm:mt-8">
+        <div class="announcements-window space-y-3 sm:space-y-6">
+          <% if (announcements.length > 0) { %> <%
+          announcements.forEach(announcement => { %>
+          <div
+            class="announcement-card bg-white shadow-md p-3 sm:p-6 rounded-xl hover:shadow-lg"
+          >
+            <div class="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+              <!-- Profile Icon -->
+              <div class="flex-shrink-0">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                  class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-blue-100"
+                  alt="Profile"
+                />
               </div>
-              <!-- Announcement Message -->
-              <p
-                class="text-sm sm:text-base text-gray-700 mt-2 sm:mt-3 leading-relaxed break-words"
-              >
-                <%= announcement.message %>
-              </p>
-            </div>
+              <div class="flex-1 min-w-0">
+                <!-- Title, Date, and Official -->
+                <div
+                  class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
+                >
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3
+                      class="font-semibold text-gray-900 text-sm sm:text-base"
+                    >
+                      IIITS Academic Office
+                    </h3>
+                    <span
+                      class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full"
+                      >Official</span
+                    >
+                  </div>
+                  <span
+                    class="text-xs sm:text-sm text-gray-500 bg-gray-50 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap"
+                  >
+                    <%= new
+                    Date(announcement.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric', hour:
+                    '2-digit', minute: '2-digit' }) %>
+                  </span>
+                </div>
+                <!-- Announcement Title and Message -->
+                <div class="mt-2 sm:mt-3">
+                  <div class="announcement-title">
+                    <%= announcement.title %>
+                  </div>
+                  <div class="announcement-message">
+                    <%= announcement.message %>
+                  </div>
+                </div>
+              </div>
 
-            <!-- Delete Button (Only for Warden/Admin) -->
-            <% if (role === 'warden' || role === 'admin') { %>
-            <button
-              onclick="deleteAnnouncement('<%= announcement.id %>')"
-              class="flex-shrink-0 bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors duration-200 self-start sm:self-center"
-              title="Delete announcement"
-            >
+              <!-- Delete Button (Only for Warden/Admin) -->
+              <% if (role === 'warden' || role === 'admin') { %>
+              <button
+                onclick="deleteAnnouncement('<%= announcement.id %>')"
+                class="flex-shrink-0 bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors duration-200 self-start sm:self-center"
+                title="Delete announcement"
+              >
+                <svg
+                  class="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+              <% } %>
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <div class="text-center py-6 sm:py-12">
+            <div class="bg-white rounded-xl shadow-sm p-4 sm:p-8 mx-3">
               <svg
-                class="w-4 h-4 sm:w-5 sm:h-5"
+                class="w-10 h-10 sm:w-16 sm:h-16 mx-auto text-gray-400 mb-3 sm:mb-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -136,38 +226,19 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
                 />
               </svg>
-            </button>
-            <% } %>
+              <h3 class="text-base sm:text-xl font-semibold text-gray-900 mb-2">
+                No Announcements Yet
+              </h3>
+              <p class="text-sm text-gray-500">
+                Check back later for updates and important information.
+              </p>
+            </div>
           </div>
+          <% } %>
         </div>
-        <% }); %> <% } else { %>
-        <div class="text-center py-6 sm:py-12">
-          <div class="bg-white rounded-xl shadow-sm p-4 sm:p-8 mx-3">
-            <svg
-              class="w-10 h-10 sm:w-16 sm:h-16 mx-auto text-gray-400 mb-3 sm:mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-              />
-            </svg>
-            <h3 class="text-base sm:text-xl font-semibold text-gray-900 mb-2">
-              No Announcements Yet
-            </h3>
-            <p class="text-sm text-gray-500">
-              Check back later for updates and important information.
-            </p>
-          </div>
-        </div>
-        <% } %>
       </div>
     </div>
 

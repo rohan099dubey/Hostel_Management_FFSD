@@ -31,11 +31,117 @@
       }
 
       .problem-card {
-        transition: all 0.3s ease;
+        background: #fff;
+        border-radius: 1.25rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        transition: box-shadow 0.3s, transform 0.3s;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
       }
-
       .problem-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-0.25rem);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .problem-card .problem-image {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-top-left-radius: 1.25rem;
+        border-top-right-radius: 1.25rem;
+        background: #f3f4f6;
+      }
+      .problem-card .card-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      .problem-card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: #1e293b;
+        min-height: 2.5rem;
+      }
+      .problem-card .meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: auto;
+      }
+      .problem-card .meta span {
+        font-size: 0.95rem;
+      }
+      /* Modal redesign */
+      .problem-modal-content {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 2rem;
+        align-items: flex-start;
+        padding: 2rem 1.5rem;
+        border-radius: 1.25rem;
+        background: #fff;
+        max-width: 900px;
+        width: 100%;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+      }
+      .problem-modal-image {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+        border-radius: 1rem;
+        background: #f3f4f6;
+      }
+      .problem-modal-details h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #1e293b;
+      }
+      .problem-modal-details .badge {
+        display: inline-block;
+        padding: 0.4em 1em;
+        border-radius: 9999px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .problem-modal-details .badge-pending {
+        background: #fef9c3;
+        color: #a16207;
+      }
+      .problem-modal-details .badge-resolved {
+        background: #d1fae5;
+        color: #047857;
+      }
+      .problem-modal-details .badge-rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .problem-modal-details .badge-tbc {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .problem-modal-details .badge-category {
+        background: #e0e7ff;
+        color: #3730a3;
+      }
+      .problem-modal-details .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #334155;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .problem-modal-details .meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
       }
 
       @media (max-width: 768px) {
@@ -51,19 +157,9 @@
 
       /* Override the problem container width for better centering */
       .problem-container {
-        width: calc(
-          350px * 3 + 2rem * 5
-        ); /* 3 cards per row + padding + increased gap */
+        width: 100%;
         max-width: 100%;
         margin: 0 auto;
-      }
-
-      /* Ensure all cards are at the same height within the grid */
-      .grid-cols-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        padding: 1rem;
       }
 
       /* Base card styles - no transform in initial state */
@@ -104,6 +200,40 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 1024px) {
+        .problem-container {
+          width: 100%;
+        }
+      }
+      @media (max-width: 768px) {
+        .problem-container {
+          width: 100%;
+        }
+        .problem-card .problem-image {
+          height: 160px;
+        }
+        .problem-modal-content {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+          padding: 1rem 0.5rem;
+        }
+        .problem-modal-image {
+          height: 180px;
+        }
+      }
+      @media (max-width: 480px) {
+        .problem-modal-content {
+          padding: 0.5rem 0.2rem;
+        }
+        .problem-modal-image {
+          height: 120px;
+        }
+        .card-content {
+          padding: 1rem;
+        }
       }
     </style>
   </head>
@@ -330,56 +460,23 @@
       <!-- Problem Grid - Fixed height container with vertical scrolling -->
       <div class="relative mb-8">
         <div class="problem-container">
-          <div class="grid grid-cols-3 gap-8 p-4 justify-center">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-2">
             <% problems.forEach(problem => { %>
             <div
               data-modal-target="problem-modal<%= problem._id %>"
               data-modal-toggle="problem-modal<%= problem._id %>"
-              class="problem-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl w-[350px]"
+              class="problem-card cursor-pointer w-full"
               data-id="<%= problem._id %>"
               data-status="<%= problem.status %>"
             >
-              <div class="relative h-56 w-full">
-                <img
-                  src="<%=problem.problemImage%>"
-                  alt="<%=problem.problemTitle%>"
-                  class="w-full h-full object-cover"
-                />
-                <div class="absolute top-4 right-4">
-                  <% if (problem.status === "Pending") { %>
-                  <span
-                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"
-                  >
-                    Pending
-                  </span>
-                  <% } else if (problem.status === "Resolved") { %>
-                  <span
-                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800"
-                  >
-                    Resolved
-                  </span>
-                  <% } else if (problem.status === "ToBeConfirmed") { %>
-                  <span
-                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
-                  >
-                    To Be Confirmed
-                  </span>
-                  <% } else if (problem.status === "Rejected") { %>
-                  <span
-                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-red-100 text-red-800"
-                  >
-                    Rejected
-                  </span>
-                  <% } %>
-                </div>
-              </div>
-              <div class="p-6 flex-grow flex flex-col justify-between">
-                <h3
-                  class="text-xl font-bold text-gray-900 mb-3 h-14 overflow-hidden"
-                >
-                  <%= problem.problemTitle %>
-                </h3>
-                <div class="flex items-center space-x-3 mt-auto">
+              <img
+                src="<%=problem.problemImage%>"
+                alt="<%=problem.problemTitle%>"
+                class="problem-image w-full object-cover"
+              />
+              <div class="card-content">
+                <h3><%= problem.problemTitle %></h3>
+                <div class="meta">
                   <span
                     class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-sm font-medium"
                   >
@@ -416,159 +513,80 @@
                     Room <%= problem.roomNo %>
                   </span>
                 </div>
-                <p class="text-gray-600 text-sm line-clamp-2">
-                  <%= problem.problemDescription %>
-                </p>
               </div>
             </div>
-
-            <!-- Problem Details Modal -->
+            <!-- Modal -->
             <div
               id="problem-modal<%= problem._id %>"
               class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50"
             >
-              <div
-                class="bg-white rounded-xl p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4"
-              >
-                <div class="flex justify-between items-center mb-6">
-                  <h2 class="text-2xl font-bold text-gray-900">
-                    <%= problem.problemTitle %>
-                  </h2>
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                    data-modal-toggle="problem-modal<%= problem._id %>"
+              <div class="problem-modal-content m-4 relative">
+                <!-- Close Button -->
+                <button
+                  type="button"
+                  class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 z-10"
+                  data-modal-toggle="problem-modal<%= problem._id %>"
+                  aria-label="Close"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      class="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div class="rounded-xl overflow-hidden shadow-lg">
-                    <img
-                      src="<%=problem.problemImage%>"
-                      alt="<%=problem.problemTitle%>"
-                      class="w-full h-auto object-cover"
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
                     />
+                  </svg>
+                </button>
+                <img
+                  src="<%=problem.problemImage%>"
+                  alt="<%=problem.problemTitle%>"
+                  class="problem-modal-image"
+                />
+                <div class="problem-modal-details">
+                  <h2><%= problem.problemTitle %></h2>
+                  <div class="mb-2">
+                    <% if (problem.status === "Pending") { %>
+                    <span class="badge badge-pending">Pending</span>
+                    <% } else if (problem.status === "Resolved") { %>
+                    <span class="badge badge-resolved">Resolved</span>
+                    <% } else if (problem.status === "ToBeConfirmed") { %>
+                    <span class="badge badge-tbc">To Be Confirmed</span>
+                    <% } else if (problem.status === "Rejected") { %>
+                    <span class="badge badge-rejected">Rejected</span>
+                    <% } %>
+                    <span class="badge badge-category"
+                      ><%= problem.category %></span
+                    >
                   </div>
-
-                  <div class="space-y-6">
-                    <div class="flex items-center gap-3">
-                      <% if (problem.status === "Pending") { %>
-                      <span
-                        class="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"
-                      >
-                        Pending
-                      </span>
-                      <% } else if (problem.status === "Resolved") { %>
-                      <span
-                        class="px-3 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800"
-                      >
-                        Resolved
-                      </span>
-                      <% } else if (problem.status === "ToBeConfirmed") { %>
-                      <span
-                        class="px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
-                      >
-                        To Be Confirmed
-                      </span>
-                      <% } else if (problem.status === "Rejected") { %>
-                      <span
-                        class="px-3 py-1.5 rounded-full text-sm font-medium bg-red-100 text-red-800"
-                      >
-                        Rejected
-                      </span>
-                      <% } %>
-                      <span
-                        class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-sm font-medium"
-                      >
-                        <%= problem.category %>
-                      </span>
-                    </div>
-
+                  <div class="section-title">Description</div>
+                  <div class="mb-4 text-gray-700">
+                    <%= problem.problemDescription %>
+                  </div>
+                  <div class="section-title">Problem Details</div>
+                  <div class="meta">
                     <div>
-                      <h4 class="text-sm font-semibold text-gray-600 mb-2">
-                        Description
-                      </h4>
-                      <p class="text-gray-800 leading-relaxed">
-                        <%= problem.problemDescription %>
-                      </p>
-                    </div>
-
-                    <div class="border-t border-gray-200 pt-6">
-                      <h4 class="text-sm font-semibold text-gray-600 mb-4">
-                        Problem Details
-                      </h4>
-                      <div class="grid grid-cols-2 gap-6">
-                        <div>
-                          <p class="text-sm text-gray-600">Roll Number</p>
-                          <p class="font-medium text-gray-900">
-                            <%= problem.studentId %>
-                          </p>
-                        </div>
-                        <div>
-                          <p class="text-sm text-gray-600">Hostel</p>
-                          <p class="font-medium text-gray-900">
-                            <%= problem.hostel %>
-                          </p>
-                        </div>
-                        <div>
-                          <p class="text-sm text-gray-600">Room Number</p>
-                          <p class="font-medium text-gray-900">
-                            <%= problem.roomNumber %>
-                          </p>
-                        </div>
+                      <div class="text-xs text-gray-500">Roll Number</div>
+                      <div class="font-semibold text-gray-900">
+                        <%= problem.studentId %>
                       </div>
                     </div>
-
-                    <% if (role !== 'student' && problem.status !== 'Resolved'
-                    && problem.status !== 'Rejected') { %>
-                    <div class="border-t border-gray-200 pt-6">
-                      <h4 class="text-sm font-semibold text-gray-600 mb-4">
-                        Update Status
-                      </h4>
-                      <form id="statusForm" class="flex items-center gap-4">
-                        <input
-                          type="hidden"
-                          name="problemId"
-                          id="problemId"
-                          value="<%= problem._id %>"
-                        />
-                        <select
-                          name="status"
-                          id="status"
-                          class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-3 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                        >
-                          <option disabled selected>Select Status</option>
-                          <option value="Pending">Pending</option>
-                          <option value="Resolved">
-                            Mark as Resolved (Needs Student Confirmation)
-                          </option>
-                          <% if (user.role === 'admin') { %>
-                          <option value="Rejected">Rejected</option>
-                          <% } %>
-                        </select>
-                        <button
-                          type="submit"
-                          class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg"
-                        >
-                          Update
-                        </button>
-                      </form>
+                    <div>
+                      <div class="text-xs text-gray-500">Hostel</div>
+                      <div class="font-semibold text-gray-900">
+                        <%= problem.hostel %>
+                      </div>
                     </div>
-                    <% } %>
+                    <div>
+                      <div class="text-xs text-gray-500">Room Number</div>
+                      <div class="font-semibold text-gray-900">
+                        <%= problem.roomNo || problem.roomNumber %>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
