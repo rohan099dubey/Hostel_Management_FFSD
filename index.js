@@ -16,6 +16,9 @@ const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const { problemUpload, cloudinary } = require("./config/cloudinary");
 
+// Import Cloudinary helper
+const cloudinaryHelper = require('./utils/cloudinaryHelper');
+
 //Databse connection
 const { dataProblems, dataEntryExit, userData } = require("./config/data.js");
 const connectDB = require("./config/database.js");
@@ -579,16 +582,12 @@ app.post(
         return res.status(400).json({ message: "Image upload is required" });
       }
 
-      // Get Cloudinary image URL instead of local path
-      const problemImage = req.file.path;
-
       console.log("Received data:", req.body);
       console.log("Uploaded file:", req.file);
 
       if (
         !problemTitle ||
         !problemDescription ||
-        !problemImage ||
         !studentId ||
         !hostel ||
         !roomNo ||
@@ -597,10 +596,18 @@ app.post(
         return res.status(400).json({ message: "All fields are required" });
       }
 
+      // Upload file to Cloudinary using helper
+      const result = await cloudinaryHelper.uploadLocalFile(
+        req.file.path,
+        'hostel_problems',
+        { transformation: [{ width: 1000, height: 800, crop: "limit" }] }
+      );
+
+      // Create new problem with Cloudinary URL
       const newProblem = {
         problemTitle,
         problemDescription,
-        problemImage,
+        problemImage: result.secure_url, // Use the Cloudinary URL
         studentId,
         hostel,
         roomNo,
@@ -1337,38 +1344,56 @@ io.on("connection", (socket) => {
   });
 
   // Handle chat messages
-  socket.on(
-    "sendMessage",
-    async ({ roomId, userId, message, imageData, userName }) => {
-      try {
-        const chatRoom = await ChatRoom.findById(roomId);
-        if (!chatRoom) {
-          socket.emit("error", { message: "Chat room not found" });
+  socket.on('sendMessage', async ({ roomId, userId, message, imageData, userName }) => {
+    try {
+      const chatRoom = await ChatRoom.findById(roomId);
+      if (!chatRoom) {
+        socket.emit('error', { message: 'Chat room not found' });
+        return;
+      }
+
+      let cloudinaryUrl = null;
+
+      // If imageData is provided (base64), upload to Cloudinary
+      if (imageData && imageData.startsWith('data:image')) {
+        try {
+          // Upload base64 image to Cloudinary using helper
+          const result = await cloudinaryHelper.uploadBase64Image(
+            imageData,
+            'hostel_chat',
+            { transformation: [{ width: 800, height: 600, crop: 'limit' }] }
+          );
+          cloudinaryUrl = result.secure_url;
+        } catch (uploadError) {
+          console.error("Error uploading to Cloudinary:", uploadError);
+          socket.emit('error', { message: 'Error uploading image' });
           return;
         }
-
-        // Save message to database
-        chatRoom.messages.push({
-          userId,
-          userName,
-          message,
-          imageData, // Store the base64 image data
-          timestamp: new Date()
-        });
-        await chatRoom.save();
-
-        // Broadcast message to room
-        io.to(roomId).emit('newMessage', {
-          userId,
-          userName,
-          message,
-          imageData,
-          timestamp: new Date()
-        });
-      } catch (error) {
-        socket.emit('error', { message: 'Error sending message' });
       }
-    });
+
+      // Save message to database using Cloudinary URL if available
+      chatRoom.messages.push({
+        userId,
+        userName,
+        message,
+        imageData: cloudinaryUrl || imageData, // Use Cloudinary URL if available
+        timestamp: new Date()
+      });
+      await chatRoom.save();
+
+      // Broadcast message to room
+      io.to(roomId).emit('newMessage', {
+        userId,
+        userName,
+        message,
+        imageData: cloudinaryUrl || imageData, // Use Cloudinary URL if available
+        timestamp: new Date()
+      });
+    } catch (error) {
+      console.error("Error in sendMessage:", error);
+      socket.emit('error', { message: 'Error sending message' });
+    }
+  });
 
   // Handle room deletion notification
   socket.on("chatRoomDeleted", ({ roomId, message }) => {
@@ -2078,6 +2103,19 @@ async function deleteUnknownTransitEntries() {
 }
 
 deleteUnknownTransitEntries();
+
+// Create temporary upload directory if it doesn't exist
+(async () => {
+  const tempDirPath = path.join(__dirname, "public", "uploads", "temp");
+  try {
+    await fs.mkdir(tempDirPath, { recursive: true });
+    console.log(`Temporary upload directory created: ${tempDirPath}`);
+  } catch (err) {
+    if (err.code !== 'EEXIST') {
+      console.error(`Error creating temp directory: ${err.message}`);
+    }
+  }
+})();
 
 // Update the server listen call to use http instead of app
 const PORT = process.env.PORT || 3000;
