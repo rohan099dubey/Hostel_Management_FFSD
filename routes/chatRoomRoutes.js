@@ -6,7 +6,7 @@ const {
   deleteChatRoom,
   getChatRoomStatus,
   viewChatRoom,
-} = require("../controllers/chatroomController");
+} = require("../controllers/chatRoomController");
 const { authMiddleware } = require("../controllers/authController");
 
 // Chat room routes - specific routes first, then catch-all routes
