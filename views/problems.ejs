@@ -469,11 +469,40 @@
               data-id="<%= problem._id %>"
               data-status="<%= problem.status %>"
             >
-              <img
-                src="<%=problem.problemImage%>"
-                alt="<%=problem.problemTitle%>"
-                class="problem-image w-full object-cover"
-              />
+              <div class="relative">
+                <img
+                  src="<%=problem.problemImage%>"
+                  alt="<%=problem.problemTitle%>"
+                  class="problem-image w-full object-cover"
+                />
+                <div class="absolute top-4 right-4">
+                  <% if (problem.status === "Pending") { %>
+                  <span
+                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"
+                  >
+                    Pending
+                  </span>
+                  <% } else if (problem.status === "Resolved") { %>
+                  <span
+                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                  >
+                    Resolved
+                  </span>
+                  <% } else if (problem.status === "ToBeConfirmed") { %>
+                  <span
+                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                  >
+                    To Be Confirmed
+                  </span>
+                  <% } else if (problem.status === "Rejected") { %>
+                  <span
+                    class="px-3 py-1.5 rounded-full text-sm font-medium bg-red-100 text-red-800"
+                  >
+                    Rejected
+                  </span>
+                  <% } %>
+                </div>
+              </div>
               <div class="card-content">
                 <h3><%= problem.problemTitle %></h3>
                 <div class="meta">

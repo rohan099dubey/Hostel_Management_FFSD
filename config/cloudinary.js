@@ -1,6 +1,6 @@
 const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
+const path = require("path");
 
 // Configure Cloudinary
 cloudinary.config({
@@ -9,35 +9,46 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Set up storage engine for problems
-const problemStorage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: "hostel_problems",
-        allowed_formats: ["jpg", "jpeg", "png"],
-        transformation: [{ width: 1000, height: 800, crop: "limit" }]
-    }
+// Set up local storage for multer (temporary storage before Cloudinary upload)
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/uploads/temp");
+    },
+    filename: (req, file, cb) => {
+        cb(
+            null,
+            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+        );
+    },
 });
 
-// Set up storage engine for chat images
-const chatStorage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: "hostel_chat",
-        allowed_formats: ["jpg", "jpeg", "png"],
-        transformation: [{ width: 800, height: 600, crop: "limit" }]
-    }
-});
+// File filter for problem images
+const imageFilter = (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png/;
+    const extname = fileTypes.test(
+        path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = fileTypes.test(file.mimetype);
 
-// Create multer instances
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+    }
+};
+
+// Create multer upload object for problems
 const problemUpload = multer({
-    storage: problemStorage,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    fileFilter: imageFilter,
 });
 
+// Create multer upload object for chat images
 const chatUpload = multer({
-    storage: chatStorage,
-    limits: { fileSize: 2 * 1024 * 1024 } // 2MB limit
+    storage: storage,
+    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
+    fileFilter: imageFilter,
 });
 
 module.exports = {
