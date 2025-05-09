@@ -604,17 +604,28 @@
     </style>
   </head>
 
-  <body>
+  <body class="overflow-x-hidden">
     <!-- Navbar Section -->
     <%- include('partials/navbar.ejs', { loggedIn }) %>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section
+      class="hero flex flex-col justify-center items-center px-4 sm:px-8 md:px-20"
+    >
       <div class="hero-bg"></div>
       <div class="hero-particles" id="particles"></div>
-      <div class="hero-content">
-        <h1 class="hero-title mt-16" data-aos="zoom-in">HOSTELIA</h1>
-        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+      <div class="hero-content w-full max-w-3xl mx-auto">
+        <h1
+          class="hero-title mt-16 text-4xl sm:text-5xl md:text-6xl"
+          data-aos="zoom-in"
+        >
+          HOSTELIA
+        </h1>
+        <p
+          class="hero-subtitle text-lg sm:text-xl md:text-2xl"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
           Revolutionizing Hostel Management with Innovation
         </p>
       </div>
@@ -627,10 +638,15 @@
     <div class="container">
       <!-- Mission Section -->
       <section>
-        <h2 class="section-title" data-aos="fade-up">Our Mission</h2>
-        <div class="narrow-container">
+        <h2
+          class="section-title text-2xl sm:text-3xl md:text-4xl"
+          data-aos="fade-up"
+        >
+          Our Mission
+        </h2>
+        <div class="narrow-container px-2 sm:px-4 md:px-8">
           <div class="mission skeleton" data-aos="fade-up">
-            <p class="mission-text">
+            <p class="mission-text text-base sm:text-lg">
               At <strong style="color: var(--primary)">Hostelia</strong>, we are
               revolutionizing hostel management by providing a comprehensive
               platform that simplifies communication, enhances security, and
@@ -644,10 +660,15 @@
 
       <!-- Abstract Section -->
       <section>
-        <h2 class="section-title" data-aos="fade-up">About The Project</h2>
-        <div class="narrow-container">
+        <h2
+          class="section-title text-2xl sm:text-3xl md:text-4xl"
+          data-aos="fade-up"
+        >
+          About The Project
+        </h2>
+        <div class="narrow-container px-2 sm:px-4 md:px-8">
           <div class="mission skeleton" data-aos="fade-up">
-            <p class="mission-text">
+            <p class="mission-text text-base sm:text-lg">
               The Hostel Management Application is a comprehensive solution
               designed to simplify hostel administration for students, wardens,
               and admins. It enables students to lodge complaints, pay fees, and
@@ -663,8 +684,15 @@
 
       <!-- Features Section -->
       <section>
-        <h2 class="section-title" data-aos="fade-up">Core Features</h2>
-        <div class="features-grid">
+        <h2
+          class="section-title text-2xl sm:text-3xl md:text-4xl"
+          data-aos="fade-up"
+        >
+          Core Features
+        </h2>
+        <div
+          class="features-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8"
+        >
           <div
             class="feature-card skeleton"
             data-aos="flip-left"
@@ -793,15 +821,22 @@
 
       <!-- Technology Stack -->
       <section>
-        <h2 class="section-title" data-aos="fade-up">Technology Stack</h2>
-        <div class="narrow-container">
+        <h2
+          class="section-title text-2xl sm:text-3xl md:text-4xl"
+          data-aos="fade-up"
+        >
+          Technology Stack
+        </h2>
+        <div class="narrow-container px-2 sm:px-4 md:px-8">
           <div class="tech-stack skeleton" data-aos="fade-up">
-            <p class="mission-text" style="text-align: center">
+            <p class="mission-text text-base sm:text-lg text-center">
               Hostelia is powered by cutting-edge technologies ensuring a
               robust, scalable, and secure platform for all your hostel
               management needs.
             </p>
-            <div class="tech-badges">
+            <div
+              class="tech-badges flex flex-wrap justify-center gap-2 sm:gap-4 mt-4"
+            >
               <span class="tech-badge" data-aos="zoom-in" data-aos-delay="100"
                 >Node.js</span
               >
@@ -830,8 +865,15 @@
 
       <!-- Users and Roles -->
       <section class="roles-section">
-        <h2 class="section-title" data-aos="fade-up">Users & Roles</h2>
-        <div class="role-cards">
+        <h2
+          class="section-title text-2xl sm:text-3xl md:text-4xl"
+          data-aos="fade-up"
+        >
+          Users & Roles
+        </h2>
+        <div
+          class="role-cards grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8"
+        >
           <div
             class="role-card skeleton"
             data-aos="fade-right"
@@ -887,8 +929,15 @@
 
       <!-- Revenue Model -->
       <section>
-        <h2 class="section-title" data-aos="fade-up">Revenue Model</h2>
-        <div class="revenue-cards">
+        <h2
+          class="section-title text-2xl sm:text-3xl md:text-4xl"
+          data-aos="fade-up"
+        >
+          Revenue Model
+        </h2>
+        <div
+          class="revenue-cards grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8"
+        >
           <div
             class="revenue-card skeleton"
             data-aos="fade-up"
@@ -943,9 +992,16 @@
 
       <!-- Key Features List -->
       <section>
-        <h2 class="section-title" data-aos="fade-up">Key Features</h2>
-        <div class="narrow-container">
-          <div class="features-list">
+        <h2
+          class="section-title text-2xl sm:text-3xl md:text-4xl"
+          data-aos="fade-up"
+        >
+          Key Features
+        </h2>
+        <div class="narrow-container px-2 sm:px-4 md:px-8">
+          <div
+            class="features-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4"
+          >
             <div
               class="feature-item skeleton"
               data-aos="zoom-in"
