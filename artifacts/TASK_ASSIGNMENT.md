@@ -4,18 +4,6 @@ This document outlines the feature-wise task distribution and implementation res
 
 ---
 
-## 👨‍💻 **Rohan Dubey (S20230010207)**
-
-**Features:** Comprehensive User Interface and Layout Design  
-**Responsibilities:**
-
-- **Home Page:** Design and develop the Home Page, including the About Us, Contact, and Login/Signup pages.
-- **User Authentication:** Store sign-up details into the database and ensure role-based redirection (Admin, Warden, or Student) after login.
-- **Security Implementation:** Handle frontend and backend logic for secure authentication using OTP and college email verification.
-- **UI/UX Design:** Create intuitive and responsive user interfaces for seamless user experience across all pages.
-
----
-
 ## 👨‍💻 **Abhiraj Singh Chauhan (S20230010002)**
 
 **Features:** Warden Preface  
@@ -25,6 +13,18 @@ This document outlines the feature-wise task distribution and implementation res
 - **Mess Management:** Develop mess menu management and complaint resolution features for efficient hostel operations.
 - **Chat Room:** Build the frontend and backend for the chat system, enabling seamless communication with students and admins.
 - **Backend Integration:** Implement robust APIs and database operations for all warden-related functionalities.
+
+---
+
+## 👨‍💻 **Rohan Dubey (S20230010207)**
+
+**Features:** Comprehensive User Interface and Layout Design  
+**Responsibilities:**
+
+- **Home Page:** Design and develop the Home Page, including the About Us, Contact, and Login/Signup pages.
+- **User Authentication:** Store sign-up details into the database and ensure role-based redirection (Admin, Warden, or Student) after login.
+- **Security Implementation:** Handle frontend and backend logic for secure authentication using OTP and college email verification.
+- **UI/UX Design:** Create intuitive and responsive user interfaces for seamless user experience across all pages.
 
 ---
 
