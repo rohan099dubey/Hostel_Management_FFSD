@@ -6,60 +6,87 @@ This document outlines the feature-wise task distribution and implementation res
 
 ## 👨‍💻 **Abhiraj Singh Chauhan (S20230010002)**
 
-**Features:** Warden Preface  
+**Features:** Announcement System, Entry/Exit Management, Fee Management & Email System  
 **Responsibilities:**
 
-- **Warden Dashboard:** Create a real-time dashboard for issue tracking with dynamic data visualization and status monitoring.
-- **Mess Management:** Develop mess menu management and complaint resolution features for efficient hostel operations.
-- **Chat Room:** Build the frontend and backend for the chat system, enabling seamless communication with students and admins.
-- **Backend Integration:** Implement robust APIs and database operations for all warden-related functionalities.
+
+- **Entry/Exit System:** Implement hostel entry and exit tracking
+  - **View Entry/Exit:** Display entry/exit records in the hostel
+  - **Create Entry/Exit Registry:** Build system to create and manage entry/exit records
+- **Fee Management:** Develop fee management system for admins and wardens
+  - **Fee Verification:** Allow admins to verify which students have paid fees
+  - **Email Notifications:** Send emails for fee updates and reminders
+- **Notification Systems:** Build comprehensive notification system
+  - **Reminders:** Implement reminder system via email
+  - **OTP System:** Develop OTP verification system with email integration
 
 ---
 
 ## 👨‍💻 **Rohan Dubey (S20230010207)**
 
-**Features:** Comprehensive User Interface and Layout Design  
+**Features:** Authentication & Dashboard System  
 **Responsibilities:**
 
-- **Home Page:** Design and develop the Home Page, including the About Us, Contact, and Login/Signup pages.
-- **User Authentication:** Store sign-up details into the database and ensure role-based redirection (Admin, Warden, or Student) after login.
-- **Security Implementation:** Handle frontend and backend logic for secure authentication using OTP and college email verification.
-- **UI/UX Design:** Create intuitive and responsive user interfaces for seamless user experience across all pages.
+- **Authentication:** Implement secure user authentication system
+  - **Login:** Develop user login functionality with role-based access
+  - **Signup:** Create user registration with proper validation and database integration
+- **Dashboard System:** Build customized dashboards for different user roles
+  - **Student Dashboard:** Display problem completion rate and time analytics
+  - **Admin Dashboard:** Provide comprehensive analytics and management tools
+  - **Warden Dashboard:** Implement analytics and monitoring features for wardens
 
 ---
 
 ## 👨‍💻 **Saurav Singh (S20230010219)**
 
-**Features:** Student Preface  
+**Features:** Problem Registry & Tracking System, Warden Management  
 **Responsibilities:**
 
-- **Problem Reporting Module:** Design the "Add Problem" modal and enable issue upvoting/downvoting and real-time tracking for efficient problem management.
-- **Mess Feedback Page:** Enable students to submit mess feedback with an intuitive frontend interface for continuous improvement.
-- **Notice Board:** Build the notice board to display updates and circulars, with downloadable PDFs for easy access to important information.
-- **Student Experience:** Ensure smooth user experience for all student-facing features with responsive design and efficient backend integration.
+- **Problem Registry and Tracking System:** Develop comprehensive problem management
+  - **Create Problem:** Allow students to create and submit problem reports
+  - **View Problem:** Implement system to view problem details and current status
+  - **Problem Status Updates:** Enable admins and wardens to update problem status
+  - **Student Verification:** Build student verification system for problem status updates
+- **Warden Appointment and Management System:** Develop administrative management tools
+  - **Warden Appointment:** Create system for admins to appoint and manage wardens
+  - **Warden Management:** Implement comprehensive warden management functionality
 
 ---
 
+
 ## 👨‍💻 **Ashutosh Sinha (S20230010027)**
 
-**Features:** Admin Preface  
+**Features:** Mess Feedback System & Chat Room System  
 **Responsibilities:**
 
-- **Admin Dashboard:** Design the dashboard for fee statistics, problem resolution graphs, and activity logs with comprehensive data visualization.
-- **User Management:** Manage user roles and permissions (students, wardens, and admins) with secure access control mechanisms.
-- **Analytics:** Develop analytics and reporting features to track hostel operations and generate insights for better decision making.
-- **System Administration:** Implement comprehensive admin controls for managing the entire hostel management system.
+- **Mess Feedback System:** Develop comprehensive mess management functionality
+  - **View Menu:** Implement menu viewing functionality for all 7 days
+  - **Feedback Submission:** Create feedback submission system for all 7 days
+- **Chat Room System:** Build real-time communication platform
+  - **Join Chat Rooms:** Allow users to join existing chat rooms
+  - **Create Chat Rooms:** Enable users to create new chat rooms
+  - **Custom Chat Rooms:** Implement restricted access chat rooms based on user roles
 
 ---
 
 ## 👨‍💻 **Ch. Venkata Sivaji (S20230010063)**
 
-**Features:** Core System Features  
+**Features:** User Interface Design & Frontend Development  
 **Responsibilities:**
 
-- **Real-Time Notifications:** Design the Real-Time Notifications interface for in-app alerts and build UI for direct email system integration.
-- **Mess Menu Display:** Develop a simple mess menu page to display updates with clean and user-friendly interface.
-- **Notification System:** Assist in setting up notifications to display status updates from the backend system and minor support for integrating Email API system.
-- **Core Integration:** Ensure seamless integration of core system features with the overall platform architecture.
+- **UI Pages:** Design and develop user interface pages
+- **Home Page:** Create the main landing page with modern UI/UX
+- **About Us:** Develop an informative about page showcasing the hostel management system
+- **Contact Us:** Build contact form with backend integration for message submission
+- **Announcement System:** Develop comprehensive announcement management
+  - **View Announcements:** Create announcements page for students
+  - **Create Announcements:** Enable admin and wardens to create announcements
 
 ---
+
+
+
+
+
+
+
