@@ -20,7 +20,6 @@ const { problemUpload, cloudinary } = require("./config/cloudinary");
 const cloudinaryHelper = require("./utils/cloudinaryHelper");
 
 //Databse connection
-const { dataProblems, dataEntryExit, userData } = require("./config/data.js");
 const connectDB = require("./config/database.js");
 connectDB(); // Connect to MongoDB
 
