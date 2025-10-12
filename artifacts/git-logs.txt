@@ -1,0 +1,826 @@
+commit 890d9f5e1d50f87483ba6a0b965044d416bac09d
+Merge: 387e25f c8fa6c6
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Fri May 9 18:16:25 2025 +0530
+
+    Merge pull request #48 from abhiraj2404/sorav-devs
+    
+    Sorav devs
+
+commit c8fa6c639ef4b84a56a42c1e10e08eae4592aefd
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Fri May 9 18:12:01 2025 +0530
+
+    fixes
+
+commit b9679f4092d19a4b1160ae535ab477be655dca76
+Merge: 82f5f8c 387e25f
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Fri May 9 18:09:01 2025 +0530
+
+    Merge branch 'main' into sorav-devs
+
+commit 82f5f8c178a808b3470b29e959df899cf730e88d
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Fri May 9 18:07:11 2025 +0530
+
+    ui fix
+
+commit 387e25fbdf707e006ff873e997f380784a0dd445
+Merge: 859f70e 49c2af2
+Author: Saurav Singh <147067494+sauravsinghs@users.noreply.github.com>
+Date:   Fri May 9 18:06:04 2025 +0530
+
+    Merge pull request #47 from abhiraj2404/abhi-devs
+    
+    fix: error
+
+commit 49c2af29bbc2d214b12fac2bd380a81165a145df
+Author: Abhiraj Singh Chauhan <chauhanabhiraj06@gmail.com>
+Date:   Fri May 9 18:02:56 2025 +0530
+
+    fix: error
+
+commit 859f70e5991881de8edca336df9f52fca89d4a86
+Merge: e554a05 b99d16f
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Fri May 9 17:48:16 2025 +0530
+
+    Merge pull request #46 from abhiraj2404/sorav-devs
+    
+    added controllers
+
+commit b99d16f543cd529a7f1dddfc33b8c5486ddee8ce
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Fri May 9 17:39:23 2025 +0530
+
+    added controllers
+
+commit e554a058140b39c05bdafaf5a718e70c0c1196ff
+Merge: d87f04d 0f7cf9f
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Fri May 9 14:22:15 2025 +0530
+
+    Merge pull request #45 from abhiraj2404/rohan-devs
+    
+    Email notification sent on problem status change
+
+commit 0f7cf9f2c788e5e733c9c22c66343b9d5b2b339c
+Author: Your New Username <your_new_email@example.com>
+Date:   Fri May 9 14:18:14 2025 +0530
+
+    Email notification sent on problem status change
+
+commit d87f04d74e461154afe0ed52fda0423b60004f8f
+Merge: 7c9f092 11b505b
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Fri May 9 13:40:28 2025 +0530
+
+    Merge pull request #44 from abhiraj2404/sorav-devs
+    
+    responsiveness and some fixes
+
+commit 11b505bf8aa229eafd57f2d22b66eb7494c213f9
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Fri May 9 13:33:00 2025 +0530
+
+    responsiveness and some fixes
+
+commit 7c9f092549f16d380ecb428642105b5518cfd999
+Merge: 1b54ee2 c63433a
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Fri May 9 11:09:59 2025 +0530
+
+    Merge pull request #43 from abhiraj2404/rohan-devs
+    
+    fixed the bugs and also fixed the cards in problem tracker
+
+commit c63433ae126bf89ab6b098cdee8801ee7a68a280
+Author: Your New Username <your_new_email@example.com>
+Date:   Fri May 9 11:08:33 2025 +0530
+
+    fixed the bugs and also fixed the cards in problem tracker
+
+commit 1b54ee2e8a777c83ae80a9691a305c18938cf8a2
+Merge: 07902a2 ec266f2
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Fri May 9 10:05:13 2025 +0530
+
+    Merge pull request #42 from abhiraj2404/rohan-devs
+    
+    cloudinary added and bugs in contact fixed
+
+commit ec266f22ed2b9fb953f68dae91bb03694fd8ca32
+Author: Your New Username <your_new_email@example.com>
+Date:   Fri May 9 10:03:23 2025 +0530
+
+    cloudinary added and bugs in contact fixed
+
+commit 07902a22686304f2a5485d7b8a5520c4bc9e13ae
+Merge: 6188c33 b38ecb7
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Fri May 9 08:49:44 2025 +0530
+
+    Merge pull request #41 from abhiraj2404/sorav-devs
+    
+    changed many files
+
+commit b38ecb7f95607c568da8aa9c108940faa1ad4b8a
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Fri May 9 06:37:23 2025 +0530
+
+    changed many files
+
+commit 6188c338687f96d2928bc6fc85403cb503b8ae79
+Merge: dca0271 c473b8d
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu May 8 22:20:51 2025 +0530
+
+    Merge pull request #40 from abhiraj2404/rohan-devs
+    
+    more fixes and bugs removed
+
+commit c473b8d9ae023de968566443876dc6fc76a96c31
+Author: Your New Username <your_new_email@example.com>
+Date:   Thu May 8 21:18:57 2025 +0530
+
+    more fixes and bugs removed
+
+commit dca027194d4d61fb4e8e1b992e3fb6686652a221
+Merge: 24e7be4 cedff99
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu May 8 20:28:19 2025 +0530
+
+    Merge pull request #39 from abhiraj2404/rohan-devs
+    
+    multiple things done
+
+commit cedff995a1abd4deaa12376304fbdd510b8e53da
+Author: Your New Username <your_new_email@example.com>
+Date:   Thu May 8 20:22:53 2025 +0530
+
+    multiple things done
+
+commit 24e7be4fc67e1928b3af612a3d3d552a9d9671b5
+Merge: 602a01c 21eaf15
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu May 8 18:49:23 2025 +0530
+
+    Merge pull request #38 from abhiraj2404/rohan-devs
+    
+    nodemailer done
+
+commit 21eaf15a6ddf50f738c4b8617f0f94f35e65978d
+Author: Your New Username <your_new_email@example.com>
+Date:   Thu May 8 17:50:15 2025 +0530
+
+    nodemailer done
+
+commit 602a01cae3d4bce226fa0b3f2d0e630dc6890d0a
+Merge: 2977a4c 0148c5c
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu May 8 17:07:38 2025 +0530
+
+    Merge pull request #36 from abhiraj2404/as
+    
+    feedback improved and chatrooms made
+
+commit 0148c5c453eb1ce900bf14a8158db47c5738b5c1
+Merge: e30022f 2977a4c
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Thu May 8 17:03:42 2025 +0530
+
+    completed merge
+
+commit 2977a4c32ab363f8de5a0d39dd0bcf4d7e5b02e8
+Merge: dfe5696 0c1a44c
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu May 8 12:17:52 2025 +0530
+
+    Merge pull request #37 from abhiraj2404/sorav-devs
+    
+    Sorav devs
+
+commit 0c1a44cafd2bb3cb1f86adcbd6d35c24ad0497da
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Thu May 8 12:14:48 2025 +0530
+
+    photo
+
+commit ea8fde2f9c002c8af78c769aaf6560114b20bde4
+Merge: 4433632 dfe5696
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Thu May 8 12:11:08 2025 +0530
+
+    Merge branch 'main' of https://github.com/abhiraj2404/Hostel_Management_FFSD into sorav-devs
+
+commit 443363218a14c78933e1eea8fe5801dd4ec37119
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Thu May 8 11:30:43 2025 +0530
+
+    changed many codefiles
+
+commit e30022f55eaaffb9d78ce446a6c8ca841be14898
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Thu May 8 03:30:03 2025 +0530
+
+    feedback improved and chatrooms made
+
+commit dfe569656947abf3a2a9981a8bfc2c2668d8e931
+Merge: 0ab71a7 57022b7
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu May 8 02:35:23 2025 +0530
+
+    Merge pull request #35 from abhiraj2404/rohan-devs
+    
+    Some error fixed and status resolve is also fixed
+
+commit 57022b70a788ffae1c26fe932f8420c787158984
+Author: Your New Username <your_new_email@example.com>
+Date:   Thu May 8 00:13:40 2025 +0530
+
+    Some error fixed and status resolve is also fixed
+
+commit 0ab71a7866f9b6a68810e103d01f4b67b25bd4a0
+Merge: b393cea 2540e25
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed May 7 17:37:14 2025 +0530
+
+    Merge pull request #34 from abhiraj2404/rohan-devs
+    
+    i have finally created a branch
+
+commit 2540e251ab193f7ff5996a3613ab10fb09e6d382
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed May 7 17:29:35 2025 +0530
+
+    i have finally created a branch
+
+commit b393cea3f4c45ce540b4b69d9b8f7dbf7cb5eb53
+Merge: b6f0cda 465269b
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed May 7 17:12:01 2025 +0530
+
+    Merge pull request #33 from rohan099dubey/main
+    
+    Student Confirmation also added
+
+commit 465269b87fcc6535c0bba930eac56a048ecd2131
+Merge: db2d471 b6f0cda
+Author: Rohan Dubey <145865048+rohan099dubey@users.noreply.github.com>
+Date:   Wed May 7 17:07:43 2025 +0530
+
+    Merge branch 'abhiraj2404:main' into main
+
+commit db2d471f49befc00c0ee69401b8c6ce97146bcbd
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed May 7 17:03:33 2025 +0530
+
+    Student Confirmation done
+
+commit b6f0cdad2afcb73149293aa072cac013857a024e
+Merge: f0bae88 628d51f
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed May 7 14:58:18 2025 +0530
+
+    Merge pull request #32 from rohan099dubey/main
+    
+    Database migration
+
+commit 628d51f3b53f53d5a7823c3ce0be3384564b9261
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed May 7 14:04:31 2025 +0530
+
+    Database migration
+
+commit f0bae88fed94f5e95ccd1c941f5768b21db14d10
+Merge: 67d6cc9 bf36024
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Sat Mar 29 14:59:52 2025 +0530
+
+    Merge pull request #31 from abhiraj2404/as
+    
+    error removed
+
+commit bf360247d2930629fe5c42be8fcbd551fd3e7f28
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Thu Mar 27 14:25:57 2025 +0530
+
+    error removed
+
+commit 67d6cc91b607f454844d5f1ce86bf2b270e1e7ab
+Merge: f865121 10735a8
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu Mar 27 11:06:29 2025 +0530
+
+    Merge pull request #30 from abhiraj2404/as
+    
+    chatRoom creation
+
+commit 10735a82246bc96863540e96294026d973930199
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Thu Mar 27 03:41:21 2025 +0530
+
+    chatRoom creation
+
+commit f86512101a34b0624d184b1221b995ae2e3fcd71
+Merge: 83113ef 3b40593
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu Mar 27 02:35:18 2025 +0530
+
+    Merge pull request #29 from abhiraj2404/sorav-devs
+    
+    sorav devs
+
+commit 3b40593126a96ef23afadacd98db053a42de5a52
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Thu Mar 27 02:17:41 2025 +0530
+
+    multiple changes
+
+commit 4ef694549243f30470eb76081dc752a130e1e7ca
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Wed Mar 26 22:29:27 2025 +0530
+
+    navbar fixed
+
+commit 83113ef020f16793a841c9a3e1496ea6beb47527
+Merge: 676e533 11ba9ad
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 21:46:55 2025 +0530
+
+    Merge pull request #27 from rohan099dubey/main
+    
+    More bugs fixed and mostly everything is functional
+
+commit 11ba9ad84d9b866d5b2acafed91dcfbe0bb42c52
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed Mar 26 14:32:58 2025 +0530
+
+    More bugs fixed and mostly everything is functional
+
+commit 676e533c261f372f097d5cea661db9f1ab4ef124
+Merge: d8a059b b80ad3f
+Author: Rohan Dubey <145865048+rohan099dubey@users.noreply.github.com>
+Date:   Wed Mar 26 11:53:45 2025 +0530
+
+    Merge pull request #26 from abhiraj2404/abhi-devs
+    
+    minor changes
+
+commit b80ad3fe3dc297e04182be937c8360fa5d1d446a
+Author: Abhiraj Singh Chauhan <chauhanabhiraj06@gmail.com>
+Date:   Wed Mar 26 11:50:39 2025 +0530
+
+    minor changes
+
+commit d8a059bb61a477446d5fb3f9b429b83768c73b8e
+Merge: 146f777 c37ca82
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 11:04:41 2025 +0530
+
+    Merge pull request #25 from sauravsinghs/saurav
+    
+    homepage done
+
+commit 146f777686253418512a0869061da86e20a5ee6e
+Merge: ac10a00 3afd839
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 11:04:16 2025 +0530
+
+    Merge pull request #24 from rohan099dubey/main
+    
+    all the minor issues fixed
+
+commit c37ca820b912f183e5036c314afe710ce0820c78
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Wed Mar 26 08:12:03 2025 +0530
+
+    homepage done
+
+commit 3afd839656c54c682bb379dc403597377dd42eb4
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed Mar 26 07:43:50 2025 +0530
+
+    all the minor issues fixed
+
+commit ac10a004447f7509fed347188638e332d8c7e91c
+Merge: 68cfce3 57d6787
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 05:33:39 2025 +0530
+
+    Merge pull request #23 from sauravsinghs/saurav
+    
+    homepage, navbar fixed
+
+commit 57d6787f3e29d5529aeab2de785d2113a3d39c87
+Author: saurav <contactforsauravsingh@gmail.com>
+Date:   Wed Mar 26 05:21:27 2025 +0530
+
+    homepage, navbar fixed
+
+commit 68cfce3ba58f899e2337c4b1c8708d912240139f
+Merge: 38b9165 70cd5a5
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 05:05:41 2025 +0530
+
+    Merge pull request #22 from rohan099dubey/main
+    
+    rohan
+
+commit 70cd5a50d0dbbd3f67efc3fc662cec5e97cce0e9
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed Mar 26 05:04:26 2025 +0530
+
+    dashboard complete , navbar fixed
+
+commit 920968a2e3e60b2e9f622b71a5ae1381a7051c4b
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed Mar 26 04:59:02 2025 +0530
+
+    merged
+
+commit 38b91654a77cb1a98489e90c61351f033db5bf07
+Merge: 219dc51 c997576
+Author: Rohan Dubey <145865048+rohan099dubey@users.noreply.github.com>
+Date:   Wed Mar 26 04:50:47 2025 +0530
+
+    Merge pull request #21 from abhiraj2404/abhi-devs
+    
+    feat: UI improvements
+
+commit c997576b6cde4d9fdeced9a3bc65b9188988d401
+Author: Abhiraj Singh Chauhan <chauhanabhiraj06@gmail.com>
+Date:   Wed Mar 26 04:46:45 2025 +0530
+
+    feat: UI improvements
+
+commit 219dc51d4e1222181944352aeb93c783bcec5606
+Merge: a7f8570 aea6c11
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 03:29:07 2025 +0530
+
+    Merge pull request #20 from rohan099dubey/main
+    
+    rohan PR
+
+commit aea6c113d191bf5f51efc3300388628f2626ec92
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed Mar 26 03:27:07 2025 +0530
+
+    combined changes
+
+commit aa03ddef0453b6da9aec515b3d981d357ff3da55
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed Mar 26 03:16:46 2025 +0530
+
+    rohan changes
+
+commit 85e8120dc0471a1608ed8bb89bcc17b4775a3ddc
+Author: Your New Username <your_new_email@example.com>
+Date:   Wed Mar 26 03:16:18 2025 +0530
+
+    merge
+
+commit a7f8570443656ee7ea05079007671a5f8eaa3a6e
+Merge: ed2ed62 15c431d
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 01:16:06 2025 +0530
+
+    Merge pull request #19 from abhiraj2404/ashutosh
+    
+    Ashutosh
+
+commit 15c431d91feb6c39c328d23dbf22af82f333094d
+Merge: 97e53f4 ed2ed62
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 01:15:53 2025 +0530
+
+    Merge branch 'main' into ashutosh
+
+commit 97e53f4cac1b486f28d3a4835608e842c24faefd
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Wed Mar 26 01:10:24 2025 +0530
+
+    minor fixes
+
+commit ed2ed62fb9237e559c2dc1585b004c30cc0a1721
+Merge: efbe43a 9db7b9a
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Wed Mar 26 00:06:41 2025 +0530
+
+    Merge pull request #18 from abhiraj2404/ashutosh
+    
+    Ashutosh
+
+commit d2ef968ce6d220d5dd74bd30263045bb8e990b78
+Merge: 9db7b9a efbe43a
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Tue Mar 25 23:58:49 2025 +0530
+
+    Merge branch 'main' into ashutosh
+
+commit 9db7b9afb5febdb907ed0000d60c6e5cf02cfaf9
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Tue Mar 25 23:57:18 2025 +0530
+
+    chatRoom layout
+
+commit efbe43afec2f4454e487eb832a3b151c603ffe04
+Merge: 6128bc8 1703c05
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Tue Mar 25 20:39:15 2025 +0530
+
+    Merge pull request #17 from YashDoshi01/main
+    
+    entry exit with basic ui done
+
+commit 1703c059543f2f0a81864e37957c62ab6a589d51
+Merge: 2a037b5 6128bc8
+Author: YashDoshi01 <90956721+YashDoshi01@users.noreply.github.com>
+Date:   Tue Mar 25 20:20:06 2025 +0530
+
+    Merge branch 'main' of https://github.com/YashDoshi01/Hostel_Management_FFSD
+
+commit 2a037b566fe505e32796cdeddf6f814fa7dc4313
+Author: YashDoshi01 <90956721+YashDoshi01@users.noreply.github.com>
+Date:   Tue Mar 25 20:19:13 2025 +0530
+
+    done wwith entry exit register baasic ui
+
+commit 6128bc8a7fd66da921c9618ca8f3fca1854445b0
+Merge: 77d4b2a 9f3ea7f
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Tue Mar 25 20:11:11 2025 +0530
+
+    Merge pull request #16 from abhiraj2404/swastik-devs
+    
+    Swastik devs
+
+commit 9f3ea7f136811c8ec8c93165fdcfcb75984fba95
+Author: STELLAR <thisisswastik@gmail.com>
+Date:   Tue Mar 25 20:09:11 2025 +0530
+
+    added accordion and changed navbar
+
+commit 1ecd1d9fd7ac381f208c4d0fd02cbcdf32426c7f
+Merge: 8e93d02 77d4b2a
+Author: STELLAR <thisisswastik@gmail.com>
+Date:   Tue Mar 25 18:53:47 2025 +0530
+
+    Merge branch 'main' of https://github.com/abhiraj2404/Hostel_Management_FFSD into swastik-devs
+
+commit 31502ae8ae4e5811a042cdb744bf96996ac36a2f
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Tue Mar 25 02:00:07 2025 +0530
+
+    navbar issue corrected on about.ejs
+
+commit fac3e38f4f0d38af2b39015767b9ce9f79ac08ef
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Tue Mar 25 01:50:31 2025 +0530
+
+    navbar issue corrected on about.ejs
+
+commit 8e93d02658491f3788939cd23ea1977ca45ccb32
+Merge: e5ebd78 88d2d96
+Author: STELLAR <thisisswastik@gmail.com>
+Date:   Mon Mar 24 22:07:43 2025 +0530
+
+    Merge branch 'main' into swastik-devs
+
+commit 77d4b2a9b015801dfc277c2b1837b9af0dc3ef8e
+Merge: baf2c8c 5b47ab8
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Mon Mar 24 20:31:14 2025 +0530
+
+    Merge pull request #14 from rohan099dubey/main
+    
+    Problems created and other things done
+
+commit 5b47ab8ca857490387ace5bc34927742a0579b69
+Author: Your New Username <your_new_email@example.com>
+Date:   Mon Mar 24 20:28:00 2025 +0530
+
+    Problems created and other things done
+
+commit baf2c8ca65ba2afecf097fe689c3feaf5ecc754b
+Merge: 88d2d96 e5ebd78
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Mon Mar 24 19:29:05 2025 +0530
+
+    Merge pull request #13 from abhiraj2404/swastik-devs
+    
+    improved hero section to fill on the screen
+
+commit e5ebd786edca77ec14ea670744d1c09d2e749fb8
+Author: STELLAR <thisisswastik@gmail.com>
+Date:   Mon Mar 24 12:43:31 2025 +0530
+
+    improved hero section to fill on the screen
+
+commit 88d2d9614bb60b09e62ec7c4e782d364c0299a11
+Merge: b85e182 d483b05
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Mon Mar 24 11:49:55 2025 +0530
+
+    Merge pull request #12 from abhiraj2404/swastik-devs
+    
+    added a hero section and FAQ
+
+commit d483b0594ec208073b0978ffeb58f6a5299ffe98
+Author: STELLAR <thisisswastik@gmail.com>
+Date:   Mon Mar 24 03:53:27 2025 +0530
+
+    added a hero section and FAQ
+
+commit b85e1821ff61e0e55d17e7532a4b0aa59f588117
+Merge: 327e9aa af2ff36
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Mon Mar 24 03:08:16 2025 +0530
+
+    Merge pull request #11 from abhiraj2404/swastik-devs
+    
+    redesigned homepage
+
+commit af2ff36b77d2cea25315edca27cab034ce7b73b8
+Author: STELLAR <thisisswastik@gmail.com>
+Date:   Mon Mar 24 03:05:50 2025 +0530
+
+    redesigned homepage
+
+commit 327e9aa3c001956fd83d358114086eded00fcc7e
+Merge: dbdfe3e d89eb12
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Mon Mar 24 00:56:58 2025 +0530
+
+    Merge pull request #10 from rohan099dubey/main
+    
+    many features added like problems but still not uploading and storing data from the form , working on it
+
+commit d89eb12f99255cedd631d209f4a7380e91516c14
+Merge: f571766 dbdfe3e
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Mon Mar 24 00:56:32 2025 +0530
+
+    Merge branch 'main' into main
+
+commit dbdfe3e978d276e231bdf8aab24c48e8d9d784a4
+Merge: 503627c ed67c40
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Mon Mar 24 00:54:52 2025 +0530
+
+    Merge pull request #9 from YashDoshi01/main
+    
+    minor bug fixes
+
+commit f5717660cf1229459cb91a30fc5643f5fee44ffe
+Author: Your New Username <your_new_email@example.com>
+Date:   Mon Mar 24 00:47:27 2025 +0530
+
+    many features added like problems but still not uploading it
+
+commit ed67c407436a9ce781014bbc93184a1416ba380a
+Author: YashDoshi01 <90956721+YashDoshi01@users.noreply.github.com>
+Date:   Mon Mar 24 00:21:24 2025 +0530
+
+    minor bug fixes in announcements
+
+commit 712ab3e7b69b12b8afa4fea60635f629f717c74c
+Author: YashDoshi01 <90956721+YashDoshi01@users.noreply.github.com>
+Date:   Mon Mar 24 00:11:52 2025 +0530
+
+    some changes made in announcements
+
+commit 503627c31327a384a9edb9669eca10fcdf05473a
+Merge: ee95e93 74ba6e8
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Sun Mar 23 23:17:24 2025 +0530
+
+    Merge pull request #7 from abhiraj2404/ashutosh
+    
+    Ashutosh
+
+commit 74ba6e80969e8ab0a124467a9a272989ec2c948f
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Sun Mar 23 23:14:26 2025 +0530
+
+    rating mess menu done
+
+commit 7f756670a48cbf11c1acf5b3169bc6c8d9170e62
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Sun Mar 23 23:08:23 2025 +0530
+
+    remove feedbacl.json for sure
+
+commit 0831370279e340e4cf5419e51d9b12b82b737f5f
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Sun Mar 23 23:06:22 2025 +0530
+
+    remove feedbacl.json
+
+commit 043dfcbf86a3586bfc251882d35adcd9be2b7d1e
+Merge: 306bcef ee95e93
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Sun Mar 23 23:00:46 2025 +0530
+
+    Merge branch 'main' of https://github.com/abhiraj2404/Hostel_Management_FFSD into ashutosh
+
+commit 306bcef510603a5e85bddd885fa72aacf8e7239b
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Sun Mar 23 22:55:56 2025 +0530
+
+    rating work
+
+commit ee95e932aa4fff283af8fd639fae8d2d994e01c6
+Merge: d8e194a 3f823ad
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Sun Mar 23 22:50:05 2025 +0530
+
+    Merge pull request #6 from YashDoshi01/main
+    
+    announcements completed
+
+commit 3f823ad17a9ac003100193992a639252aa1f24db
+Author: YashDoshi01 <90956721+YashDoshi01@users.noreply.github.com>
+Date:   Sun Mar 23 22:29:21 2025 +0530
+
+    announcements completed
+
+commit 0e408fdceb063e73f33817474d4973c45bcd0139
+Author: YashDoshi01 <90956721+YashDoshi01@users.noreply.github.com>
+Date:   Sun Mar 23 20:20:31 2025 +0530
+
+    announcements completed
+
+commit d8e194af85a914bf4426febaa85bf12882b90281
+Merge: f3332bb 01e4517
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Thu Mar 20 20:03:08 2025 +0530
+
+    Merge pull request #4 from rohan099dubey/main
+    
+    Added database config, updated models and views and authorization is  done  through jwt
+
+commit 01e4517a272c86260310fbe39b245e0294c77c75
+Author: Your New Username <your_new_email@example.com>
+Date:   Thu Mar 20 15:03:27 2025 +0530
+
+    Added database config, updated models and views and authorization is done
+
+commit f3332bb7d9b45fb0fc21c7c8b7ff5feb6745c3cb
+Merge: f03b687 4e07702
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Tue Mar 18 20:33:27 2025 +0530
+
+    Merge pull request #3 from abhiraj2404/ashutosh
+    
+    contact and dashboard
+
+commit 4e077025306bc35f0611a0a29371e09072e1cc40
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Tue Mar 18 20:23:32 2025 +0530
+
+    homepage animation by swastik
+
+commit 31a1c53f5679188becfb4546eecea8aece904df4
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Tue Mar 18 20:10:22 2025 +0530
+
+    contact and dashboard
+
+commit f03b687b9a8f9ee295635a548620e55bb736d0ca
+Merge: 04c81a7 a9392b3
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Tue Mar 18 10:05:23 2025 +0530
+
+    Merge pull request #2 from abhiraj2404/ashutosh
+    
+    about page
+
+commit a9392b39f95076381bb167967568161781db635b
+Author: Unmixeddiplomacy <147068106+Unmixeddiplomacy@users.noreply.github.com>
+Date:   Sun Mar 16 01:05:46 2025 +0530
+
+    about page
+
+commit 04c81a7559fd51827a89eb99f673575a65b3aff9
+Merge: 99f1037 3947aac
+Author: Abhiraj Singh Chauhan <135122367+abhiraj2404@users.noreply.github.com>
+Date:   Sat Mar 15 22:54:43 2025 +0530
+
+    Merge pull request #1 from rohan099dubey/main
+    
+    first commit - i have made some changes please accept this request
+
+commit 3947aac65a5c62db9efa0bf49fa8350c721d3f32
+Author: Your New Username <your_new_email@example.com>
+Date:   Sat Mar 15 16:59:21 2025 +0530
+
+    first commit
+
+commit 99f1037bf5c4386f3df4ec4bf16f39be29eda32b
+Author: Abhiraj Singh Chauhan <chauhanabhiraj06@gmail.com>
+Date:   Tue Jan 28 15:35:44 2025 +0530
+
+    first commit
