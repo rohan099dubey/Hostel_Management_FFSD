@@ -1,0 +1,120 @@
+{
+  "Announcement": {
+    "collection": "Announcement",
+    "fields": {
+      "title": "String (required)",
+      "message": "String (required)",
+      "createdAt": "Date (auto, from timestamps)",
+      "updatedAt": "Date (auto, from timestamps)"
+    }
+  },
+  "Message": {
+    "collection": "Message",
+    "fields": {
+      "userId": "ObjectId (ref: 'User', required)",
+      "userName": "String (required)",
+      "message": "String (default: '')",
+      "imageData": "String (default: null)",
+      "timestamp": "Date (default: Date.now)"
+    }
+  },
+  "ChatRoom": {
+    "collection": "ChatRoom",
+    "fields": {
+      "roomName": "String (required)",
+      "roomType": "String (required)",
+      "description": "String (default: '')",
+      "accessLevel": "String (required)",
+      "restrictedToHostel": "String (default: null)",
+      "roomIcon": "String (default: 'fas fa-comments')",
+      "createdBy": "ObjectId (ref: 'User')",
+      "messages": "Array of ObjectId (ref: 'Message')",
+      "deleted": "Boolean (default: false)",
+      "deletedAt": "Date (default: null)",
+      "deletedBy": "ObjectId (ref: 'User', default: null)",
+      "createdAt": "Date (auto, from timestamps)",
+      "updatedAt": "Date (auto, from timestamps)"
+    },
+    "indexes": [{ "fields": ["deleted"], "unique": false }]
+  },
+  "Feedback": {
+    "collection": "Feedback",
+    "fields": {
+      "rating": "String (enum: ['1','2','3','4','5'], required)",
+      "comment": "String (default: 'No comment provided')",
+      "day": "String (enum: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], required)",
+      "mealType": "String (enum: ['Breakfast','Lunch','Snacks','Dinner'], required)",
+      "user": "ObjectId (ref: 'User')",
+      "createdAt": "Date (default: Date.now)",
+      "updatedAt": "Date (auto, from timestamps)"
+    }
+  },
+  "MenuItem": {
+    "collection": "MenuItem",
+    "fields": {
+      "day": "String (required)",
+      "mealType": "String (required)",
+      "name": "String (required)",
+      "alternateWeek": "Boolean (default: false)",
+      "seasonal": "Boolean (default: false)"
+    }
+  },
+  "OTP": {
+    "collection": "OTP",
+    "fields": {
+      "email": "String (required, unique)",
+      "otp": "String (required)",
+      "createdAt": "Date (default: Date.now, expires: 600 seconds)"
+    }
+  },
+  "Problem": {
+    "collection": "Problem",
+    "fields": {
+      "problemTitle": "String (required)",
+      "problemDescription": "String (required)",
+      "problemImage": "String (required)",
+      "hostel": "String (required)",
+      "roomNo": "String (required)",
+      "category": "String (enum: ['Electrical','Plumbing','Painting','Carpentry','Cleaning','Internet','Furniture','Pest Control','Other'], required)",
+      "studentId": "String (required)",
+      "status": "String (enum: ['Pending','Resolved','Rejected','ToBeConfirmed'], default: 'Pending')",
+      "studentStatus": "String (enum: ['NotResolved','Resolved','Rejected'], default: 'NotResolved')",
+      "timeResolved": "Date (default: null)",
+      "timeCreated": "Date (default: Date.now)",
+      "createdAt": "Date (auto, from timestamps)",
+      "updatedAt": "Date (auto, from timestamps)"
+    }
+  },
+  "Transit": {
+    "collection": "Transit",
+    "fields": {
+      "studentRollNumber": "String (required)",
+      "studentName": "String (required, default: 'Unknown')",
+      "studentHostel": "String (required, default: 'Unknown')",
+      "studentRoomNumber": "String (required, default: 'Unknown')",
+      "purpose": "String (required)",
+      "transitStatus": "String (enum: ['ENTRY','EXIT'], required)",
+      "date": "Date (required, default: current date in YYYY-MM-DD)",
+      "time": "String (required, default: current time in HH:MM:SS)",
+      "createdAt": "Date (auto, from timestamps)",
+      "updatedAt": "Date (auto, from timestamps)"
+    }
+  },
+  "User": {
+    "collection": "User",
+    "fields": {
+      "role": "String (enum: ['student','admin','warden'], required, default: 'student')",
+      "name": "String (required)",
+      "rollNo": "String (unique, sparse)",
+      "email": "String (required, unique)",
+      "year": "String (enum: ['UG-1','UG-2','UG-3','UG-4'])",
+      "hostel": "String (enum: ['BH-1','BH-2','BH-3','BH-4'])",
+      "roomNo": "String",
+      "password": "String (required)",
+      "feeStatus.hostelFees": "Boolean (default: false)",
+      "feeStatus.messFees": "Boolean (default: false)",
+      "createdAt": "Date (auto, from timestamps)",
+      "updatedAt": "Date (auto, from timestamps)"
+    }
+  }
+}
